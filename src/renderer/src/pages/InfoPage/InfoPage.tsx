@@ -108,7 +108,7 @@ export const InfoPage: React.FC = () => {
               {malData.studios.map((studio) => studio.name).join(", ")}
             </p>
 
-            <div className="grid grid-cols-3 grid-rows-2 gap-4 overflow-hidden sm:grid-cols-4 2xl:grid-cols-6">
+            <div className="grid grid-cols-3 gap-4 overflow-hidden sm:grid-cols-4 2xl:grid-cols-6">
               {malData.related_anime.slice(0, 7).map((related) => (
                 <button
                   key={related.node.id}
