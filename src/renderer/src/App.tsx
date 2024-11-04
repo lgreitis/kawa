@@ -1,35 +1,49 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { useLocation, useRoutes } from "react-router-dom";
+import "./app.css";
+import React from "react";
+import { HomePage } from "./pages/HomePage";
+import { MainLayout } from "./components/layouts/MainLayout";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { StreamPage } from "./pages/StreamPage/StreamPage";
+import { InfoPage } from "./pages/InfoPage/InfoPage";
+import { AnimatePresence } from "framer-motion";
+import { WatchPage } from "./pages/WatchPage";
+import { ExtensionLoader } from "./components/ExtensionLoader/ExtensionLoader";
+import { queryClient } from "./queryClient";
+import { SettingsPage } from "./pages/SettingsPage/SettingsPage";
+import { AnimeListPage } from "./pages/AnimeListPage/AnimeListPage";
+import { MalAuthListener } from "./listeners/MalAuthListener";
 
-function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+const router = [
+  {
+    element: <MainLayout />,
+    children: [
+      { path: "/", element: <HomePage /> },
+      { path: "/info/:malId", element: <InfoPage /> },
+      { path: "/stream/:malId/:episode", element: <StreamPage /> },
+      { path: "/watch/:url", element: <WatchPage /> },
+      { path: "/settings", element: <SettingsPage /> },
+      { path: "/list", element: <AnimeListPage /> },
+    ],
+  },
+];
+
+const App: React.FC = () => {
+  const element = useRoutes(router);
+  const location = useLocation();
+
+  if (!element) return null;
 
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
-  )
-}
+    <QueryClientProvider client={queryClient}>
+      <MalAuthListener />
+      <ExtensionLoader />
+      <AnimatePresence mode="wait">
+        {React.cloneElement(element, { key: location.pathname })}
+      </AnimatePresence>
+      {/* {IS_DEV && <ReactQueryDevtools />} */}
+    </QueryClientProvider>
+  );
+};
 
-export default App
+export default App;

@@ -1,0 +1,47 @@
+import { type IKitsuAnimeEpisode } from "@renderer/services/kitsu/kitsuTypes";
+import { useAnimeListEntry } from "@renderer/store/animeListStore";
+import { useNavigate } from "react-router-dom";
+
+interface IInfoEpisodeListCardProps {
+  malId: number;
+  episode: IKitsuAnimeEpisode;
+}
+
+export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) => {
+  const { malId, episode } = props;
+  const navigate = useNavigate();
+  const animeListEntry = useAnimeListEntry(malId);
+
+  return (
+    <button
+      className="relative flex items-center gap-4 rounded-lg p-2 text-left hover:bg-black/30"
+      onClick={() => navigate(`/stream/${malId}/${episode.attributes.number}`)}
+    >
+      <div className="relative aspect-video h-24">
+        {episode.attributes.thumbnail ? (
+          <img
+            className="aspect-video h-24 rounded-lg object-cover"
+            src={episode.attributes.thumbnail?.small ?? episode.attributes.thumbnail?.original}
+          />
+        ) : (
+          <div className="aspect-video h-24 rounded-lg bg-black/40"></div>
+        )}
+        {(animeListEntry?.watchedEpisodes ?? 0) >= episode.attributes.number && (
+          <div className="absolute inset-0 flex w-full items-center justify-center rounded-lg bg-black/40 text-sm font-semibold">
+            <span>Watched</span>
+          </div>
+        )}
+      </div>
+      <div className="flex w-full flex-col overflow-hidden">
+        <span className="font-medium">
+          {episode.attributes.canonicalTitle
+            ? `${episode.attributes.number}. ${episode.attributes.canonicalTitle}`
+            : `Episode ${episode.attributes.number}`}
+        </span>
+        <span className="line-clamp-2 text-sm text-neutral-300">
+          {episode.attributes.description}
+        </span>
+      </div>
+    </button>
+  );
+};

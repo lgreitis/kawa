@@ -1,34 +1,11 @@
-# anitorrent
+# Kawa
 
-An Electron application with React and TypeScript
+# Acknowledgements
 
-## Recommended IDE Setup
+A big thanks to [ThaUnknown](https://github.com/ThaUnknown) for writing and open-sourcing the libraries that made this app possible:
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [jassub](https://github.com/ThaUnknown/jassub) – for enabling integration of ASS subtitles.
+- [matroska-metadata](https://github.com/ThaUnknown/matroska-metadata) – for handling Matroska metadata.
+- [anitomyscript](https://github.com/ThaUnknown/anitomyscript) – javascript bindings for [Anitomy](https://github.com/erengy/anitomy).
 
-## Project Setup
-
-### Install
-
-```bash
-$ npm install
-```
-
-### Development
-
-```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
-```
+Check out ThaUnknown's streaming app alternative [miru](https://github.com/ThaUnknown/miru).

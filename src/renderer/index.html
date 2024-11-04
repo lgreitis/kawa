@@ -2,11 +2,17 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Electron</title>
+    <title>Kawa</title>
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+      content="default-src 'self'; 
+      script-src 'self' blob: 'unsafe-eval'; 
+      style-src 'self' 'unsafe-inline'; 
+      img-src 'self' https://media.kitsu.app https://live.metahub.space https://images.metahub.space https://cdn.myanimelist.net data:; 
+      connect-src 'self' http://api.anidb.net:9001 https://kitsu.io https://api.myanimelist.net https://feed.animetosho.org https://relations.yuna.moe https://torrentio.strem.fun https://raw.githubusercontent.com; 
+      media-src 'self' http://localhost:8080;
+      font-src 'self' data:;"
     />
   </head>
 
