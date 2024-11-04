@@ -50,9 +50,9 @@ export interface IMalAnimeDetailsResponse {
     en: string;
     ja: string;
   };
-  start_date: string;
+  start_date?: string;
   synopsis: string;
-  mean: number;
+  mean?: number;
   rank: number;
   popularity: number;
   num_list_users: number;

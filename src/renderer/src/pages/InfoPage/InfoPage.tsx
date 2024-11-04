@@ -71,28 +71,36 @@ export const InfoPage: React.FC = () => {
               )}
             </div>
             <div className="mb-4 flex flex-wrap gap-4">
-              <div className="flex items-center">
-                <StarIcon className="mr-1 h-5 w-5 text-yellow-400" />
-                <span>{malData.mean}/10</span>
-              </div>
-              <div className="flex items-center">
-                <ClockIcon className="mr-1 h-5 w-5" />
-                <span>{`${Math.round(malData.average_episode_duration / 60)} min per ep`}</span>
-              </div>
-              <div className="flex items-center">
-                <CalendarIcon className="mr-1 h-5 w-5" />
-                <span>{malData.start_date}</span>
-              </div>
+              {malData.mean && (
+                <div className="flex items-center">
+                  <StarIcon className="mr-1 h-5 w-5 text-yellow-400" />
+                  <span>{malData.mean}/10</span>
+                </div>
+              )}
+              {!!malData.average_episode_duration && (
+                <div className="flex items-center">
+                  <ClockIcon className="mr-1 h-5 w-5" />
+                  <span>{`${Math.round(malData.average_episode_duration / 60)} min per ep`}</span>
+                </div>
+              )}
+              {malData.start_date && (
+                <div className="flex items-center">
+                  <CalendarIcon className="mr-1 h-5 w-5" />
+                  <span>{malData.start_date}</span>
+                </div>
+              )}
               {animeListEntry?.status && (
                 <div className="flex items-center">
                   <ListBulletIcon className="mr-1 h-5 w-5" />
                   <span>{animeListEntry?.status}</span>
                 </div>
               )}
-              <button onClick={onPictureButtonClick} className="flex items-center">
-                <PhotoIcon className="mr-1 h-5 w-5" />
-                <span>View background</span>
-              </button>
+              {imdbId && (
+                <button onClick={onPictureButtonClick} className="flex items-center">
+                  <PhotoIcon className="mr-1 h-5 w-5" />
+                  <span>View background</span>
+                </button>
+              )}
             </div>
 
             <div className="gap mb-6 flex gap-2">
