@@ -5,7 +5,7 @@ import {
 } from "./electronTypes";
 
 export const submitMagnetUri = async (data: ISubmitMagnetUriRequest) => {
-  const path = (await window.electron.ipcRenderer.invoke("sendMagnetURI", {
+  const path = (await window.electron.ipcRenderer.invoke("torrent:sendMagnetURI", {
     infoHash: data.infoHash,
     magnetURI: data.magnetURI,
   })) as {

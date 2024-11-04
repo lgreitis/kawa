@@ -56,4 +56,4 @@ const handleTorrentAdd = async (
   return { streamUrl: `http://localhost:8080${videoFile.streamURL}`, tracks };
 };
 
-registerEvent("sendMagnetURI", handleTorrentAdd);
+registerEvent("torrent:sendMagnetURI", handleTorrentAdd);
