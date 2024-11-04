@@ -30,7 +30,8 @@ export const WatchPage: React.FC = () => {
   useEffect(() => {
     if (!playerRef.current) {
       const videoEl = videoRef.current;
-      const videoElement = videoEl!.appendChild(document.createElement("video-js"));
+      const videoJsElement = document.createElement("video-js");
+      const videoElement = videoEl!.appendChild(videoJsElement);
 
       state?.tracks.forEach((track) => {
         const trackElement = document.createElement("track");
@@ -82,10 +83,7 @@ export const WatchPage: React.FC = () => {
 
   return (
     <SafeArea>
-      <div
-        className="h-[calc(100dvh-2.25rem-2px)] w-full !border-none !outline-none focus:outline-none"
-        ref={videoRef}
-      ></div>
+      <div className="h-[calc(100dvh-2.25rem-2px)] w-full !border-none" ref={videoRef}></div>
     </SafeArea>
   );
 };
