@@ -5,6 +5,7 @@ interface IExtensionStore {
   sources: { importedModule: AbstractSource; name: string }[];
   addSource: (sources: { name: string; code: string }) => Promise<void>;
   removeSource: (name: string) => void;
+  reset: () => void;
 }
 
 export const useExtensionStore = create<IExtensionStore>((set, get) => ({
@@ -26,4 +27,5 @@ export const useExtensionStore = create<IExtensionStore>((set, get) => ({
       sources: state.sources.filter((source) => source.name !== name),
     }));
   },
+  reset: () => set({ sources: [] }),
 }));

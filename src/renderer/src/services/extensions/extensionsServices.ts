@@ -14,7 +14,7 @@ export const getEpisodeFromExtensions = async (data: IEpisodeParams) => {
   const results: IEpisodeServiceResult[] = [];
   const sources = useExtensionStore.getState().sources;
 
-  for await (const source of sources) {
+  for (const source of sources) {
     try {
       const sourceResults = await source.importedModule.episode(data);
 

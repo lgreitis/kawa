@@ -1,22 +1,33 @@
 import { useGetExtensionsQuery } from "@renderer/services/electron/electronQueries";
 import { useExtensionStore } from "@renderer/store/extensionStore";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export const ExtensionLoader: React.FC = () => {
   const { data } = useGetExtensionsQuery();
-  const { addSource } = useExtensionStore();
+  const { addSource, reset, sources } = useExtensionStore();
+  const isAddingRef = useRef(false);
 
   useEffect(() => {
-    if (data) {
-      const run = async () => {
-        for await (const extension of data.extensions) {
-          await addSource({ name: extension.name, code: extension.code });
-        }
-      };
-
-      void run();
+    if (!data || isAddingRef.current) {
+      return;
     }
-  }, [data, addSource]);
+
+    isAddingRef.current = true;
+    const run = async () => {
+      for (const extension of data.extensions) {
+        await addSource({ name: extension.name, code: extension.code });
+      }
+      isAddingRef.current = false;
+    };
+
+    void run();
+
+    return () => {
+      reset();
+    };
+  }, [data, addSource, reset]);
+
+  console.log(sources);
 
   return null;
 };
