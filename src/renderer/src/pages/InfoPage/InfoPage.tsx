@@ -20,6 +20,7 @@ import { InfoEpisodeListCard } from "./components/InfoEpisodeListCard";
 import { InfoEpisodeListBadge } from "./components/InfoEpisodeListBadge";
 import { twMerge } from "tailwind-merge";
 import { AnimeListStatusSelector } from "./components/AnimeListStatusSelector";
+import { toast } from "sonner";
 
 export const InfoPage: React.FC = () => {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export const InfoPage: React.FC = () => {
                 </h2>
               )}
             </div>
-            <div className="mb-4 flex flex-wrap gap-4">
+            <div className="mb-4 flex flex-wrap gap-x-4 gap-y-2">
               {malData.mean && (
                 <div className="flex items-center">
                   <StarIcon className="mr-1 h-5 w-5 text-yellow-400" />
@@ -98,7 +99,7 @@ export const InfoPage: React.FC = () => {
               )}
             </div>
 
-            <div className="gap mb-6 flex gap-2">
+            <div className="gap mb-6 flex flex-wrap gap-2">
               {malData.genres.map((genre, index) => (
                 <Badge key={index}>{genre.name}</Badge>
               ))}
@@ -106,11 +107,12 @@ export const InfoPage: React.FC = () => {
 
             <p className="mb-4 max-w-2xl">{malData.synopsis}</p>
 
-            <p className="lg:mb-6">
+            <p className="mb-6">
               <strong>{"Studio: "}</strong>
               {malData.studios.map((studio) => studio.name).join(", ")}
             </p>
 
+            <h3 className="mb-4 mt-3 text-2xl font-semibold">Related anime</h3>
             <div className="grid grid-cols-3 gap-4 overflow-hidden sm:grid-cols-4 2xl:grid-cols-6">
               {malData.related_anime.slice(0, 7).map((related) => (
                 <button
@@ -127,14 +129,17 @@ export const InfoPage: React.FC = () => {
                 </button>
               ))}
               {malData.related_anime.length > 7 && (
-                <button className="flex aspect-[2/3] items-center justify-center rounded-2xl bg-black/40">
+                <button
+                  className="flex aspect-[2/3] items-center justify-center rounded-2xl bg-black/40"
+                  onClick={() => toast.error("Not implemented")}
+                >
                   <span>View more</span>
                 </button>
               )}
             </div>
           </div>
 
-          <div className="flex w-full max-w-2xl flex-col lg:col-span-2">
+          <div className="flex w-full flex-col lg:col-span-2 lg:max-w-2xl">
             <div className="flex justify-between">
               <h3 className="mb-4 mt-3 text-2xl font-semibold">Episodes</h3>
               <div className="flex items-center gap-2">
