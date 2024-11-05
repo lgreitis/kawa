@@ -5,6 +5,7 @@
   "main": "./out/main/index.js",
   "author": "lgreitis",
   "homepage": "https://github.com/lgreitis/kawa",
+  "license": "GPL-3.0-only",
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
