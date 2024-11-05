@@ -3,6 +3,7 @@ import {
   getMalAnimeDetails,
   getMalRankingAnime,
   getUserMalAnimeList,
+  getUserMalAnimeListEntry,
   malAnimeSearch,
 } from "./malServices";
 import {
@@ -10,6 +11,7 @@ import {
   type IMalAnimeDetailsRequest,
   type IMalRankingAnimeRequest,
   type IUserMalAnimeListRequest,
+  type IGetUserMalAnimeListEntryRequest,
 } from "./malTypes";
 import { useUserStore } from "@renderer/store/userStore";
 import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from "@renderer/constants";
@@ -42,6 +44,16 @@ export const useUserMalAnimeList = (data: IUserMalAnimeListRequest) => {
   return useQuery({
     queryKey: ["mal", "user", "@me", "animeList"],
     queryFn: () => getUserMalAnimeList(data),
+    enabled: !!currentUserId,
+  });
+};
+
+export const useUserMalAnimeListEntryQuery = (data: IGetUserMalAnimeListEntryRequest) => {
+  const { currentUserId } = useUserStore();
+
+  return useQuery({
+    queryKey: ["mal", "user", "entry", data.malId],
+    queryFn: () => getUserMalAnimeListEntry(data),
     enabled: !!currentUserId,
   });
 };

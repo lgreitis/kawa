@@ -27,7 +27,5 @@ export const ExtensionLoader: React.FC = () => {
     };
   }, [data, addSource, reset]);
 
-  console.log(sources);
-
   return null;
 };

@@ -2,7 +2,7 @@ import axios, { isAxiosError } from "axios";
 import { getCurrentUser, useUserStore } from "./store/userStore";
 import { refreshMalToken } from "./services/mal/malServices";
 
-const createAxiosInstance = () => {
+const createAuthenticatedMalAxiosInstance = () => {
   const instance = axios.create();
 
   instance.interceptors.request.use(
@@ -12,6 +12,9 @@ const createAxiosInstance = () => {
       if (user) {
         config.headers.Authorization = `Bearer ${user.token}`;
       }
+
+      // Mal expects form data for POST and PATCH requests.
+      config.headers["Content-Type"] = "application/x-www-form-urlencoded";
 
       return config;
     },
@@ -60,4 +63,4 @@ const createAxiosInstance = () => {
   return instance;
 };
 
-export const malAuthenticatedApi = createAxiosInstance();
+export const malAuthenticatedApi = createAuthenticatedMalAxiosInstance();

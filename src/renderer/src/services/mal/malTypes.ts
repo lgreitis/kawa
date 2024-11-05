@@ -182,3 +182,21 @@ export interface IUserMalAnimeList {
     };
   };
 }
+
+export interface IUserMalAnimeListUpdateRequest {
+  malId: number;
+  status: MalAnimeStatus;
+}
+
+export interface IGetUserMalAnimeListEntryRequest {
+  malId: number;
+}
+
+export interface IUserMalAnimeListEntry {
+  my_list_status?: {
+    status: MalAnimeStatus;
+    is_rewatching: boolean;
+    num_episodes_watched: number;
+    score: number;
+  };
+}

@@ -4,6 +4,7 @@ import {
   PhotoIcon,
   Squares2X2Icon,
   StarIcon,
+  ListBulletIcon,
 } from "@heroicons/react/24/outline";
 import { Badge } from "@renderer/components/Badge/Badge";
 import { useIdFromMal } from "@renderer/hooks/useIdFromMal";
@@ -15,22 +16,21 @@ import { useKitsuAnimeEpisodesInfiniteQuery } from "@renderer/services/kitsu/kit
 import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { BlurBackgroundContainer } from "@renderer/components/containers/BlurBackgroundContainer";
-import { useAnimeListEntry } from "@renderer/store/animeListStore";
-import { ListBulletIcon } from "@heroicons/react/24/solid";
 import { InfoEpisodeListCard } from "./components/InfoEpisodeListCard";
 import { InfoEpisodeListBadge } from "./components/InfoEpisodeListBadge";
 import { twMerge } from "tailwind-merge";
+import { AnimeListStatusSelector } from "./components/AnimeListStatusSelector";
 
 export const InfoPage: React.FC = () => {
   const navigate = useNavigate();
-  const { malId } = useParams<{ malId: string }>();
-  const { imdbId, kitsuId } = useIdFromMal(parseInt(malId ?? ""));
-  const animeListEntry = useAnimeListEntry(parseInt(malId ?? ""));
+  const { malId: malIdString } = useParams<{ malId: string }>();
+  const malId = parseInt(malIdString ?? "");
+  const { imdbId, kitsuId } = useIdFromMal(malId);
   const [episodesCompressed, setEpisodesCompressed] = useState(false);
 
   const { ref, inView } = useInView();
 
-  const { data: malData } = useMalAnimeDetailsQuery({ animeId: parseInt(malId ?? "") });
+  const { data: malData } = useMalAnimeDetailsQuery({ animeId: malId });
   const {
     data: kitsuData,
     fetchNextPage,
@@ -89,12 +89,7 @@ export const InfoPage: React.FC = () => {
                   <span>{malData.start_date}</span>
                 </div>
               )}
-              {animeListEntry?.status && (
-                <div className="flex items-center">
-                  <ListBulletIcon className="mr-1 h-5 w-5" />
-                  <span>{animeListEntry?.status}</span>
-                </div>
-              )}
+              <AnimeListStatusSelector malId={malId} />
               {imdbId && (
                 <button onClick={onPictureButtonClick} className="flex items-center">
                   <PhotoIcon className="mr-1 h-5 w-5" />
@@ -166,17 +161,9 @@ export const InfoPage: React.FC = () => {
                 <React.Fragment key={page.offset}>
                   {page?.data.map((episode) =>
                     episodesCompressed ? (
-                      <InfoEpisodeListBadge
-                        key={episode.id}
-                        malId={parseInt(malId ?? "")}
-                        episode={episode}
-                      />
+                      <InfoEpisodeListBadge key={episode.id} malId={malId} episode={episode} />
                     ) : (
-                      <InfoEpisodeListCard
-                        key={episode.id}
-                        malId={parseInt(malId ?? "")}
-                        episode={episode}
-                      />
+                      <InfoEpisodeListCard key={episode.id} malId={malId} episode={episode} />
                     ),
                   )}
                 </React.Fragment>

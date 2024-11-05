@@ -6,3 +6,12 @@ export const EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAA
 export const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 export const ONE_DAY_IN_MS = 24 * ONE_HOUR_IN_MS;
 export const ONE_WEEK_IN_MS = 7 * ONE_DAY_IN_MS;
+
+// TODO: might want actual translation lib in the future
+export const MAL_STATUS_TO_ENGLISH_TRANSLATION = {
+  watching: "Watching",
+  completed: "Completed",
+  on_hold: "On Hold",
+  dropped: "Dropped",
+  plan_to_watch: "Plan to Watch",
+};

@@ -10,6 +10,9 @@ import {
   type IMalUserResponse,
   type IUserMalAnimeListResponse,
   type IUserMalAnimeListRequest,
+  type IUserMalAnimeListUpdateRequest,
+  type IGetUserMalAnimeListEntryRequest,
+  type IUserMalAnimeListEntry,
 } from "./malTypes";
 import { kitsuAnimeMappingQueryFn, kitsuIdFromMalIdQueryFn } from "../kitsu/kitsuQueries";
 import { type IMalTokenResponse } from "@shared/types/mal";
@@ -140,6 +143,30 @@ export const getUserMalAnimeList = async (data: IUserMalAnimeListRequest) => {
       params: {
         limit: 1000,
         status: data.status,
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const updateUserMalAnimeList = async (data: IUserMalAnimeListUpdateRequest) => {
+  const response = await malAuthenticatedApi.patch<unknown>(
+    `https://api.myanimelist.net/v2/anime/${data.malId}/my_list_status`,
+    {
+      status: data.status,
+    },
+  );
+
+  return response.data;
+};
+
+export const getUserMalAnimeListEntry = async (data: IGetUserMalAnimeListEntryRequest) => {
+  const response = await malAuthenticatedApi.get<IUserMalAnimeListEntry>(
+    `https://api.myanimelist.net/v2/anime/${data.malId}`,
+    {
+      params: {
+        fields: "my_list_status",
       },
     },
   );
