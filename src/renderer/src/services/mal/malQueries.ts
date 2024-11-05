@@ -42,7 +42,7 @@ export const useUserMalAnimeList = (data: IUserMalAnimeListRequest) => {
   const { currentUserId } = useUserStore();
 
   return useQuery({
-    queryKey: ["mal", "user", "@me", "animeList"],
+    queryKey: ["mal", "user", "@me", "animeList", data.status],
     queryFn: () => getUserMalAnimeList(data),
     enabled: !!currentUserId,
   });
