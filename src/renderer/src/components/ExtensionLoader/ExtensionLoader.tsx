@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 export const ExtensionLoader: React.FC = () => {
   const { data } = useGetExtensionsQuery();
-  const { addSource, reset, sources } = useExtensionStore();
+  const { addSource, reset } = useExtensionStore();
   const isAddingRef = useRef(false);
 
   useEffect(() => {
