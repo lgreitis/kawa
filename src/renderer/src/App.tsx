@@ -42,7 +42,17 @@ const App: React.FC = () => {
       <AnimatePresence mode="wait">
         {React.cloneElement(element, { key: location.pathname })}
       </AnimatePresence>
-      <Toaster position="top-right" theme="dark" offset={48} />
+      <Toaster
+        toastOptions={{
+          style: {
+            background: "rgba(0, 0, 0, 0.4)",
+          },
+          className: "backdrop-blur-md border-none",
+        }}
+        position="top-right"
+        theme="dark"
+        offset={48}
+      />
       {/* {IS_DEV && <ReactQueryDevtools />} */}
     </QueryClientProvider>
   );
