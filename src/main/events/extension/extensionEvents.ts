@@ -7,7 +7,7 @@ const extensionsDir = path.join(APP_DATA_PATH, "extensions");
 
 const handleGetExtensions = async () => {
   const extensionFiles = fs.readdirSync(extensionsDir).filter((file) => file.endsWith(".js"));
-
+  console.log(extensionFiles);
   const extensionCodes = extensionFiles.map((file) => {
     const filePath = path.join(extensionsDir, file);
     const code = fs.readFileSync(filePath, "utf8");
@@ -33,7 +33,12 @@ const handleRemoveExtension = async (
 
 const handleExtensionAdd = async (
   _event: Electron.IpcMainInvokeEvent,
-  data: { paths: string[] },
+  data: {
+    files: {
+      fileName: string;
+      content: string;
+    }[];
+  },
 ) => {
   try {
     await fs.promises.access(extensionsDir);
@@ -41,16 +46,12 @@ const handleExtensionAdd = async (
     await fs.promises.mkdir(extensionsDir, { recursive: true });
   }
 
-  for (const sourcePath of data.paths) {
-    const fileName = path.basename(sourcePath);
-    const destinationPath = path.join(extensionsDir, fileName);
-
-    try {
-      await fs.promises.cp(sourcePath, destinationPath, { recursive: true });
-      console.log(`Copied ${sourcePath} to ${destinationPath}`);
-    } catch (err) {
-      console.error(`Error copying ${sourcePath} to ${destinationPath}:`, err);
-    }
+  for (const file of data.files) {
+    const filePath = path.join(extensionsDir, file.fileName);
+    await fs.promises
+      .writeFile(filePath, file.content)
+      .then(() => console.log(`Added extension ${file.fileName}`))
+      .catch((err) => console.error(`Error adding extension ${file.fileName}:`, err));
   }
 };
 

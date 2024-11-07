@@ -25,12 +25,8 @@ export const ExtensionManager: React.FC = () => {
     <div className="flex max-w-md flex-col gap-2 px-6 py-4">
       <span className="text-lg font-semibold">Extensions:</span>
       {sources.map((source) => (
-        <div
-          key={source.name}
-          className="relative flex flex-col rounded-2xl border px-3.5 py-2"
-          onClick={() => handleRemove(source.name)}
-        >
-          <button className="absolute right-2 top-2">
+        <div key={source.name} className="relative flex flex-col rounded-2xl border px-3.5 py-2">
+          <button className="absolute right-2 top-2" onClick={() => handleRemove(source.name)}>
             <XMarkIcon className="size-5" />
           </button>
           <span className="text-lg font-semibold">{source.importedModule.name}</span>

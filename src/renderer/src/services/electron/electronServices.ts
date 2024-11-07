@@ -22,9 +22,33 @@ export const submitMagnetUri = async (data: ISubmitMagnetUriRequest) => {
   return path;
 };
 
+const readFileAsString = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.result) {
+        resolve(reader.result as string);
+      } else {
+        reject(new Error("File reading result is null or undefined."));
+      }
+    };
+
+    // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+    reader.onerror = (error) => reject(error);
+
+    reader.readAsText(file);
+  });
+};
+
 export const addExtension = async (data: IAddExtensionsRequest) => {
+  const filesStrings = await Promise.all(data.extensions.map(readFileAsString));
+
   await window.electron.ipcRenderer.invoke("extensionAdd", {
-    paths: data.extensions.map((file) => file.path),
+    files: data.extensions.map((file, index) => ({
+      fileName: file.name,
+      content: filesStrings[index],
+    })),
   });
 };
 
