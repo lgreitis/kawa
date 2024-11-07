@@ -7,7 +7,7 @@ const extensionsDir = path.join(APP_DATA_PATH, "extensions");
 
 const handleGetExtensions = async () => {
   const extensionFiles = fs.readdirSync(extensionsDir).filter((file) => file.endsWith(".js"));
-  console.log(extensionFiles);
+
   const extensionCodes = extensionFiles.map((file) => {
     const filePath = path.join(extensionsDir, file);
     const code = fs.readFileSync(filePath, "utf8");
