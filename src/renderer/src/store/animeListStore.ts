@@ -1,20 +1,14 @@
-import { type IMyAnimeList } from "@renderer/utils/malImporter";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export enum AnimeStatus {
-  Watching = "Watching",
-  Completed = "Completed",
-  OnHold = "On-Hold",
-  Dropped = "Dropped",
-  PlanToWatch = "Plan to Watch",
-}
-
 export interface IAnimeListEntry {
   malId: number;
-  status: AnimeStatus;
-  watchedEpisodes: number;
-  watchProgress?: number;
+  episodes: Record<
+    number,
+    {
+      watchProgress?: number;
+    }
+  >;
 }
 
 interface IAnimeListStore {
@@ -24,29 +18,42 @@ interface IAnimeListStore {
     importUsername: string;
   };
   animeList: IAnimeListEntry[];
-  importMalData: (data: IMyAnimeList) => void;
+  setProgress: (malId: number, episodeNumber: number, watchProgress: number) => void;
 }
 
 export const useAnimeListStore = create<IAnimeListStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       importData: undefined,
       animeList: [],
-      importMalData: (data) => {
-        const animeList = data.myanimelist.anime.map((anime) => ({
-          malId: anime.series_animedb_id,
-          status: AnimeStatus[anime.my_status as keyof typeof AnimeStatus],
-          watchedEpisodes: anime.my_watched_episodes,
-        }));
+      setProgress: (malId, episodeNumber, watchProgress) => {
+        const currentEntry = get().animeList.find((entry) => entry.malId === malId);
 
-        set({
-          animeList,
-          importData: {
-            importDate: new Date().toUTCString(),
-            importSource: "MyAnimeList",
-            importUsername: data.myanimelist.myinfo.user_name,
-          },
-        });
+        if (!currentEntry) {
+          set((state) => ({
+            animeList: [
+              ...state.animeList,
+              {
+                malId,
+                episodes: {
+                  [episodeNumber]: {
+                    watchProgress,
+                  },
+                },
+              },
+            ],
+          }));
+        } else {
+          currentEntry.episodes[episodeNumber] = {
+            watchProgress,
+          };
+
+          set((state) => ({
+            animeList: state.animeList.map((entry) =>
+              entry.malId === malId ? currentEntry : entry,
+            ),
+          }));
+        }
       },
     }),
     { name: "animeList" },

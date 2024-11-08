@@ -1,4 +1,5 @@
 import { SafeArea } from "@renderer/components/SafeArea/SafeArea";
+import { useAnimeListStore } from "@renderer/store/animeListStore";
 import { type IWatchPageState } from "@renderer/types/watchPageTypes";
 import { TrackHelper } from "@renderer/utils/TrackHelper";
 import { useEffect, useRef } from "react";
@@ -25,6 +26,8 @@ export const WatchPage: React.FC = () => {
   const playerRef = useRef<ReturnType<typeof videojs> | null>();
   const trackHelperRef = useRef<TrackHelper | null>(null);
 
+  const { setProgress } = useAnimeListStore();
+
   const decodedUrl = encodeURI(atob(url ?? ""));
 
   useEffect(() => {
@@ -36,7 +39,7 @@ export const WatchPage: React.FC = () => {
       state?.tracks.forEach((track) => {
         const trackElement = document.createElement("track");
         trackElement.kind = "subtitles";
-        trackElement.label = track.name ?? track.language ?? "English";
+        trackElement.label = track.language ?? "English";
         trackElement.srclang = track.language ?? "en";
         trackElement.id = track.number.toString();
         videoElement.appendChild(trackElement);
@@ -80,6 +83,27 @@ export const WatchPage: React.FC = () => {
       }
     };
   }, [playerRef]);
+
+  useEffect(() => {
+    const player = playerRef.current;
+
+    if (player && state) {
+      player.on("timeupdate", () => {
+        const currentTime = player.currentTime() ?? 0;
+        const duration = player.duration() ?? 0;
+        if (duration === 0) return;
+        const percentage = (currentTime / duration) * 100;
+
+        setProgress(state.malId, state.episodeNumber, percentage);
+      });
+    }
+
+    return () => {
+      if (player && !player.isDisposed()) {
+        player.off("timeupdate");
+      }
+    };
+  }, [playerRef, setProgress, state]);
 
   return (
     <SafeArea>

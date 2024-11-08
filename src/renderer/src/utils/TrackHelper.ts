@@ -31,13 +31,7 @@ interface ISubtitle {
 
 export class TrackHelper {
   textTracks: TextTrack[] = [];
-  tracks: {
-    number: number;
-    language?: string;
-    type: string;
-    name: string;
-    header: string;
-  }[];
+  tracks: { number: number; language?: string; type: string; name: string; header: string }[];
   player: Player;
   receivedSubtitles = new Map<string, Set<string>>();
   renderer: JASSUB;
@@ -45,13 +39,7 @@ export class TrackHelper {
 
   constructor(
     player: Player,
-    tracks: {
-      number: number;
-      language?: string;
-      type: string;
-      name: string;
-      header: string;
-    }[],
+    tracks: { number: number; language?: string; type: string; name: string; header: string }[],
   ) {
     this.player = player;
     this.tracks = tracks;

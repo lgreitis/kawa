@@ -10,13 +10,7 @@ export const submitMagnetUri = async (data: ISubmitMagnetUriRequest) => {
     magnetURI: data.magnetURI,
   })) as {
     streamUrl: string;
-    tracks: {
-      number: number;
-      language?: string;
-      type: string;
-      TrackType: string;
-      header: string;
-    }[];
+    tracks: { number: number; language?: string; type: string; name: string; header: string }[];
   };
 
   return path;

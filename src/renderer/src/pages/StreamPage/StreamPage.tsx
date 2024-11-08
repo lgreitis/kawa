@@ -14,17 +14,20 @@ type TStreamPageParams = {
 };
 
 export const StreamPage: React.FC = () => {
-  const { malId, episode } = useParams<TStreamPageParams>();
+  const { malId: malIdString, episode: episodeString } = useParams<TStreamPageParams>();
   const navigate = useNavigate();
 
-  const { anidbId, imdbId } = useIdFromMal(parseInt(malId ?? ""));
+  const episode = parseInt(episodeString ?? "-1");
+  const malId = parseInt(malIdString ?? "0");
+
+  const { anidbId, imdbId } = useIdFromMal(malId);
 
   const { data: anidbData, isLoading: isAnidbDataLoading } = useAnidbAnimeInfoQuery(anidbId ?? 0);
 
   const anidbEid = useMemo(
     () =>
       anidbData?.anime.episodes.episode.find(
-        (ep) => ep.epno["#text"] === parseInt(episode ?? "-1") && ep.epno.type === 1,
+        (ep) => ep.epno["#text"] === episode && ep.epno.type === 1,
       )?.id,
     [anidbData, episode],
   );
@@ -55,14 +58,18 @@ export const StreamPage: React.FC = () => {
               disabled={isPending}
               data={data.best}
               onClick={async () => {
-                const mutationData = await mutateAsync({
+                const mutationResult = await mutateAsync({
                   magnetURI: data?.best.magnet,
                   infoHash: data.best.infoHash,
                 });
 
-                navigate(`/watch/${btoa(mutationData.streamUrl)}`, {
-                  state: { tracks: mutationData.tracks, malId: malId },
-                });
+                const watchPageState = {
+                  tracks: mutationResult.tracks,
+                  malId: malId,
+                  episodeNumber: episode,
+                };
+
+                navigate(`/watch/${btoa(mutationResult.streamUrl)}`, { state: watchPageState });
               }}
             />
           )}
@@ -73,12 +80,18 @@ export const StreamPage: React.FC = () => {
               key={stream.title}
               data={stream}
               onClick={async () => {
-                const data = await mutateAsync({
+                const mutationResult = await mutateAsync({
                   magnetURI: stream.magnet,
                   infoHash: stream.infoHash,
                 });
 
-                navigate(`/watch/${btoa(data.streamUrl)}`, { state: { tracks: data.tracks } });
+                const watchPageState = {
+                  tracks: mutationResult.tracks,
+                  malId: malId,
+                  episodeNumber: episode,
+                };
+
+                navigate(`/watch/${btoa(mutationResult.streamUrl)}`, { state: watchPageState });
               }}
             />
           ))}

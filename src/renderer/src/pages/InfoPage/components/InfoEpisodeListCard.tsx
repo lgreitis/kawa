@@ -1,3 +1,4 @@
+import { Progress } from "@renderer/components/Progress/Progress";
 import { type IKitsuAnimeEpisode } from "@renderer/services/kitsu/kitsuTypes";
 import { useAnimeListEntry } from "@renderer/store/animeListStore";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,8 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
   const { malId, episode } = props;
   const navigate = useNavigate();
   const animeListEntry = useAnimeListEntry(malId);
+
+  const progress = animeListEntry?.episodes[episode.attributes.number]?.watchProgress;
 
   return (
     <button
@@ -26,11 +29,16 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
         ) : (
           <div className="aspect-video h-24 rounded-lg bg-black/40"></div>
         )}
-        {(animeListEntry?.watchedEpisodes ?? 0) >= episode.attributes.number && (
+        {progress && (
+          <div className="absolute bottom-2 z-40 w-full px-4">
+            <Progress percent={progress} />
+          </div>
+        )}
+        {/* {(animeListEntry?.watchedEpisodes ?? 0) >= episode.attributes.number && (
           <div className="absolute inset-0 flex w-full items-center justify-center rounded-lg bg-black/40 text-sm font-semibold">
             <span>Watched</span>
           </div>
-        )}
+        )} */}
       </div>
       <div className="flex w-full flex-col overflow-hidden">
         <span className="font-medium">
