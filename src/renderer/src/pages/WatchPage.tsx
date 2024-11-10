@@ -18,9 +18,7 @@ const initialOptions = {
 };
 
 export const WatchPage: React.FC = () => {
-  // TODO: useLocation sucks
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { state }: IWatchPageState = useLocation();
+  const { state } = useLocation() as IWatchPageState;
   const { url } = useParams<{ url: string }>();
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<ReturnType<typeof videojs> | null>();
