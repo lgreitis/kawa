@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+export interface IEpisodeData {
+  watchProgress?: number;
+  currentTime?: number;
+}
+
 export interface IAnimeListEntry {
   malId: number;
-  episodes: Record<
-    number,
-    {
-      watchProgress?: number;
-    }
-  >;
+  episodes: Record<number, IEpisodeData>;
 }
 
 interface IAnimeListStore {
@@ -18,7 +18,13 @@ interface IAnimeListStore {
     importUsername: string;
   };
   animeList: IAnimeListEntry[];
-  setProgress: (malId: number, episodeNumber: number, watchProgress: number) => void;
+  getEpisodeData: (malId: number, episodeNumber: number) => IEpisodeData | undefined;
+  setProgress: (
+    malId: number,
+    episodeNumber: number,
+    watchProgress: number,
+    currentTime: number,
+  ) => void;
 }
 
 export const useAnimeListStore = create<IAnimeListStore>()(
@@ -26,7 +32,9 @@ export const useAnimeListStore = create<IAnimeListStore>()(
     (set, get) => ({
       importData: undefined,
       animeList: [],
-      setProgress: (malId, episodeNumber, watchProgress) => {
+      getEpisodeData: (malId, episodeNumber) =>
+        get().animeList.find((entry) => entry.malId === malId)?.episodes[episodeNumber],
+      setProgress: (malId, episodeNumber, watchProgress, currentTime) => {
         const currentEntry = get().animeList.find((entry) => entry.malId === malId);
 
         if (!currentEntry) {
@@ -38,6 +46,7 @@ export const useAnimeListStore = create<IAnimeListStore>()(
                 episodes: {
                   [episodeNumber]: {
                     watchProgress,
+                    currentTime,
                   },
                 },
               },
@@ -46,6 +55,7 @@ export const useAnimeListStore = create<IAnimeListStore>()(
         } else {
           currentEntry.episodes[episodeNumber] = {
             watchProgress,
+            currentTime,
           };
 
           set((state) => ({

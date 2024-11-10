@@ -26,7 +26,7 @@ export const WatchPage: React.FC = () => {
   const playerRef = useRef<ReturnType<typeof videojs> | null>();
   const trackHelperRef = useRef<TrackHelper | null>(null);
 
-  const { setProgress } = useAnimeListStore();
+  const { setProgress, getEpisodeData } = useAnimeListStore();
 
   const decodedUrl = encodeURI(atob(url ?? ""));
 
@@ -66,10 +66,26 @@ export const WatchPage: React.FC = () => {
       }
 
       player.fill(true);
+
+      player.ready(() => {
+        if (!state) {
+          return;
+        }
+
+        const episodeData = getEpisodeData(state.malId, state.episodeNumber);
+
+        if (!episodeData?.currentTime) {
+          return;
+        }
+
+        if (episodeData.currentTime - 20 > 0) {
+          player.currentTime(episodeData.currentTime - 20);
+        }
+      });
     } else {
       // const player = playerRef.current;
     }
-  }, [decodedUrl, state?.tracks]);
+  }, [decodedUrl, state, getEpisodeData]);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -94,7 +110,7 @@ export const WatchPage: React.FC = () => {
         if (duration === 0) return;
         const percentage = (currentTime / duration) * 100;
 
-        setProgress(state.malId, state.episodeNumber, percentage);
+        setProgress(state.malId, state.episodeNumber, percentage, currentTime);
       });
     }
 
