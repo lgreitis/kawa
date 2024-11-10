@@ -39,6 +39,8 @@ export const StreamPage: React.FC = () => {
 
   const { mutateAsync, isPending } = useSubmitMagnetUriMutation();
 
+  const dataExists = data && data.results.length > 0 && data.best;
+
   return (
     <BlurBackgroundContainer
       imdbId={imdbId}
@@ -46,56 +48,62 @@ export const StreamPage: React.FC = () => {
       darkenLoader={isPending}
     >
       <motion.div
-        className="flex items-center justify-center"
+        className="flex h-full items-center justify-center"
         initial={{ opacity: 0, y: -24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="flex w-full max-w-4xl flex-col gap-4 p-4">
-          <h1 className="text-2xl font-medium">Best Source:</h1>
-          {data?.best && (
-            <StreamButton
-              disabled={isPending}
-              data={data.best}
-              onClick={async () => {
-                const mutationResult = await mutateAsync({
-                  magnetURI: data?.best.magnet,
-                  infoHash: data.best.infoHash,
-                });
+        {dataExists ? (
+          <div className="flex w-full max-w-4xl flex-col gap-4 p-4">
+            <h1 className="text-2xl font-medium">Best Source:</h1>
+            {data?.best && (
+              <StreamButton
+                disabled={isPending}
+                data={data.best}
+                onClick={async () => {
+                  const mutationResult = await mutateAsync({
+                    magnetURI: data?.best.magnet,
+                    infoHash: data.best.infoHash,
+                  });
 
-                const watchPageState = {
-                  tracks: mutationResult.tracks,
-                  malId: malId,
-                  episodeNumber: episode,
-                };
+                  const watchPageState = {
+                    tracks: mutationResult.tracks,
+                    malId: malId,
+                    episodeNumber: episode,
+                  };
 
-                navigate(`/watch/${btoa(mutationResult.streamUrl)}`, { state: watchPageState });
-              }}
-            />
-          )}
-          <h1 className="text-2xl font-medium">Alternative Sources:</h1>
-          {data?.results.map((stream) => (
-            <StreamButton
-              disabled={isPending}
-              key={stream.title}
-              data={stream}
-              onClick={async () => {
-                const mutationResult = await mutateAsync({
-                  magnetURI: stream.magnet,
-                  infoHash: stream.infoHash,
-                });
+                  navigate(`/watch/${btoa(mutationResult.streamUrl)}`, { state: watchPageState });
+                }}
+              />
+            )}
+            <h1 className="text-2xl font-medium">Alternative Sources:</h1>
+            {data?.results.map((stream) => (
+              <StreamButton
+                disabled={isPending}
+                key={stream.title}
+                data={stream}
+                onClick={async () => {
+                  const mutationResult = await mutateAsync({
+                    magnetURI: stream.magnet,
+                    infoHash: stream.infoHash,
+                  });
 
-                const watchPageState = {
-                  tracks: mutationResult.tracks,
-                  malId: malId,
-                  episodeNumber: episode,
-                };
+                  const watchPageState = {
+                    tracks: mutationResult.tracks,
+                    malId: malId,
+                    episodeNumber: episode,
+                  };
 
-                navigate(`/watch/${btoa(mutationResult.streamUrl)}`, { state: watchPageState });
-              }}
-            />
-          ))}
-        </div>
+                  navigate(`/watch/${btoa(mutationResult.streamUrl)}`, { state: watchPageState });
+                }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <h1 className="text-2xl font-medium">Failed to find any sources for this episode.</h1>
+          </div>
+        )}
       </motion.div>
     </BlurBackgroundContainer>
   );
