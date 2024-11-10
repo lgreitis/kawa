@@ -1,5 +1,17 @@
 # Kawa
 
+## An early in development anime streaming app.
+
+# About
+
+**Problem:** Current anime sites are crap, and they go down when they get DMCA'd.
+
+**Solution:** A standalone app where extensions provide the content. Your anime list is synced with [MAL](https://myanimelist.net/) and watch progress is saved in app. Enjoy anime without ads with amazing quality and without the risk of the site going down.
+
+# Development
+
+All you should need is Node.js and yarn. Setup the .env file with .env.example guide and run `yarn install` and `yarn dev` to start the app.
+
 # Acknowledgements
 
 A big thanks to [ThaUnknown](https://github.com/ThaUnknown) for writing and open-sourcing the libraries that made this app possible:
