@@ -24,13 +24,17 @@ export const StreamPage: React.FC = () => {
 
   const { data: anidbData, isLoading: isAnidbDataLoading } = useAnidbAnimeInfoQuery(anidbId ?? 0);
 
-  const anidbEid = useMemo(
-    () =>
-      anidbData?.anime.episodes.episode.find(
-        (ep) => ep.epno["#text"] === episode && ep.epno.type === 1,
-      )?.id,
-    [anidbData, episode],
-  );
+  const anidbEid = useMemo(() => {
+    const episodes = anidbData?.anime.episodes.episode;
+
+    if (Array.isArray(episodes)) {
+      return episodes.find((ep) => ep.epno["#text"] === episode && ep.epno.type === 1)?.id;
+    } else {
+      return episodes?.epno["#text"] === episode && episodes?.epno.type === 1
+        ? episodes.id
+        : undefined;
+    }
+  }, [anidbData, episode]);
 
   const { data, isLoading } = useGetEpisodeFromExtensionsQuery({
     anidbId: anidbId ?? 0,

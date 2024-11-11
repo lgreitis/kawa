@@ -152,7 +152,7 @@ interface Seiyuu {
 
 // Episodes
 interface Episodes {
-  episode: Episode[]; // Array of Episode
+  episode: Episode[] | Episode; // Array of Episode
 }
 
 interface Episode {
