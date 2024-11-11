@@ -15,3 +15,9 @@ export const MAL_STATUS_TO_ENGLISH_TRANSLATION = {
   dropped: "Dropped",
   plan_to_watch: "Plan to Watch",
 };
+
+export const MAL_AIR_STATUS_TO_ENGLISH_TRANSLATION = {
+  finished_airing: "Finished Airing",
+  currently_airing: "Currently Airing",
+  not_yet_aired: "Not Yet Aired",
+};

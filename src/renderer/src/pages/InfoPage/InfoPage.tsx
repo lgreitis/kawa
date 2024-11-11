@@ -5,6 +5,7 @@ import {
   Squares2X2Icon,
   StarIcon,
   ListBulletIcon,
+  FilmIcon,
 } from "@heroicons/react/24/outline";
 import { Badge } from "@renderer/components/Badge/Badge";
 import { useIdFromMal } from "@renderer/hooks/useIdFromMal";
@@ -21,6 +22,7 @@ import { InfoEpisodeListBadge } from "./components/InfoEpisodeListBadge";
 import { twMerge } from "tailwind-merge";
 import { AnimeListStatusSelector } from "./components/AnimeListStatusSelector";
 import { toast } from "sonner";
+import { MAL_AIR_STATUS_TO_ENGLISH_TRANSLATION } from "@renderer/constants";
 
 export const InfoPage: React.FC = () => {
   const navigate = useNavigate();
@@ -88,6 +90,12 @@ export const InfoPage: React.FC = () => {
                 <div className="flex items-center">
                   <CalendarIcon className="mr-1 h-5 w-5" />
                   <span>{malData.start_date}</span>
+                </div>
+              )}
+              {malData.status && (
+                <div className="flex items-center">
+                  <FilmIcon className="mr-1 h-5 w-5" />
+                  <span>{MAL_AIR_STATUS_TO_ENGLISH_TRANSLATION[malData.status]}</span>
                 </div>
               )}
               <AnimeListStatusSelector malId={malId} />

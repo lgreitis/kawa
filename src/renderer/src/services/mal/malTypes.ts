@@ -61,7 +61,7 @@ export interface IMalAnimeDetailsResponse {
   created_at: string;
   updated_at: string;
   media_type: string;
-  status: string;
+  status?: string;
   genres: {
     id: number;
     name: string;
