@@ -72,12 +72,12 @@ export const WatchPage: React.FC = () => {
 
         const episodeData = getEpisodeData(state.malId, state.episodeNumber);
 
-        if (!episodeData?.currentTime) {
+        if (!episodeData?.watchTime) {
           return;
         }
 
-        if (episodeData.currentTime - 20 > 0) {
-          player.currentTime(episodeData.currentTime - 20);
+        if (episodeData.watchTime - 20 > 0) {
+          player.currentTime(episodeData.watchTime - 20);
         }
       });
     } else {

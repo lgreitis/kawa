@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware";
 
 export interface IEpisodeData {
   watchProgress?: number;
-  currentTime?: number;
+  watchTime?: number;
 }
 
 export interface IAnimeListEntry {
@@ -12,18 +12,13 @@ export interface IAnimeListEntry {
 }
 
 interface IAnimeListStore {
-  importData?: {
-    importDate: string;
-    importSource: string;
-    importUsername: string;
-  };
   animeList: IAnimeListEntry[];
   getEpisodeData: (malId: number, episodeNumber: number) => IEpisodeData | undefined;
   setProgress: (
     malId: number,
     episodeNumber: number,
     watchProgress: number,
-    currentTime: number,
+    watchTime: number,
   ) => void;
 }
 
@@ -34,7 +29,7 @@ export const useAnimeListStore = create<IAnimeListStore>()(
       animeList: [],
       getEpisodeData: (malId, episodeNumber) =>
         get().animeList.find((entry) => entry.malId === malId)?.episodes[episodeNumber],
-      setProgress: (malId, episodeNumber, watchProgress, currentTime) => {
+      setProgress: (malId, episodeNumber, watchProgress, watchTime) => {
         const currentEntry = get().animeList.find((entry) => entry.malId === malId);
 
         if (!currentEntry) {
@@ -46,7 +41,7 @@ export const useAnimeListStore = create<IAnimeListStore>()(
                 episodes: {
                   [episodeNumber]: {
                     watchProgress,
-                    currentTime,
+                    watchTime,
                   },
                 },
               },
@@ -55,7 +50,7 @@ export const useAnimeListStore = create<IAnimeListStore>()(
         } else {
           currentEntry.episodes[episodeNumber] = {
             watchProgress,
-            currentTime,
+            watchTime,
           };
 
           set((state) => ({
