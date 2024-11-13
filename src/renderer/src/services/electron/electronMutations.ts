@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import {
   addExtension,
+  removeAllDownloads,
   removeExtension,
   startMalAuthStart,
   submitMagnetUri,
@@ -31,4 +32,12 @@ export const useRemoveExtensionMutation = () =>
 export const useStartMalAuthMutation = () =>
   useMutation({
     mutationFn: startMalAuthStart,
+  });
+
+export const useRemoveAllDownloadsMutation = () =>
+  useMutation({
+    mutationFn: removeAllDownloads,
+    onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: ["electron", "torrent"] });
+    },
   });

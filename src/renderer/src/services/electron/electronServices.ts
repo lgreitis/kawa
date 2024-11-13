@@ -61,3 +61,15 @@ export const removeExtension = async (data: IRemoveExtensionsRequest) => {
 export const startMalAuthStart = async () => {
   await window.electron.ipcRenderer.invoke("malAuthStart");
 };
+
+export const getDownloadFolderSize = async () => {
+  const response = (await window.electron.ipcRenderer.invoke("torrent:downloadsSize")) as number;
+
+  return response;
+};
+
+export const removeAllDownloads = async () => {
+  const response = (await window.electron.ipcRenderer.invoke("torrent:removeAllDownloads")) as void;
+
+  return response;
+};

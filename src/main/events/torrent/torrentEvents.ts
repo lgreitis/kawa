@@ -3,6 +3,7 @@ import WebTorrent from "webtorrent";
 import { registerEvent } from "../registerEvent";
 import { MetadataHelper } from "../../utils/MetadataHelper";
 import { APP_DATA_PATH } from "../../constants";
+import { readdir, stat, unlink } from "fs/promises";
 
 const downloadsDir = path.join(APP_DATA_PATH, "downloads");
 const client = new WebTorrent();
@@ -56,4 +57,30 @@ const handleTorrentAdd = async (
   return { streamUrl: `http://localhost:8080${videoFile.streamURL}`, tracks };
 };
 
+const getDownloadFolderSize = async () => {
+  const files = await readdir(downloadsDir);
+
+  const stats = files.map((file) => stat(path.join(downloadsDir, file)));
+
+  const size = (await Promise.all(stats)).reduce((accumulator, { size }) => accumulator + size, 0);
+
+  return size;
+};
+
+const removeAllDownloads = async () => {
+  for (const torrent of client.torrents) {
+    client.remove(torrent, { destroyStore: true });
+  }
+
+  const files = await readdir(downloadsDir);
+
+  for (const file of files) {
+    await unlink(path.join(downloadsDir, file));
+  }
+
+  return;
+};
+
 registerEvent("torrent:sendMagnetURI", handleTorrentAdd);
+registerEvent("torrent:downloadsSize", getDownloadFolderSize);
+registerEvent("torrent:removeAllDownloads", removeAllDownloads);
