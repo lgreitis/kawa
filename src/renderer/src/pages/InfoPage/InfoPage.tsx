@@ -23,13 +23,15 @@ import { twMerge } from "tailwind-merge";
 import { AnimeListStatusSelector } from "./components/AnimeListStatusSelector";
 import { toast } from "sonner";
 import { MAL_AIR_STATUS_TO_ENGLISH_TRANSLATION } from "@renderer/constants";
+import { useAnidbAnimeInfoQuery } from "@renderer/services/anidb/anidbQueries";
 
 export const InfoPage: React.FC = () => {
   const navigate = useNavigate();
   const { malId: malIdString } = useParams<{ malId: string }>();
   const malId = parseInt(malIdString ?? "");
-  const { imdbId, kitsuId } = useIdFromMal(malId);
+  const { imdbId, kitsuId, anidbId } = useIdFromMal(malId);
   const [episodesCompressed, setEpisodesCompressed] = useState(false);
+  const { isLoading: isAnidbDataLoading } = useAnidbAnimeInfoQuery(anidbId ?? 0);
 
   const { ref, inView } = useInView();
 
@@ -53,7 +55,7 @@ export const InfoPage: React.FC = () => {
     }
   };
 
-  const isLoading = !malData || !kitsuData;
+  const isLoading = !malData || !kitsuData || isAnidbDataLoading;
 
   return (
     <BlurBackgroundContainer imdbId={imdbId} isLoading={isLoading}>
@@ -182,7 +184,12 @@ export const InfoPage: React.FC = () => {
                     episodesCompressed ? (
                       <InfoEpisodeListBadge key={episode.id} malId={malId} episode={episode} />
                     ) : (
-                      <InfoEpisodeListCard key={episode.id} malId={malId} episode={episode} />
+                      <InfoEpisodeListCard
+                        key={episode.id}
+                        malId={malId}
+                        episode={episode}
+                        anidbId={anidbId}
+                      />
                     ),
                   )}
                 </React.Fragment>

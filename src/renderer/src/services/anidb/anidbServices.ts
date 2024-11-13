@@ -1,12 +1,17 @@
 import axios from "axios";
 import { XMLParser } from "fast-xml-parser";
 import { type IAnidbAnimeData } from "./anidbTypes";
+import { RateLimiter } from "@renderer/utils/RateLimiter";
 
 const clientVer = 9;
 // TODO: change this lmao
 const clientName = "clientname";
 
+const rateLimiter = new RateLimiter(1000, 5000, 300000);
+
 export const getAnidbAnimeInfo = async (anidbId: number) => {
+  await rateLimiter.wait();
+
   const response = await axios.get<string>(
     `http://api.anidb.net:9001/httpapi?request=anime&client=${clientName}&clientver=${clientVer}&protover=1&aid=${anidbId}`,
   );

@@ -6,7 +6,6 @@ export const useAnidbAnimeInfoQuery = (anidbId: number) =>
   useQuery({
     queryKey: ["anidb", "animeInfo", anidbId],
     queryFn: () => getAnidbAnimeInfo(anidbId),
-    staleTime: ONE_DAY_IN_MS, // Caching may be too aggressive, but the rate limit of anidb is fucking stupid
+    staleTime: ONE_DAY_IN_MS,
     enabled: !!anidbId,
-    retry: false, // Don't retry because anidb will ban us if we spam them too much
   });

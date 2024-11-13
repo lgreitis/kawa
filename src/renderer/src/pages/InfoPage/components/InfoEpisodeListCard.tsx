@@ -1,19 +1,23 @@
 import { Progress } from "@renderer/components/Progress/Progress";
+import { useIsEpisodeReleased } from "@renderer/hooks/useIsEpisodeReleased";
 import { type IKitsuAnimeEpisode } from "@renderer/services/kitsu/kitsuTypes";
 import { useAnimeListEntry } from "@renderer/store/animeListStore";
 import { useNavigate } from "react-router-dom";
 
 interface IInfoEpisodeListCardProps {
   malId: number;
+  anidbId?: number;
   episode: IKitsuAnimeEpisode;
 }
 
 export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) => {
-  const { malId, episode } = props;
+  const { malId, episode, anidbId } = props;
   const navigate = useNavigate();
   const animeListEntry = useAnimeListEntry(malId);
 
   const progress = animeListEntry?.episodes[episode.attributes.number]?.watchProgress;
+
+  const { isEpisodeReleased } = useIsEpisodeReleased(episode.attributes.number, anidbId);
 
   return (
     <button
@@ -39,6 +43,11 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
             <span>Watched</span>
           </div>
         )} */}
+        {!isEpisodeReleased && (
+          <div className="absolute inset-0 flex w-full items-center justify-center rounded-lg bg-black/40 text-sm font-semibold">
+            <span>Unreleased</span>
+          </div>
+        )}
       </div>
       <div className="flex w-full flex-col overflow-hidden">
         <span className="font-medium">

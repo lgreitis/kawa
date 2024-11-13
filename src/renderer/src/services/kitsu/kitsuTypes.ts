@@ -40,7 +40,7 @@ export interface IKitsuAnimeEpisode {
     seasonNumber: number;
     number: number;
     relativeNumber: null;
-    airdate: string;
+    airdate: string | null;
     length: number;
     thumbnail?: {
       tiny?: string;

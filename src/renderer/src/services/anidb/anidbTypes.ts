@@ -152,15 +152,15 @@ interface Seiyuu {
 
 // Episodes
 interface Episodes {
-  episode: Episode[] | Episode; // Array of Episode
+  episode: IAnidbEpisode[] | IAnidbEpisode; // Array of Episode
 }
 
-interface Episode {
+export interface IAnidbEpisode {
   id: number; // Attribute
   update: string; // Attribute
   epno: Epno;
   length: string;
-  airdate: string;
+  airdate?: string;
   rating?: Rating;
   title?: Title | Title[]; // Can be single or array
 }

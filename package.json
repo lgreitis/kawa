@@ -35,8 +35,10 @@
     "@tanstack/react-query-persist-client": "^5.59.16",
     "@xyflow/react": "^12.3.0",
     "anitomyscript": "github:ThaUnknown/anitomyscript#42290c4b3f256893be08a4e89051f448ff5e9d00",
+    "async-lock": "^1.4.1",
     "axios": "^1.7.7",
     "comlink": "^4.4.1",
+    "date-fns": "^4.1.0",
     "electron-updater": "^6.1.7",
     "embla-carousel": "8.1.8",
     "embla-carousel-autoplay": "8.1.8",
@@ -61,6 +63,7 @@
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^1.0.1",
+    "@types/async-lock": "^1.4.2",
     "@types/eslint": "^9.6.1",
     "@types/node": "^20.14.8",
     "@types/pako": "^2.0.3",
