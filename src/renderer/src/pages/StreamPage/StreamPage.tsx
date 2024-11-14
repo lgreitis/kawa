@@ -25,7 +25,11 @@ export const StreamPage: React.FC = () => {
   const { data: anidbData, isLoading: isAnidbDataLoading } = useAnidbAnimeInfoQuery(anidbId ?? 0);
 
   const anidbEid = useMemo(() => {
-    const episodes = anidbData?.anime.episodes.episode;
+    const episodes = anidbData?.anime.episodes?.episode;
+
+    if (!episodes) {
+      return undefined;
+    }
 
     if (Array.isArray(episodes)) {
       return episodes.find((ep) => ep.epno["#text"] === episode && ep.epno.type === 1)?.id;

@@ -28,7 +28,7 @@ interface Anime {
   resources: Resources;
   tags: Tags;
   characters: Characters;
-  episodes: Episodes;
+  episodes?: Episodes;
 }
 
 // Titles

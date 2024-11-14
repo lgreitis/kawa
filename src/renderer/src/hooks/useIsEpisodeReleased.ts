@@ -10,6 +10,10 @@ export const useIsEpisodeReleased = (episodeNumber: number, anidbId?: number) =>
       return true;
     }
 
+    if (!anidbData.anime.episodes) {
+      return false;
+    }
+
     if (Array.isArray(anidbData.anime.episodes.episode)) {
       const anidbEpisodeList = anidbData.anime.episodes.episode.filter(
         (episode) => episode.epno.type === 1,
