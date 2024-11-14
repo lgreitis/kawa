@@ -60,6 +60,10 @@ export class TrackHelper {
           this.renderer.setTrack(foundTrack?.header ?? defaultHeader);
           const subtitleSet = this.receivedSubtitles.get(this.currentTrack.toString())!;
 
+          if (!subtitleSet) {
+            return;
+          }
+
           subtitleSet.forEach((subtitleString) => {
             const subtitle = JSON.parse(subtitleString) as ISubtitle;
             this.renderer.createEvent({

@@ -38,6 +38,14 @@ const addTorrent = (magnetURI: string): Promise<WebTorrent.Torrent> => {
   });
 };
 
+const pauseOtherTorrents = (torrent: WebTorrent.Torrent) => {
+  for (const otherTorrent of client.torrents) {
+    if (otherTorrent !== torrent) {
+      otherTorrent.pause();
+    }
+  }
+};
+
 const handleTorrentAdd = async (
   _event: Electron.IpcMainInvokeEvent,
   data: { magnetURI: string; infoHash: string },
@@ -49,6 +57,9 @@ const handleTorrentAdd = async (
   if (!torrent) {
     torrent = await addTorrent(data.magnetURI);
   }
+
+  pauseOtherTorrents(torrent);
+  torrent.resume();
 
   const videoFile = findVideoFile(torrent);
   const metadataHelper = new MetadataHelper(videoFile);
@@ -69,7 +80,15 @@ const getDownloadFolderSize = async () => {
 
 const removeAllDownloads = async () => {
   for (const torrent of client.torrents) {
-    client.remove(torrent, { destroyStore: true });
+    await new Promise<void>((resolve, _reject) => {
+      client.remove(torrent, { destroyStore: true }, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        resolve();
+      });
+    });
   }
 
   const files = await readdir(downloadsDir);
