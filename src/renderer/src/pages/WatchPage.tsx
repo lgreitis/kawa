@@ -6,6 +6,7 @@ import { useEffect, useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import videojs from "video.js";
 import "video.js/dist/video-js.min.css";
+import "videojs-hotkeys";
 
 const initialOptions = {
   controls: true,
@@ -13,6 +14,13 @@ const initialOptions = {
   controlBar: {
     volumePanel: {
       inline: false,
+    },
+  },
+  plugins: {
+    hotkeys: {
+      volumeStep: 0.1, // Volume step for up/down keys
+      seekStep: 5, // Seek step in seconds for left/right keys
+      enableModifiersForNumbers: false, // Disable Shift/Ctrl modifier for number keys
     },
   },
 };
