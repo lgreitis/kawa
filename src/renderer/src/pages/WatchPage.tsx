@@ -84,8 +84,8 @@ export const WatchPage: React.FC = () => {
           return;
         }
 
-        if (episodeData.watchTime - 20 > 0) {
-          player.currentTime(episodeData.watchTime - 20);
+        if (episodeData.watchTime - 1 > 0) {
+          player.currentTime(episodeData.watchTime - 1);
         }
       });
     } else {

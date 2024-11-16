@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { StreamButton } from "./components/StreamButton";
 import { motion } from "framer-motion";
+import { useIsMounted } from "usehooks-ts";
 
 type TStreamPageParams = {
   malId: string;
@@ -16,6 +17,7 @@ type TStreamPageParams = {
 export const StreamPage: React.FC = () => {
   const { malId: malIdString, episode: episodeString } = useParams<TStreamPageParams>();
   const navigate = useNavigate();
+  const isMounted = useIsMounted();
 
   const episode = parseInt(episodeString ?? "-1");
   const malId = parseInt(malIdString ?? "0");
@@ -80,7 +82,14 @@ export const StreamPage: React.FC = () => {
                     episodeNumber: episode,
                   };
 
-                  navigate(`/watch/${btoa(mutationResult.streamUrl)}`, { state: watchPageState });
+                  if (!isMounted()) {
+                    return;
+                  }
+
+                  navigate(`/watch/${btoa(mutationResult.streamUrl)}`, {
+                    state: watchPageState,
+                    replace: true,
+                  });
                 }}
               />
             )}
