@@ -1,7 +1,6 @@
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  MagnifyingGlassIcon,
   MinusIcon,
   XMarkIcon,
   HomeIcon,
@@ -55,12 +54,6 @@ export const WindowsTitleBarButtons: React.FC = () => {
             onClick={() => navigate("/")}
           >
             <HomeIcon className="size-4" />
-          </button>
-          <button
-            className="ml-2 rounded-md p-1 transition-colors hover:bg-black/30"
-            onClick={() => setSearchOpen(true)}
-          >
-            <MagnifyingGlassIcon className="m-auto size-4" />
           </button>
         </div>
         <div className="h-full w-full region-drag"></div>

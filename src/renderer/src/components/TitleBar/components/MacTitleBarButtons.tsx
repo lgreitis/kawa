@@ -1,9 +1,4 @@
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  MagnifyingGlassIcon,
-  HomeIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowRightIcon, HomeIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useKeyPress } from "@xyflow/react";
@@ -54,12 +49,6 @@ export const MacTitleBarButtons: React.FC = () => {
         </div>
         <div className="h-full w-full region-drag"></div>
         <div className="mr-1 flex h-full items-center justify-start">
-          <button
-            className="mr-2 rounded-md p-1 transition-colors hover:bg-black/30"
-            onClick={() => setSearchOpen(true)}
-          >
-            <MagnifyingGlassIcon className="m-auto size-4" />
-          </button>
           <UserTitleBarSection setSearchOpen={setSearchOpen} />
         </div>
       </div>

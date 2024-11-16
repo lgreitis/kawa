@@ -41,13 +41,13 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
     >
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+        className="fixed inset-0 bg-black bg-opacity-25 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
       />
 
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
         <DialogPanel
           transition
-          className="mx-auto max-w-xl transform divide-y divide-neutral-800 overflow-hidden rounded-xl bg-black/70 backdrop-blur-md transition-all data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+          className="mx-auto max-w-xl transform divide-y divide-neutral-800 overflow-hidden rounded-xl bg-black/80 backdrop-blur-md transition-all data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
         >
           <Combobox
             onChange={(malId: number) => {
@@ -78,7 +78,7 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
                     <ComboboxOption
                       key={anime.node.id}
                       value={anime.node.id}
-                      className="flex cursor-default select-none items-center gap-2 px-4 py-2 data-[focus]:bg-purple-700 data-[focus]:text-white"
+                      className="group flex cursor-default select-none items-center gap-2 px-4 py-2 data-[focus]:bg-white/70 data-[focus]:text-black"
                     >
                       {anime.node.main_picture?.medium && (
                         <img
@@ -89,7 +89,7 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
                       <div className="flex flex-col">
                         <span>{anime.node.title}</span>
                         {anime.node.title !== anime.node.alternative_titles.en && (
-                          <span className="text-sm text-neutral-300">
+                          <span className="text-sm text-neutral-300 group-data-[focus]:text-neutral-800">
                             {anime.node.alternative_titles.en}
                           </span>
                         )}
