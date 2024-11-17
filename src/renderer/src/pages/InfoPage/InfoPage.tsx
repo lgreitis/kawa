@@ -117,10 +117,12 @@ export const InfoPage: React.FC = () => {
 
             <p className="mb-4 max-w-2xl">{malData.synopsis}</p>
 
-            <p className="mb-6">
-              <strong>{"Studio: "}</strong>
-              {malData.studios.map((studio) => studio.name).join(", ")}
-            </p>
+            {!!malData.studios.length && (
+              <p className="mb-6">
+                <strong>{"Studio: "}</strong>
+                {malData.studios.map((studio) => studio.name).join(", ")}
+              </p>
+            )}
 
             {!!malData.related_anime.length && (
               <React.Fragment>
