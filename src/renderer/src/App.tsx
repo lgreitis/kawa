@@ -1,4 +1,4 @@
-import { useLocation, useRoutes } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import "./app.css";
 import React from "react";
 import { HomePage } from "./pages/HomePage";
@@ -6,7 +6,6 @@ import { MainLayout } from "./components/layouts/MainLayout";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { StreamPage } from "./pages/StreamPage/StreamPage";
 import { InfoPage } from "./pages/InfoPage/InfoPage";
-import { AnimatePresence } from "framer-motion";
 import { WatchPage } from "./pages/WatchPage";
 import { ExtensionLoader } from "./components/ExtensionLoader/ExtensionLoader";
 import { queryClient } from "./queryClient";
@@ -15,7 +14,7 @@ import { AnimeListPage } from "./pages/AnimeListPage/AnimeListPage";
 import { MalAuthListener } from "./listeners/MalAuthListener";
 import { Toaster } from "sonner";
 
-const router = [
+const router = createHashRouter([
   {
     element: <MainLayout />,
     children: [
@@ -27,21 +26,14 @@ const router = [
       { path: "/list", element: <AnimeListPage /> },
     ],
   },
-];
+]);
 
 const App: React.FC = () => {
-  const element = useRoutes(router);
-  const location = useLocation();
-
-  if (!element) return null;
-
   return (
     <QueryClientProvider client={queryClient}>
       <MalAuthListener />
       <ExtensionLoader />
-      <AnimatePresence mode="wait">
-        {React.cloneElement(element, { key: location.pathname })}
-      </AnimatePresence>
+      <RouterProvider router={router} />
       <Toaster
         toastOptions={{
           style: {
