@@ -1,6 +1,7 @@
 import { Progress } from "@renderer/components/Progress/Progress";
 import { useIsEpisodeReleased } from "@renderer/hooks/useIsEpisodeReleased";
 import { type IKitsuAnimeEpisode } from "@renderer/services/kitsu/kitsuTypes";
+import { useUserMalAnimeListEntryQuery } from "@renderer/services/mal/malQueries";
 import { useAnimeListEntry } from "@renderer/store/animeListStore";
 import { useNavigate } from "react-router-dom";
 
@@ -14,8 +15,10 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
   const { malId, episode, anidbId } = props;
   const navigate = useNavigate();
   const animeListEntry = useAnimeListEntry(malId);
+  const { data: malUserEntry } = useUserMalAnimeListEntryQuery({ malId });
 
   const progress = animeListEntry?.episodes[episode.attributes.number]?.watchProgress;
+  const episodeWatchCount = malUserEntry?.my_list_status?.num_episodes_watched ?? 0;
 
   const { isEpisodeReleased } = useIsEpisodeReleased(episode.attributes.number, anidbId);
 
@@ -38,11 +41,11 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
             <Progress percent={progress} />
           </div>
         )}
-        {/* {(animeListEntry?.watchedEpisodes ?? 0) >= episode.attributes.number && (
+        {episodeWatchCount >= episode.attributes.number && isEpisodeReleased && (
           <div className="absolute inset-0 flex w-full items-center justify-center rounded-lg bg-black/40 text-sm font-semibold">
             <span>Watched</span>
           </div>
-        )} */}
+        )}
         {!isEpisodeReleased && (
           <div className="absolute inset-0 flex w-full items-center justify-center rounded-lg bg-black/40 text-sm font-semibold">
             <span>Unreleased</span>
