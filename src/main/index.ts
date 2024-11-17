@@ -27,7 +27,7 @@ let mainWindow: BrowserWindow | null;
 function createMainWindow(): BrowserWindow {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1600 - 36 * 2, // We make it a bit smaller by default to make 16:9 videos fill completely and look nicer
+    width: 1600 - 35 * 2, // We make it a bit smaller by default to make 16:9 videos fill completely and look nicer
     height: 900,
     show: false,
     autoHideMenuBar: true,
