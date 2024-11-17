@@ -53,6 +53,7 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
             onChange={(malId: number) => {
               if (malId) {
                 navigate(`/info/${malId}`);
+                setOpen(false);
               }
             }}
           >
