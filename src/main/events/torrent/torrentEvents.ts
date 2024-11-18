@@ -20,6 +20,7 @@ const findVideoFile = (torrent: WebTorrent.Torrent) => {
   );
 
   if (!videoFiles.length) {
+    console.log(torrent.files);
     throw new Error("No video files found in torrent");
   }
   if (videoFiles.length > 1) {
@@ -60,6 +61,14 @@ const handleTorrentAdd = async (
 
   pauseOtherTorrents(torrent);
   torrent.resume();
+
+  if (!torrent.ready) {
+    await new Promise<void>((resolve, _reject) => {
+      torrent.on("ready", () => {
+        resolve();
+      });
+    });
+  }
 
   const videoFile = findVideoFile(torrent);
   const metadataHelper = new MetadataHelper(videoFile);
