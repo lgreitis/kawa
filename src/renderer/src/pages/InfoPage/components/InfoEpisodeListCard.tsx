@@ -3,6 +3,7 @@ import { useIsEpisodeReleased } from "@renderer/hooks/useIsEpisodeReleased";
 import { type IKitsuAnimeEpisode } from "@renderer/services/kitsu/kitsuTypes";
 import { useUserMalAnimeListEntryQuery } from "@renderer/services/mal/malQueries";
 import { useAnimeListEntry } from "@renderer/store/animeListStore";
+import { intlFormat } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 interface IInfoEpisodeListCardProps {
@@ -20,7 +21,9 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
   const progress = animeListEntry?.episodes[episode.attributes.number]?.watchProgress;
   const episodeWatchCount = malUserEntry?.my_list_status?.num_episodes_watched ?? 0;
 
-  const { isEpisodeReleased } = useIsEpisodeReleased(episode.attributes.number, anidbId);
+  const { isEpisodeReleased, airdate } = useIsEpisodeReleased(episode.attributes.number, anidbId);
+
+  console.log({ airdate, episode: episode.attributes.number });
 
   return (
     <button
@@ -48,7 +51,7 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
         )}
         {!isEpisodeReleased && (
           <div className="absolute inset-0 flex w-full items-center justify-center rounded-lg bg-black/40 text-sm font-semibold">
-            <span>Unreleased</span>
+            <span>{airdate ? intlFormat(airdate) : "Unreleased"}</span>
           </div>
         )}
       </div>
