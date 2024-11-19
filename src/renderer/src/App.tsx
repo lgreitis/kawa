@@ -13,10 +13,12 @@ import { SettingsPage } from "./pages/SettingsPage/SettingsPage";
 import { AnimeListPage } from "./pages/AnimeListPage/AnimeListPage";
 import { MalAuthListener } from "./listeners/MalAuthListener";
 import { Toaster } from "sonner";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 const router = createHashRouter([
   {
     element: <MainLayout />,
+    errorElement: <ErrorBoundary />,
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/info/:malId", element: <InfoPage /> },
