@@ -23,8 +23,6 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
 
   const { isEpisodeReleased, airdate } = useIsEpisodeReleased(episode.attributes.number, anidbId);
 
-  console.log({ airdate, episode: episode.attributes.number });
-
   return (
     <button
       className="relative flex items-center gap-4 rounded-lg p-2 text-left hover:bg-black/30"
