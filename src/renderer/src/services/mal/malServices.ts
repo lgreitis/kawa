@@ -14,9 +14,10 @@ import {
   type IGetUserMalAnimeListEntryRequest,
   type IUserMalAnimeListEntry,
 } from "./malTypes";
-import { kitsuAnimeMappingQueryFn, kitsuIdFromMalIdQueryFn } from "../kitsu/kitsuQueries";
+import { kitsuAnimeMappingQueryFn } from "../kitsu/kitsuQueries";
 import { type IMalTokenResponse } from "@shared/types/mal";
 import { malAuthenticatedApi } from "@renderer/api";
+import { idMappingsFromMalIdQueryFn } from "../mappings/mappingsQueries";
 
 const checkImage = (url: string): Promise<boolean> => {
   return new Promise((resolve, _reject) => {
@@ -51,7 +52,7 @@ export const getMalRankingAnime = async (data: IMalRankingAnimeRequest) => {
   const kitsuAnimeMapping = await kitsuAnimeMappingQueryFn();
 
   const promises = response.data.data.map(async (anime) => {
-    const { kitsu } = await kitsuIdFromMalIdQueryFn(anime.node.id);
+    const { kitsu } = await idMappingsFromMalIdQueryFn(anime.node.id);
 
     if (!kitsu) {
       return;

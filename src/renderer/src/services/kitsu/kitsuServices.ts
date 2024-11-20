@@ -8,13 +8,6 @@ export const getKitsuAnimeMapping = async () =>
     )
   ).data;
 
-export const getKitsuIdFromMalId = async (malId: number) =>
-  (
-    await axios.get<{ kitsu?: number; imdb?: string; anidb?: number; anilist?: number }>(
-      `https://arm.haglund.dev/api/v2/ids?source=myanimelist&id=${malId}`,
-    )
-  ).data;
-
 export const getKitsuAnimeEpisodes = async (kitsuId: number, limit: number, offset: number) => {
   // TODO: infinite query
   const response = await axios.get<IGetKitsuAnimeEpisodesResponse>(

@@ -1,7 +1,5 @@
-import {
-  useKitsuAnimeMappingQuery,
-  useKitsuIdFromMalIdQuery,
-} from "@renderer/services/kitsu/kitsuQueries";
+import { useKitsuAnimeMappingQuery } from "@renderer/services/kitsu/kitsuQueries";
+import { useIdMappingsFromMalIdQuery } from "@renderer/services/mappings/mappingsQueries";
 import { useMemo } from "react";
 
 interface IUseIdFromMalData {
@@ -12,15 +10,15 @@ interface IUseIdFromMalData {
 }
 
 export const useIdFromMal = (malId: number) => {
-  const { data: kitsuIdFromMal } = useKitsuIdFromMalIdQuery(malId);
+  const { data: idMappingsFromMal } = useIdMappingsFromMalIdQuery(malId);
   const { data: kitsuAnimeMapping } = useKitsuAnimeMappingQuery();
 
   return useMemo((): IUseIdFromMalData => {
-    if (!kitsuIdFromMal || !kitsuAnimeMapping) return {};
+    if (!idMappingsFromMal || !kitsuAnimeMapping) return {};
 
-    const kitsuId = kitsuIdFromMal.kitsu;
-    const anidbId = kitsuIdFromMal.anidb;
-    const anilistId = kitsuIdFromMal.anilist;
+    const kitsuId = idMappingsFromMal.kitsu;
+    const anidbId = idMappingsFromMal.anidb;
+    const anilistId = idMappingsFromMal.anilist;
 
     if (!kitsuId) return {};
 
@@ -28,10 +26,10 @@ export const useIdFromMal = (malId: number) => {
     if (!mapInfo) return { kitsuId: kitsuId, anidbId: anidbId, anilistId: anilistId };
 
     return {
-      imdbId: mapInfo.imdb_id ?? kitsuIdFromMal.imdb,
-      kitsuId: kitsuIdFromMal.kitsu,
+      imdbId: mapInfo.imdb_id ?? idMappingsFromMal.imdb,
+      kitsuId: idMappingsFromMal.kitsu,
       anidbId: anidbId,
       anilistId: anilistId,
     };
-  }, [kitsuIdFromMal, kitsuAnimeMapping]);
+  }, [idMappingsFromMal, kitsuAnimeMapping]);
 };
