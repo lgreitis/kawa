@@ -3,6 +3,7 @@ import WebTorrent from "webtorrent";
 import { registerEvent } from "../registerEvent";
 import { MetadataHelper } from "../../utils/MetadataHelper";
 import { APP_DATA_PATH } from "../../constants";
+import fs from "fs";
 import { readdir, stat, unlink } from "fs/promises";
 
 const downloadsDir = path.join(APP_DATA_PATH, "downloads");
@@ -11,6 +12,14 @@ const instance = client.createServer();
 // @ts-expect-error - bad types
 // eslint-disable-next-line
 instance.server.listen(8080);
+
+const addDownloadsDirIfDoesntExist = async () => {
+  try {
+    await fs.promises.access(downloadsDir);
+  } catch {
+    await fs.promises.mkdir(downloadsDir, { recursive: true });
+  }
+};
 
 const findVideoFile = (torrent: WebTorrent.Torrent) => {
   const videoExtensions = [".mkv", ".mp4", ".avi", ".m4v"];
@@ -79,10 +88,10 @@ const handleTorrentAdd = async (
 };
 
 const getDownloadFolderSize = async () => {
+  await addDownloadsDirIfDoesntExist();
+
   const files = await readdir(downloadsDir);
-
   const stats = files.map((file) => stat(path.join(downloadsDir, file)));
-
   const size = (await Promise.all(stats)).reduce((accumulator, { size }) => accumulator + size, 0);
 
   return size;

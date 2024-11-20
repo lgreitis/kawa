@@ -5,7 +5,16 @@ import { APP_DATA_PATH } from "../../constants";
 
 const extensionsDir = path.join(APP_DATA_PATH, "extensions");
 
+const addExtensionDirIfDoesntExist = async () => {
+  try {
+    await fs.promises.access(extensionsDir);
+  } catch {
+    await fs.promises.mkdir(extensionsDir, { recursive: true });
+  }
+};
+
 const handleGetExtensions = async () => {
+  await addExtensionDirIfDoesntExist();
   const extensionFiles = fs.readdirSync(extensionsDir).filter((file) => file.endsWith(".js"));
 
   const extensionCodes = extensionFiles.map((file) => {
@@ -40,11 +49,7 @@ const handleExtensionAdd = async (
     }[];
   },
 ) => {
-  try {
-    await fs.promises.access(extensionsDir);
-  } catch {
-    await fs.promises.mkdir(extensionsDir, { recursive: true });
-  }
+  await addExtensionDirIfDoesntExist();
 
   for (const file of data.files) {
     const filePath = path.join(extensionsDir, file.fileName);
