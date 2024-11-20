@@ -18,6 +18,9 @@ export interface IMalSeasonalAnime {
       large: string;
     };
     rank: number;
+    alternative_titles?: {
+      en?: string;
+    };
   };
 }
 
@@ -179,6 +182,9 @@ export interface IUserMalAnimeList {
     main_picture: {
       medium: string;
       large: string;
+    };
+    alternative_titles?: {
+      en?: string;
     };
   };
 }

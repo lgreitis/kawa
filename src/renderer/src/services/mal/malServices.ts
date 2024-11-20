@@ -38,7 +38,7 @@ const checkImage = (url: string): Promise<boolean> => {
 
 export const getMalRankingAnime = async (data: IMalRankingAnimeRequest) => {
   const response = await axios.get<IMalSeasonalAnimeResponse>(
-    `https://api.myanimelist.net/v2/anime/ranking?ranking_type=${data.rankingType}&limit=50`,
+    `https://api.myanimelist.net/v2/anime/ranking?ranking_type=${data.rankingType}&limit=50&fields=alternative_titles`,
     {
       headers: {
         "X-MAL-CLIENT-ID": MAL_CLIENT_ID,
@@ -138,7 +138,7 @@ export const refreshMalToken = async (refreshToken: string) => {
 // TODO: load more than 1000
 export const getUserMalAnimeList = async (data: IUserMalAnimeListRequest) => {
   const response = await malAuthenticatedApi.get<IUserMalAnimeListResponse>(
-    "https://api.myanimelist.net/v2/users/@me/animelist",
+    "https://api.myanimelist.net/v2/users/@me/animelist?fields=alternative_titles",
     {
       params: {
         limit: 1000,

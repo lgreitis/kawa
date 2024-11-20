@@ -45,7 +45,11 @@ export const HomePage: React.FC = () => {
         <div className="absolute bottom-64 flex w-full items-end justify-between px-4">
           <div className="flex flex-col">
             <span>Top airing anime</span>
-            <h1 className="text-4xl font-bold text-white">{data.data[currentSlide].node.title}</h1>
+            <h1 className="text-4xl font-bold text-white">
+              {data.data[currentSlide].node.alternative_titles?.en
+                ? data.data[currentSlide].node.alternative_titles.en
+                : data.data[currentSlide].node.title}
+            </h1>
           </div>
           <div className="flex h-[60px] flex-grow items-center justify-end">
             {imdbId && (

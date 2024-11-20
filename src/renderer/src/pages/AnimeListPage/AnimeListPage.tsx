@@ -62,7 +62,11 @@ export const AnimeListPage: React.FC = () => {
                     className="aspect-[2/3] overflow-hidden rounded-2xl object-cover"
                     src={anime.node.main_picture.large}
                   />
-                  <span className="line-clamp-2">{anime.node.title}</span>
+                  <span className="line-clamp-2">
+                    {anime.node.alternative_titles?.en
+                      ? anime.node.alternative_titles.en
+                      : anime.node.title}
+                  </span>
                 </motion.div>
               ))}
             </div>
