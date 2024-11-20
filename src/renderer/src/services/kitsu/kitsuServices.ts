@@ -11,7 +11,7 @@ export const getKitsuAnimeMapping = async () =>
 export const getKitsuIdFromMalId = async (malId: number) =>
   (
     await axios.get<{ kitsu?: number; imdb?: string; anidb?: number; anilist?: number }>(
-      `https://relations.yuna.moe/api/v2/ids?source=myanimelist&id=${malId}&include=imdb,kitsu,anidb,anilist`,
+      `https://arm.haglund.dev/api/v2/ids?source=myanimelist&id=${malId}`,
     )
   ).data;
 
