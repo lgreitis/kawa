@@ -152,11 +152,11 @@ export const getUserMalAnimeList = async (data: IUserMalAnimeListRequest) => {
 };
 
 export const updateUserMalAnimeList = async (data: IUserMalAnimeListUpdateRequest) => {
+  const { malId, ...patchData } = data;
+
   const response = await malAuthenticatedApi.patch<unknown>(
-    `https://api.myanimelist.net/v2/anime/${data.malId}/my_list_status`,
-    {
-      status: data.status,
-    },
+    `https://api.myanimelist.net/v2/anime/${malId}/my_list_status`,
+    patchData,
   );
 
   return response.data;

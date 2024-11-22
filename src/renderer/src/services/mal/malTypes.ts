@@ -191,7 +191,9 @@ export interface IUserMalAnimeList {
 
 export interface IUserMalAnimeListUpdateRequest {
   malId: number;
-  status: MalAnimeStatus;
+  status?: MalAnimeStatus;
+  score?: number;
+  num_watched_episodes?: number;
 }
 
 export interface IGetUserMalAnimeListEntryRequest {

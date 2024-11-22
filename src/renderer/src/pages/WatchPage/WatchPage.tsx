@@ -4,6 +4,7 @@ import { type IWatchPageState } from "@renderer/types/watchPageTypes";
 import { TrackHelper } from "@renderer/utils/TrackHelper";
 import { useEffect, useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { useWatchedEpisodeUpdater } from "./hooks/useWatchedEpisodeUpdater";
 import videojs from "video.js";
 import "video.js/dist/video-js.min.css";
 import "videojs-hotkeys";
@@ -31,6 +32,12 @@ export const WatchPage: React.FC = () => {
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<ReturnType<typeof videojs> | null>();
   const trackHelperRef = useRef<TrackHelper | null>(null);
+
+  useWatchedEpisodeUpdater({
+    malId: state?.malId ?? 0,
+    episodeNumber: state?.episodeNumber ?? 0,
+    playerRef,
+  });
 
   const { setProgress, getEpisodeData } = useAnimeListStore();
 
