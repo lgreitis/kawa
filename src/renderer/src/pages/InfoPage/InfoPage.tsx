@@ -21,9 +21,9 @@ import { InfoEpisodeListCard } from "./components/InfoEpisodeListCard";
 import { InfoEpisodeListBadge } from "./components/InfoEpisodeListBadge";
 import { twMerge } from "tailwind-merge";
 import { AnimeListStatusSelector } from "./components/AnimeListStatusSelector";
-import { toast } from "sonner";
 import { MAL_AIR_STATUS_TO_ENGLISH_TRANSLATION } from "@renderer/constants";
 import { useAnidbAnimeInfoQuery } from "@renderer/services/anidb/anidbQueries";
+import { toast } from "sonner";
 
 export const InfoPage: React.FC = () => {
   const navigate = useNavigate();
@@ -130,7 +130,7 @@ export const InfoPage: React.FC = () => {
                 <div className="grid grid-cols-3 gap-4 overflow-hidden sm:grid-cols-4 2xl:grid-cols-6">
                   {malData.related_anime.slice(0, 7).map((related) => (
                     <button
-                      key={related.node.id}
+                      key={`${related.node.id}_${related.relation_type}`}
                       className="relative flex flex-col text-left"
                       onClick={() => navigate(`/info/${related.node.id}`)}
                     >
