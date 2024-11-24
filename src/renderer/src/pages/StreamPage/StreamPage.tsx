@@ -111,7 +111,10 @@ export const StreamPage: React.FC = () => {
                     episodeNumber: episode,
                   };
 
-                  navigate(`/watch/${btoa(mutationResult.streamUrl)}`, { state: watchPageState });
+                  navigate(`/watch/${btoa(mutationResult.streamUrl)}`, {
+                    state: watchPageState,
+                    replace: true,
+                  });
                 }}
               />
             ))}
