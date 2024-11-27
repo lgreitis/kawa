@@ -54,7 +54,7 @@ export const HomePage: React.FC = () => {
           <div className="flex h-[60px] flex-grow items-center justify-end">
             {imdbId && (
               <button
-                className="flex items-center gap-1 rounded-full bg-black/30 px-4 py-2 font-medium text-white backdrop-blur-md transition-colors active:bg-black/50"
+                className="flex items-center gap-1 rounded-full border border-white/10 bg-black/30 px-4 py-2 font-medium text-white backdrop-blur-md transition-colors active:bg-black/50"
                 onClick={() => navigate(`/info/${data.data[currentSlide].node.id}`)}
               >
                 <PlayIcon className="size-5" />

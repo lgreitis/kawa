@@ -12,7 +12,7 @@ export const ScrollArea: React.FC<IScrollAreaProps> = (props) => {
 
   return (
     <ScrollAreaComponents.Root className={twMerge("overflow-hidden", className)}>
-      <ScrollAreaComponents.Viewport className="h-full w-full rounded" ref={ref}>
+      <ScrollAreaComponents.Viewport className="h-full w-full" ref={ref}>
         {children}
       </ScrollAreaComponents.Viewport>
       <ScrollAreaComponents.Scrollbar

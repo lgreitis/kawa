@@ -15,7 +15,7 @@ export const UserButton: React.FC<IUserButtonProps> = (props) => {
     <button
       ref={ref}
       className={twMerge(
-        "flex h-7 items-center gap-2 rounded-full bg-black/30 p-2 transition-colors hover:bg-white/20",
+        "flex h-7 items-center gap-2 rounded-full border border-white/10 bg-black/30 p-2 transition-colors hover:bg-white/20",
         className,
       )}
       {...rest}

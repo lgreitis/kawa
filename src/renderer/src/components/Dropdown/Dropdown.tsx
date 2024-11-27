@@ -44,7 +44,7 @@ export const Dropdown: React.FC<IDropdownProps> = (props) => {
           transition
           anchor={{ to: to ?? "bottom end", gap: "8px" }}
           className={twJoin(
-            "z-40 w-52 rounded-xl bg-black/50 p-1 text-sm/6 text-white backdrop-blur-lg focus:outline-none",
+            "z-40 w-52 rounded-xl border border-white/10 bg-black/50 p-1 text-sm/6 text-white backdrop-blur-lg focus:outline-none",
             "transition duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0",
             (origin === "top-right" || !origin) && "origin-top-right",
             origin === "top-left" && "origin-top-left",
