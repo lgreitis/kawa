@@ -9,7 +9,7 @@ import { useAnimeListEntry, useAnimeListStore } from "@renderer/store/animeListS
 
 interface IEpisodeListSectionProps {
   malId: number;
-  anidbId?: number;
+  anidbId?: number | null;
   className?: string;
   parent: HTMLDivElement | null;
 }
@@ -72,7 +72,7 @@ export const EpisodeListSection: React.FC<IEpisodeListSectionProps> = (props) =>
           ))}
         </div>
       )}
-      {!episodesCompressed && (
+      {!episodesCompressed && anidbId && (
         <div
           style={{
             height: `${rowVirtualizer.getTotalSize()}px`,

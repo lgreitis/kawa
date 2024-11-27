@@ -1,5 +1,5 @@
 export interface IAniZipResponse {
-  mappings: { kitsu_id?: number; imdb_id?: string; anidb_id?: number; anilist_id?: number };
+  mappings: { kitsu_id?: number; imdb_id?: string; anidb_id?: number | null; anilist_id?: number };
   episodes: Record<number, IAniZipEpisode>;
 }
 

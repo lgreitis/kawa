@@ -4,7 +4,7 @@ import { type IAniZipResponse } from "../anizip/anizipTypes";
 
 export const getIdMappingsFromMalId = async (malId: number) => {
   const firstResponseData = (
-    await axios.get<{ kitsu?: number; imdb?: string; anidb?: number; anilist?: number }>(
+    await axios.get<{ kitsu?: number; imdb?: string; anidb?: number | null; anilist?: number }>(
       `https://arm.haglund.dev/api/v2/ids?source=myanimelist&id=${malId}`,
     )
   ).data;

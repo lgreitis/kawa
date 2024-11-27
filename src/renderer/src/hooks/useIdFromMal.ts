@@ -5,7 +5,7 @@ import { useMemo } from "react";
 interface IUseIdFromMalData {
   imdbId?: string;
   kitsuId?: number;
-  anidbId?: number;
+  anidbId?: number | null;
   anilistId?: number;
 }
 
