@@ -9,11 +9,13 @@ export interface IEpisodeData {
 export interface IAnimeListEntry {
   malId: number;
   episodes: Record<number, IEpisodeData>;
+  showCompressed?: boolean;
 }
 
 interface IAnimeListStore {
   animeList: IAnimeListEntry[];
   getEpisodeData: (malId: number, episodeNumber: number) => IEpisodeData | undefined;
+  setShowCompressed: (malId: number, showCompressed: boolean) => void;
   setProgress: (
     malId: number,
     episodeNumber: number,
@@ -29,6 +31,30 @@ export const useAnimeListStore = create<IAnimeListStore>()(
       animeList: [],
       getEpisodeData: (malId, episodeNumber) =>
         get().animeList.find((entry) => entry.malId === malId)?.episodes[episodeNumber],
+      setShowCompressed: (malId, showCompressed) => {
+        const currentEntry = get().animeList.find((entry) => entry.malId === malId);
+
+        if (currentEntry) {
+          currentEntry.showCompressed = showCompressed;
+
+          set((state) => ({
+            animeList: state.animeList.map((entry) =>
+              entry.malId === malId ? currentEntry : entry,
+            ),
+          }));
+        } else {
+          set((state) => ({
+            animeList: [
+              ...state.animeList,
+              {
+                malId,
+                showCompressed,
+                episodes: {},
+              },
+            ],
+          }));
+        }
+      },
       setProgress: (malId, episodeNumber, watchProgress, watchTime) => {
         const currentEntry = get().animeList.find((entry) => entry.malId === malId);
 
@@ -42,6 +68,7 @@ export const useAnimeListStore = create<IAnimeListStore>()(
                   [episodeNumber]: {
                     watchProgress,
                     watchTime,
+                    showCompressed: false,
                   },
                 },
               },
@@ -51,6 +78,7 @@ export const useAnimeListStore = create<IAnimeListStore>()(
           currentEntry.episodes[episodeNumber] = {
             watchProgress,
             watchTime,
+            ...currentEntry.episodes[episodeNumber],
           };
 
           set((state) => ({

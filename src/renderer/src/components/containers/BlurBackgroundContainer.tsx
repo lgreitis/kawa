@@ -11,10 +11,11 @@ interface IBlurBackgroundContainerProps {
   imdbId?: string;
   isLoading?: boolean;
   darkenLoader?: boolean;
+  ref?: React.RefObject<HTMLDivElement>;
 }
 
 export const BlurBackgroundContainer: React.FC<IBlurBackgroundContainerProps> = (props) => {
-  const { children, imdbId, isLoading, darkenLoader } = props;
+  const { children, imdbId, isLoading, darkenLoader, ref } = props;
 
   return (
     <div className="relative h-full">
@@ -23,7 +24,9 @@ export const BlurBackgroundContainer: React.FC<IBlurBackgroundContainerProps> = 
 
       {!isLoading ? (
         <SafeArea>
-          <ScrollArea className="h-[calc(100dvh-2.25rem)] w-full">{children}</ScrollArea>
+          <ScrollArea className="h-[calc(100dvh-2.25rem)] w-full" ref={ref}>
+            {children}
+          </ScrollArea>
         </SafeArea>
       ) : (
         // TODO: Maybe dont darken everything

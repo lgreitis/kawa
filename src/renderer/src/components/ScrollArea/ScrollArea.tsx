@@ -4,14 +4,15 @@ import { twMerge } from "tailwind-merge";
 interface IScrollAreaProps {
   children: React.ReactNode;
   className?: string;
+  ref?: React.RefObject<HTMLDivElement>;
 }
 
 export const ScrollArea: React.FC<IScrollAreaProps> = (props) => {
-  const { children, className } = props;
+  const { children, className, ref } = props;
 
   return (
     <ScrollAreaComponents.Root className={twMerge("overflow-hidden", className)}>
-      <ScrollAreaComponents.Viewport className="h-full w-full rounded">
+      <ScrollAreaComponents.Viewport className="h-full w-full rounded" ref={ref}>
         {children}
       </ScrollAreaComponents.Viewport>
       <ScrollAreaComponents.Scrollbar

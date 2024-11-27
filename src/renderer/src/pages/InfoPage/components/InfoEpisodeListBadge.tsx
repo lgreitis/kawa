@@ -1,23 +1,29 @@
-import { type IKitsuAnimeEpisode } from "@renderer/services/kitsu/kitsuTypes";
+import { useUserMalAnimeListEntryQuery } from "@renderer/services/mal/malQueries";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 
 interface IInfoEpisodeListBadgeProps {
   malId: number;
-  episode: IKitsuAnimeEpisode;
+  episodeNumber: number;
 }
+
 export const InfoEpisodeListBadge: React.FC<IInfoEpisodeListBadgeProps> = (props) => {
-  const { malId, episode } = props;
+  const { malId, episodeNumber } = props;
   const navigate = useNavigate();
-  // TODO: watched episode visual indicator
-  // const animeListEntry = useAnimeListEntry(malId);
+
+  const { data: malUserEntry } = useUserMalAnimeListEntryQuery({ malId });
+  const episodeWatchCount = malUserEntry?.my_list_status?.num_episodes_watched ?? 0;
 
   return (
     <button
-      className="size-10 rounded-md bg-black/40"
-      onClick={() => navigate(`/stream/${malId}/${episode.attributes.number}`)}
+      className={twMerge(
+        "size-10 rounded-md bg-black/40",
+        episodeWatchCount >= episodeNumber && "bg-white/10",
+      )}
+      onClick={() => navigate(`/stream/${malId}/${episodeNumber}`)}
     >
-      <span>{episode.attributes.number}</span>
+      <span>{episodeNumber}</span>
     </button>
   );
 };

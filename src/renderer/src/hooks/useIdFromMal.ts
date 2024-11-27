@@ -20,14 +20,28 @@ export const useIdFromMal = (malId: number) => {
     const anidbId = idMappingsFromMal.anidb;
     const anilistId = idMappingsFromMal.anilist;
 
-    if (!kitsuId) return {};
+    if (!kitsuId) {
+      return {
+        imdbId: idMappingsFromMal.imdb,
+        kitsuId: kitsuId,
+        anidbId: anidbId,
+        anilistId: anilistId,
+      };
+    }
 
     const mapInfo = kitsuAnimeMapping[kitsuId];
-    if (!mapInfo) return { kitsuId: kitsuId, anidbId: anidbId, anilistId: anilistId };
+    if (!mapInfo) {
+      return {
+        imdbId: idMappingsFromMal.imdb,
+        kitsuId: kitsuId,
+        anidbId: anidbId,
+        anilistId: anilistId,
+      };
+    }
 
     return {
       imdbId: mapInfo.imdb_id ?? idMappingsFromMal.imdb,
-      kitsuId: idMappingsFromMal.kitsu,
+      kitsuId: kitsuId,
       anidbId: anidbId,
       anilistId: anilistId,
     };

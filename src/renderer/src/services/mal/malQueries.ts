@@ -55,5 +55,6 @@ export const useUserMalAnimeListEntryQuery = (data: IGetUserMalAnimeListEntryReq
     queryKey: ["mal", "user", "entry", data.malId],
     queryFn: () => getUserMalAnimeListEntry(data),
     enabled: !!currentUserId,
+    staleTime: ONE_HOUR_IN_MS,
   });
 };
