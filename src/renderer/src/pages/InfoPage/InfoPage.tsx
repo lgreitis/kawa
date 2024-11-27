@@ -15,7 +15,7 @@ export const InfoPage: React.FC = () => {
   const { isLoading: isAnidbDataLoading } = useAnidbAnimeInfoQuery(anidbId ?? 0);
   const { data: malData } = useMalAnimeDetailsQuery({ animeId: malId });
 
-  const isLoading = !malData || isAnidbDataLoading;
+  const isLoading = !malData || isAnidbDataLoading || !anidbId;
 
   const [parent, setParent] = useState<HTMLDivElement | null>(null);
 
