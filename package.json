@@ -1,6 +1,6 @@
 {
   "name": "kawa",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Anime streaming app with torrents",
   "main": "./out/main/index.js",
   "author": "lgreitis",
