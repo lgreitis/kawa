@@ -1,5 +1,6 @@
 import { Progress } from "@renderer/components/Progress/Progress";
 import { useIsEpisodeReleased } from "@renderer/hooks/useIsEpisodeReleased";
+import { useAnizipMappingsQuery } from "@renderer/services/anizip/anizipQueries";
 import { type IKitsuAnimeEpisode } from "@renderer/services/kitsu/kitsuTypes";
 import { useUserMalAnimeListEntryQuery } from "@renderer/services/mal/malQueries";
 import { useAnimeListEntry } from "@renderer/store/animeListStore";
@@ -17,6 +18,19 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
   const navigate = useNavigate();
   const animeListEntry = useAnimeListEntry(malId);
   const { data: malUserEntry } = useUserMalAnimeListEntryQuery({ malId });
+  const { data: anizipData } = useAnizipMappingsQuery(malId);
+
+  const anizipEpisode = anizipData?.episodes[episode.attributes.number];
+
+  const thumbnail =
+    episode.attributes.thumbnail?.small ??
+    episode.attributes.thumbnail?.original ??
+    anizipEpisode?.image;
+
+  const title =
+    episode.attributes.canonicalTitle ?? anizipEpisode?.title.en ?? anizipEpisode?.title.ja;
+
+  const description = episode.attributes.description ?? anizipEpisode?.overview;
 
   const progress = animeListEntry?.episodes[episode.attributes.number]?.watchProgress;
   const episodeWatchCount = malUserEntry?.my_list_status?.num_episodes_watched ?? 0;
@@ -29,11 +43,8 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
       onClick={() => navigate(`/stream/${malId}/${episode.attributes.number}`)}
     >
       <div className="relative aspect-video h-24">
-        {episode.attributes.thumbnail ? (
-          <img
-            className="aspect-video h-24 rounded-lg object-cover"
-            src={episode.attributes.thumbnail?.small ?? episode.attributes.thumbnail?.original}
-          />
+        {thumbnail ? (
+          <img className="aspect-video h-24 rounded-lg object-cover" src={thumbnail} />
         ) : (
           <div className="aspect-video h-24 rounded-lg bg-black/40"></div>
         )}
@@ -55,13 +66,11 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
       </div>
       <div className="flex w-full flex-col overflow-hidden">
         <span className="font-medium">
-          {episode.attributes.canonicalTitle
-            ? `${episode.attributes.number}. ${episode.attributes.canonicalTitle}`
+          {title
+            ? `${episode.attributes.number}. ${title}`
             : `Episode ${episode.attributes.number}`}
         </span>
-        <span className="line-clamp-2 text-sm text-neutral-300">
-          {episode.attributes.description}
-        </span>
+        <span className="line-clamp-2 text-sm text-neutral-300">{description}</span>
       </div>
     </button>
   );

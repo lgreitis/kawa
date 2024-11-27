@@ -1,8 +1,6 @@
 import axios from "axios";
-
-interface IAniZipResponse {
-  mappings: { kitsu_id?: number; imdb_id?: string; anidb_id?: number; anilist_id?: number };
-}
+import { anizipMappingsQueryFn } from "../anizip/anizipQueries";
+import { type IAniZipResponse } from "../anizip/anizipTypes";
 
 export const getIdMappingsFromMalId = async (malId: number) => {
   const firstResponseData = (
@@ -11,16 +9,14 @@ export const getIdMappingsFromMalId = async (malId: number) => {
     )
   ).data;
 
-  const secondResponse = await axios
-    .get<IAniZipResponse>(`https://api.ani.zip/mappings?mal_id=${malId}`)
-    .catch((): { data: IAniZipResponse } => ({ data: { mappings: {} } }));
-
-  const secondResponseData = secondResponse.data;
+  const secondResponse = await anizipMappingsQueryFn(malId).catch(
+    (): IAniZipResponse => ({ mappings: {}, episodes: {} }),
+  );
 
   return {
-    kitsu: firstResponseData.kitsu ?? secondResponseData.mappings?.kitsu_id,
-    imdb: firstResponseData.imdb ?? secondResponseData.mappings?.imdb_id,
-    anidb: firstResponseData.anidb ?? secondResponseData.mappings?.anidb_id,
-    anilist: firstResponseData.anilist ?? secondResponseData.mappings?.anilist_id,
+    kitsu: firstResponseData.kitsu ?? secondResponse.mappings?.kitsu_id,
+    imdb: firstResponseData.imdb ?? secondResponse.mappings?.imdb_id,
+    anidb: firstResponseData.anidb ?? secondResponse.mappings?.anidb_id,
+    anilist: firstResponseData.anilist ?? secondResponse.mappings?.anilist_id,
   };
 };
