@@ -26,7 +26,7 @@ export const RelatedAnimeSection: React.FC<IRelatedAnimeSectionProps> = (props) 
             onClick={() => navigate(`/info/${related.node.id}`)}
           >
             <img
-              className="aspect-[2/3] h-full w-full rounded-2xl object-cover"
+              className="aspect-[2/3] w-full rounded-2xl object-cover"
               src={related.node.main_picture.large ?? related.node.main_picture.medium}
             />
             <span className="line-clamp-2">{related.node.title}</span>
