@@ -125,16 +125,20 @@ export const WatchPage: React.FC = () => {
   }, [playerRef]);
 
   useEffect(() => {
-    if (player && state) {
-      player.on("timeupdate", () => {
-        const { currentTime, timePercentage } = calculatePlayerTime(player);
-        setProgress(state.malId, state.episodeNumber, timePercentage, currentTime);
-      });
+    if (!player || !state) {
+      return;
     }
+
+    const handleTimeUpdate = () => {
+      const { currentTime, timePercentage } = calculatePlayerTime(player);
+      setProgress(state.malId, state.episodeNumber, timePercentage, currentTime);
+    };
+
+    player.on("timeupdate", handleTimeUpdate);
 
     return () => {
       if (player && !player.isDisposed()) {
-        player.off("timeupdate");
+        player.off("timeupdate", handleTimeUpdate);
       }
     };
   }, [player, setProgress, state]);

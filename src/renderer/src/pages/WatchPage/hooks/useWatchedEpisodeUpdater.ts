@@ -37,7 +37,7 @@ export const useWatchedEpisodeUpdater = ({
       return;
     }
 
-    player.on("timeupdate", async () => {
+    const handleTimeUpdate = async () => {
       const { timePercentage } = calculatePlayerTime(player);
 
       // Update the watched episode if the user has watched 90% of the episode
@@ -55,11 +55,13 @@ export const useWatchedEpisodeUpdater = ({
       await updateUserAnimeEntry({ malId: malId, num_watched_episodes: episodeNumber });
 
       isUpdating.current = false;
-    });
+    };
+
+    player.on("timeupdate", handleTimeUpdate);
 
     return () => {
       if (player && !player.isDisposed()) {
-        player.off("timeupdate");
+        player.off("timeupdate", handleTimeUpdate);
       }
     };
   }, [malUserEntry, malId, episodeNumber, player, updateUserAnimeEntry]);

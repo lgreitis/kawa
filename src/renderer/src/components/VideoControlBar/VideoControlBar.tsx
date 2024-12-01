@@ -45,42 +45,48 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
   });
 
   useEffect(() => {
-    if (player) {
+    if (!player) {
+      return;
+    }
+
+    const { currentTime, timePercentage, duration } = calculatePlayerTime(player);
+
+    setPlayerState({
+      currentTime: currentTime,
+      timePercentage: timePercentage,
+      volume: player.volume() ?? 1,
+      length: duration,
+      isPlaying: !player.paused(),
+      isFullscreen: player.isFullscreen() ?? false,
+    });
+
+    const handleVolumeChange = () => {
+      setPlayerState((state) => ({
+        ...state,
+        volume: player.volume() ?? 1,
+      }));
+    };
+
+    const handleTimeUpdate = () => {
       const { currentTime, timePercentage, duration } = calculatePlayerTime(player);
 
       setPlayerState({
-        currentTime: currentTime,
+        currentTime,
         timePercentage: timePercentage,
         volume: player.volume() ?? 1,
         length: duration,
         isPlaying: !player.paused(),
         isFullscreen: player.isFullscreen() ?? false,
       });
+    };
 
-      player.on("volumechange", () => {
-        setPlayerState((state) => ({
-          ...state,
-          volume: player.volume() ?? 1,
-        }));
-      });
-
-      player.on("timeupdate", () => {
-        const { currentTime, timePercentage, duration } = calculatePlayerTime(player);
-
-        setPlayerState({
-          currentTime,
-          timePercentage: timePercentage,
-          volume: player.volume() ?? 1,
-          length: duration,
-          isPlaying: !player.paused(),
-          isFullscreen: player.isFullscreen() ?? false,
-        });
-      });
-    }
+    player.on("volumechange", handleVolumeChange);
+    player.on("timeupdate", handleTimeUpdate);
 
     return () => {
       if (player && !player.isDisposed()) {
-        player.off("timeupdate");
+        player.off("volumechange", handleVolumeChange);
+        player.off("timeupdate", handleTimeUpdate);
       }
     };
   }, [player]);
