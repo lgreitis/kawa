@@ -1,5 +1,6 @@
 import { useUpdateUserMalAnimeList } from "@renderer/services/mal/malMutations";
 import { useUserMalAnimeListEntryQuery } from "@renderer/services/mal/malQueries";
+import { calculatePlayerTime } from "@renderer/utils/utils";
 import { useEffect, useRef } from "react";
 import type Player from "video.js/dist/types/player";
 
@@ -9,11 +10,11 @@ import type Player from "video.js/dist/types/player";
 export const useWatchedEpisodeUpdater = ({
   malId,
   episodeNumber,
-  playerRef,
+  player,
 }: {
   malId: number;
   episodeNumber: number;
-  playerRef: React.MutableRefObject<Player | null | undefined>;
+  player: Player | null;
 }) => {
   const { data: malUserEntry } = useUserMalAnimeListEntryQuery({ malId });
   const { mutateAsync: updateUserAnimeEntry } = useUpdateUserMalAnimeList();
@@ -27,7 +28,7 @@ export const useWatchedEpisodeUpdater = ({
     }
 
     // Early return if malId or episodeNumber is 0 or playerRef is not available
-    if (malId === 0 || episodeNumber === 0 || !playerRef.current) {
+    if (malId === 0 || episodeNumber === 0 || !player) {
       return;
     }
 
@@ -36,16 +37,11 @@ export const useWatchedEpisodeUpdater = ({
       return;
     }
 
-    const player = playerRef.current;
-
     player.on("timeupdate", async () => {
-      const currentTime = player.currentTime() ?? 0;
-      const duration = player.duration() ?? 0;
-      if (duration === 0) return;
-      const percentage = (currentTime / duration) * 100;
+      const { timePercentage } = calculatePlayerTime(player);
 
       // Update the watched episode if the user has watched 90% of the episode
-      if (percentage < 90) {
+      if (timePercentage < 90) {
         return;
       }
 
@@ -66,9 +62,7 @@ export const useWatchedEpisodeUpdater = ({
         player.off("timeupdate");
       }
     };
-    // eslint-disable-next-line react-compiler/react-compiler
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [malUserEntry, malId, episodeNumber, playerRef.current]);
+  }, [malUserEntry, malId, episodeNumber, player, updateUserAnimeEntry]);
 
   return;
 };
