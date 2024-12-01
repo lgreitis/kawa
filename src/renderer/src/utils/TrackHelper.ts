@@ -1,3 +1,4 @@
+import { type ITrack } from "@renderer/types/watchPageTypes";
 import JASSUB from "jassub";
 import type Player from "video.js/dist/types/player";
 
@@ -30,17 +31,13 @@ interface ISubtitle {
 }
 
 export class TrackHelper {
-  textTracks: TextTrack[] = [];
-  tracks: { number: number; language?: string; type: string; name: string; header: string }[];
+  tracks: ITrack[];
   player: Player;
   receivedSubtitles = new Map<string, Set<string>>();
   renderer: JASSUB;
   currentTrack: number | null = null;
 
-  constructor(
-    player: Player,
-    tracks: { number: number; language?: string; type: string; name: string; header: string }[],
-  ) {
+  constructor(player: Player, tracks: ITrack[]) {
     this.player = player;
     this.tracks = tracks;
 
@@ -51,49 +48,15 @@ export class TrackHelper {
       wasmUrl: new URL("jassub/dist/jassub-worker.wasm", import.meta.url).toString(),
     });
 
-    // TODO: this needs a rewrite
-    player.on("texttrackchange", () => {
-      this.textTracks.forEach((track) => {
-        if (track.mode === "showing") {
-          this.currentTrack = Number(track.id);
-          const foundTrack = this.tracks.find((t) => t.number === this.currentTrack);
-          this.renderer.setTrack(foundTrack?.header ?? defaultHeader);
-          const subtitleSet = this.receivedSubtitles.get(this.currentTrack.toString())!;
+    // Set the active track to English if it exists
+    for (const track of this.tracks) {
+      const name = track.name ?? track.language ?? "Unknown";
 
-          if (!subtitleSet) {
-            return;
-          }
-
-          subtitleSet.forEach((subtitleString) => {
-            const subtitle = JSON.parse(subtitleString) as ISubtitle;
-            this.renderer.createEvent({
-              Start: subtitle.time,
-              Duration: subtitle.duration,
-              Style: subtitle.style,
-              Name: subtitle.name || "",
-              MarginL: Number(subtitle.marginL) || 0,
-              MarginR: Number(subtitle.marginR) || 0,
-              MarginV: Number(subtitle.marginV) || 0,
-              Effect: subtitle.effect || "",
-              Text: subtitle.text || "",
-              ReadOrder: 1,
-              Layer: Number(subtitle.layer) || 0,
-              _index: this.currentTrack ?? 0,
-            });
-          });
-        }
-      });
-    });
-
-    // @ts-expect-error -- TODO: manual typing
-    // eslint-disable-next-line
-    player.textTracks().on("addtrack", (e: { track: TextTrack }) => {
-      this.textTracks.push(e.track);
-      // TODO: not like this lmao
-      if (e.track.label.toLowerCase().includes("eng") && !this.currentTrack) {
-        e.track.mode = "showing";
+      if (name.toLowerCase().includes("eng")) {
+        this.setActiveTrack(track.number);
+        break;
       }
-    });
+    }
 
     window.electron.ipcRenderer.on(
       "subtitle",
@@ -105,17 +68,17 @@ export class TrackHelper {
         },
       ) => {
         const { subtitle, trackNumber } = data;
-        const textTrack = this.textTracks.find((track) => track.id === trackNumber.toString());
+        const textTrack = this.tracks.find((track) => track.number === trackNumber);
 
         if (!textTrack) {
           return;
         }
 
-        if (!this.receivedSubtitles.has(textTrack.id)) {
-          this.receivedSubtitles.set(textTrack.id, new Set());
+        if (!this.receivedSubtitles.has(textTrack.number.toString())) {
+          this.receivedSubtitles.set(textTrack.number.toString(), new Set());
         }
 
-        const subtitleSet = this.receivedSubtitles.get(textTrack.id)!;
+        const subtitleSet = this.receivedSubtitles.get(textTrack.number.toString())!;
 
         if (subtitleSet.has(JSON.stringify(subtitle))) {
           return;
@@ -143,6 +106,35 @@ export class TrackHelper {
         });
       },
     );
+  }
+
+  setActiveTrack(trackNumber: number) {
+    this.currentTrack = Number(trackNumber);
+    const textTrack = this.tracks.find((track) => track.number === trackNumber);
+    this.renderer.setTrack(textTrack?.header ?? defaultHeader);
+    const subtitleSet = this.receivedSubtitles.get(this.currentTrack.toString());
+
+    if (!subtitleSet) {
+      return;
+    }
+
+    subtitleSet.forEach((subtitleString) => {
+      const subtitle = JSON.parse(subtitleString) as ISubtitle;
+      this.renderer.createEvent({
+        Start: subtitle.time,
+        Duration: subtitle.duration,
+        Style: subtitle.style,
+        Name: subtitle.name || "",
+        MarginL: Number(subtitle.marginL) || 0,
+        MarginR: Number(subtitle.marginR) || 0,
+        MarginV: Number(subtitle.marginV) || 0,
+        Effect: subtitle.effect || "",
+        Text: subtitle.text || "",
+        ReadOrder: 1,
+        Layer: Number(subtitle.layer) || 0,
+        _index: this.currentTrack ?? 0,
+      });
+    });
   }
 
   destroy() {

@@ -2,21 +2,25 @@ import { SafeArea } from "@renderer/components/SafeArea/SafeArea";
 import { useAnimeListStore } from "@renderer/store/animeListStore";
 import { type IWatchPageState } from "@renderer/types/watchPageTypes";
 import { TrackHelper } from "@renderer/utils/TrackHelper";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useWatchedEpisodeUpdater } from "./hooks/useWatchedEpisodeUpdater";
 import videojs from "video.js";
+import { VideoControlBar } from "@renderer/components/VideoControlBar/VideoControlBar";
+import { calculatePlayerTime } from "@renderer/utils/utils";
+import { twJoin } from "tailwind-merge";
 import "video.js/dist/video-js.min.css";
 import "videojs-hotkeys";
 
 const initialOptions = {
   controls: true,
   fluid: true,
-  controlBar: {
-    volumePanel: {
-      inline: false,
-    },
-  },
+  // controlBar: {
+  //   volumePanel: {
+  //     inline: false,
+  //   },
+  // },
+  controlBar: false,
   plugins: {
     hotkeys: {
       volumeStep: 0.1, // Volume step for up/down keys
@@ -31,13 +35,16 @@ export const WatchPage: React.FC = () => {
   const { url } = useParams<{ url: string }>();
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<ReturnType<typeof videojs> | null>();
+  const [player, setPlayer] = useState<ReturnType<typeof videojs> | null>(null);
   const trackHelperRef = useRef<TrackHelper | null>(null);
 
   useWatchedEpisodeUpdater({
     malId: state?.malId ?? 0,
     episodeNumber: state?.episodeNumber ?? 0,
-    playerRef,
+    player,
   });
+
+  const [showMouse, setShowMouse] = useState(true);
 
   const { setProgress, getEpisodeData } = useAnimeListStore();
 
@@ -74,6 +81,8 @@ export const WatchPage: React.FC = () => {
         },
       ));
 
+      setPlayer(player);
+
       if (state?.tracks) {
         trackHelperRef.current = new TrackHelper(player, state.tracks);
       }
@@ -108,22 +117,18 @@ export const WatchPage: React.FC = () => {
         videojs.log("player is disposed");
         trackHelperRef.current?.destroy();
         player.dispose();
+        setPlayer(null);
+        trackHelperRef.current = null;
         playerRef.current = null;
       }
     };
   }, [playerRef]);
 
   useEffect(() => {
-    const player = playerRef.current;
-
     if (player && state) {
       player.on("timeupdate", () => {
-        const currentTime = player.currentTime() ?? 0;
-        const duration = player.duration() ?? 0;
-        if (duration === 0) return;
-        const percentage = (currentTime / duration) * 100;
-
-        setProgress(state.malId, state.episodeNumber, percentage, currentTime);
+        const { currentTime, timePercentage } = calculatePlayerTime(player);
+        setProgress(state.malId, state.episodeNumber, timePercentage, currentTime);
       });
     }
 
@@ -132,11 +137,22 @@ export const WatchPage: React.FC = () => {
         player.off("timeupdate");
       }
     };
-  }, [playerRef, setProgress, state]);
+  }, [player, setProgress, state]);
 
   return (
     <SafeArea>
-      <div className="h-[calc(100dvh-2.25rem-2px)] w-full !border-none" ref={videoRef}></div>
+      <div
+        className={twJoin(
+          "h-[calc(100dvh-2.25rem-2px)] w-full !border-none",
+          showMouse ? "cursor-default" : "cursor-none",
+        )}
+        ref={videoRef}
+      ></div>
+      <VideoControlBar
+        player={player}
+        setShowMouse={setShowMouse}
+        trackHelperRef={trackHelperRef}
+      />
     </SafeArea>
   );
 };

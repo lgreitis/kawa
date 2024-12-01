@@ -76,9 +76,9 @@ export const useAnimeListStore = create<IAnimeListStore>()(
           }));
         } else {
           currentEntry.episodes[episodeNumber] = {
+            ...currentEntry.episodes[episodeNumber],
             watchProgress,
             watchTime,
-            ...currentEntry.episodes[episodeNumber],
           };
 
           set((state) => ({

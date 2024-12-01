@@ -16,7 +16,7 @@ interface IDropdownProps {
   origin?: "top-right" | "top-left";
   options: ({
     label: string;
-    icon: React.ElementType;
+    icon?: React.ElementType;
     onClick?: () => void;
     keyboardShortcut?: string;
   } | null)[];
@@ -61,7 +61,7 @@ export const Dropdown: React.FC<IDropdownProps> = (props) => {
                   className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-[focus]:bg-white/10"
                   onClick={option.onClick}
                 >
-                  <option.icon className="size-4" />
+                  {option.icon && <option.icon className="size-4" />}
                   {option.label}
                   <kbd className="ml-auto font-sans text-xs text-white/50">
                     {option.keyboardShortcut}
