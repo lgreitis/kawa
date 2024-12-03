@@ -12,6 +12,10 @@ export const ScrollArea: React.FC<IScrollAreaProps> = (props) => {
 
   return (
     <ScrollAreaComponents.Root className={twMerge("overflow-hidden", className)}>
+      {/* TODO: 1.2.1 breaks display of some elements because of `display: table` style on a radix internal element which we can't easily control */}
+      {/* Keeping the package on 1.2.0 until it's fixed */}
+      {/* https://github.com/radix-ui/primitives/issues/3247 */}
+      {/* https://github.com/radix-ui/primitives/issues/2722 */}
       <ScrollAreaComponents.Viewport className="h-full w-full" ref={ref}>
         {children}
       </ScrollAreaComponents.Viewport>
