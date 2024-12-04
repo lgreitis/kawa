@@ -11,7 +11,7 @@ const client = new WebTorrent();
 const instance = client.createServer();
 // @ts-expect-error - bad types
 // eslint-disable-next-line
-instance.server.listen(8080);
+instance.server.listen(5292);
 
 const addDownloadsDirIfDoesntExist = async () => {
   try {
