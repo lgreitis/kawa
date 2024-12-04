@@ -1,6 +1,6 @@
-# Kawa
+# Kawa - Anime streaming app.
 
-## An early in development anime streaming app.
+## 🚧 Currently Under Development – Not Ready for Use 🚧
 
 # About
 
