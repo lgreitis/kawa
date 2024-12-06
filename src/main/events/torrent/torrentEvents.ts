@@ -2,7 +2,7 @@ import path from "path";
 import WebTorrent from "webtorrent";
 import { registerEvent } from "../registerEvent";
 import { MetadataHelper } from "../../utils/MetadataHelper";
-import { APP_DATA_PATH } from "../../constants";
+import { APP_DATA_PATH, TORRENT_CONTENT_LISTEN_PORT } from "../../constants";
 import fs from "fs";
 import { readdir, stat, unlink } from "fs/promises";
 
@@ -11,7 +11,7 @@ const client = new WebTorrent();
 const instance = client.createServer();
 // @ts-expect-error - bad types
 // eslint-disable-next-line
-instance.server.listen(5292);
+instance.server.listen(TORRENT_CONTENT_LISTEN_PORT);
 
 const addDownloadsDirIfDoesntExist = async () => {
   try {
@@ -84,7 +84,10 @@ const handleTorrentAdd = async (
   const tracks = await metadataHelper.getTracks();
   videoFile.select();
 
-  return { streamUrl: `http://localhost:8080${videoFile.streamURL}`, tracks };
+  return {
+    streamUrl: `http://localhost:${TORRENT_CONTENT_LISTEN_PORT}${videoFile.streamURL}`,
+    tracks,
+  };
 };
 
 const getDownloadFolderSize = async () => {
