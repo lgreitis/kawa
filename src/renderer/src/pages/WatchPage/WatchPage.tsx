@@ -34,7 +34,7 @@ export const WatchPage: React.FC = () => {
   const { state } = useLocation() as IWatchPageState;
   const { url } = useParams<{ url: string }>();
   const videoRef = useRef<HTMLDivElement>(null);
-  const playerRef = useRef<ReturnType<typeof videojs> | null>();
+  const playerRef = useRef<ReturnType<typeof videojs> | null>(null);
   const [player, setPlayer] = useState<ReturnType<typeof videojs> | null>(null);
   const trackHelperRef = useRef<TrackHelper | null>(null);
 
