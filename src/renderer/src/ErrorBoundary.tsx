@@ -13,7 +13,7 @@ export const ErrorBoundary: React.FC = () => {
       <main className="h-dvh overflow-auto">
         <BlurBackgroundContainer>
           <div className="flex items-center justify-center p-4">
-            <div className="w-full max-w-xl text-center">
+            <div className="w-full max-w-3xl text-center">
               <h2 className="text-3xl font-extrabold">Oops! Something went wrong</h2>
               {error instanceof Error && (
                 <React.Fragment>
