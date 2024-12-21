@@ -1,12 +1,14 @@
 # Kawa - Anime streaming app.
 
-## 🚧 Currently Under Development – Not Ready for Use 🚧
+## 🚧 Currently Under Development 🚧
+
+The core functionality of the app is largely complete, though it may lack some features users typically expect from an anime streaming app. While Windows builds are available for download, MacOS and Linux users will need to build the app themselves.
 
 # About
 
-**Problem:** Current anime sites are crap, and they go down when they get DMCA'd.
+**Problem:** Current anime sites are crap, and they go down constantly.
 
-**Solution:** A standalone app where extensions provide the content. Your anime list is synced with [MAL](https://myanimelist.net/) and watch progress is saved in app. Enjoy anime without ads with amazing quality and without the risk of the site going down.
+**Solution:** A standalone app where extensions provide the content (currently supporting torrent sources only). Your anime list is synced with [MAL](https://myanimelist.net/) and watch progress is saved in app. Enjoy anime without ads with amazing quality and without the risk of the site going down.
 
 # Development
 
