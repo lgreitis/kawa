@@ -17,7 +17,10 @@ export const useAddExtensionMutation = () =>
   useMutation({
     mutationFn: addExtension,
     onSuccess: async () => {
-      await queryClient.refetchQueries({ queryKey: ["electron", "extensions"] });
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["electron", "extensions"] }),
+        queryClient.invalidateQueries({ queryKey: ["extensions", "episode"] }),
+      ]);
     },
   });
 

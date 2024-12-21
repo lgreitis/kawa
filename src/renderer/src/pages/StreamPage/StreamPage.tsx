@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { StreamButton } from "./components/StreamButton";
 import { motion } from "framer-motion";
 import { useIsMounted } from "usehooks-ts";
+import { useMalTitles } from "@renderer/hooks/useMalTitles";
 
 type TStreamPageParams = {
   malId: string;
@@ -22,8 +23,9 @@ export const StreamPage: React.FC = () => {
   const episode = parseInt(episodeString ?? "-1");
   const malId = parseInt(malIdString ?? "0");
 
-  const { anidbId, imdbId } = useIdFromMal(malId);
+  const { anidbId, imdbId, anilistId } = useIdFromMal(malId);
 
+  const titles = useMalTitles(malId);
   const { data: anidbData, isLoading: isAnidbDataLoading } = useAnidbAnimeInfoQuery(anidbId ?? 0);
 
   const anidbEid = useMemo(() => {
@@ -45,6 +47,8 @@ export const StreamPage: React.FC = () => {
   const { data, isLoading } = useGetEpisodeFromExtensionsQuery({
     anidbId: anidbId ?? 0,
     anidbEid: anidbEid ?? 0,
+    anilistId: anilistId ?? 0,
+    titles: titles,
   });
 
   const { mutateAsync, isPending } = useSubmitMagnetUriMutation();
@@ -93,7 +97,7 @@ export const StreamPage: React.FC = () => {
                 }}
               />
             )}
-            <h1 className="text-2xl font-medium">Alternative Sources:</h1>
+            <h1 className="text-2xl font-medium">Other Sources:</h1>
             {data?.results.map((stream) => (
               <StreamButton
                 disabled={isPending}

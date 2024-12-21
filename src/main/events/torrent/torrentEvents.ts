@@ -41,10 +41,18 @@ const findVideoFile = (torrent: WebTorrent.Torrent) => {
 
 const addTorrent = (magnetURI: string): Promise<WebTorrent.Torrent> => {
   return new Promise((resolve, _reject) => {
-    // @ts-expect-error - bad types
-    client.add(magnetURI, { path: downloadsDir, deselect: true }, function (torrent) {
-      resolve(torrent);
-    });
+    client.add(
+      magnetURI,
+      {
+        path: downloadsDir,
+        // @ts-expect-error - bad types
+        deselect: true,
+        announce: [atob("aHR0cDovL255YWEudHJhY2tlci53Zjo3Nzc3L2Fubm91bmNl")],
+      },
+      function (torrent) {
+        resolve(torrent);
+      },
+    );
   });
 };
 

@@ -21,3 +21,7 @@ export const MAL_AIR_STATUS_TO_ENGLISH_TRANSLATION = {
   currently_airing: "Currently Airing",
   not_yet_aired: "Not Yet Aired",
 };
+
+export const DEFAULT_EXTENSIONS = JSON.parse(import.meta.env.VITE_DEFAULT_EXTENSIONS) as {
+  extensions: string[];
+};

@@ -13,20 +13,6 @@ export const UserManager: React.FC = () => {
               <img src={user.picture} alt="User" className="h-8 w-8 rounded-full" />
               <span>{user.username}</span>
             </div>
-            <div className="flex flex-col">
-              <span>Token:</span>
-              <input
-                className="rounded-md border border-white bg-transparent px-2 py-1"
-                value={user.token}
-              />
-            </div>
-            <div className="flex flex-col">
-              <span>Refresh Token:</span>
-              <input
-                className="rounded-md border border-white bg-transparent px-2 py-1"
-                value={user.refreshToken}
-              />
-            </div>
           </div>
         ))}
       </div>

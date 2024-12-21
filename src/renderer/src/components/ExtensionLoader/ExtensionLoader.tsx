@@ -1,11 +1,22 @@
 import { useGetExtensionsQuery } from "@renderer/services/electron/electronQueries";
 import { useExtensionStore } from "@renderer/store/extensionStore";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { BlurBackgroundContainer } from "../containers/BlurBackgroundContainer";
+import { useAddExtensionMutation } from "@renderer/services/electron/electronMutations";
+import { getDefaultExtensions } from "@renderer/services/extensions/extensionsServices";
 
-export const ExtensionLoader: React.FC = () => {
+interface IExtensionProps {
+  children?: React.ReactNode;
+}
+
+export const ExtensionLoader: React.FC<IExtensionProps> = (props) => {
+  const { children } = props;
   const { data } = useGetExtensionsQuery();
   const { addSource, reset } = useExtensionStore();
   const isAddingRef = useRef(false);
+  const { mutateAsync: addExtension } = useAddExtensionMutation();
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!data || isAddingRef.current) {
@@ -13,10 +24,26 @@ export const ExtensionLoader: React.FC = () => {
     }
 
     isAddingRef.current = true;
+    setIsLoading(true);
     const run = async () => {
-      for (const extension of data.extensions) {
-        await addSource({ name: extension.name, code: extension.code });
+      const extensions = await getDefaultExtensions().catch(() => []);
+
+      if (extensions.length) {
+        for (const extension of extensions) {
+          await addSource({
+            name: extension.name,
+            code: extension.code,
+            isDefault: true,
+          });
+        }
       }
+
+      if (data) {
+        for (const extension of data.extensions) {
+          await addSource({ name: extension.name, code: extension.code });
+        }
+      }
+      setIsLoading(false);
       isAddingRef.current = false;
     };
 
@@ -25,7 +52,17 @@ export const ExtensionLoader: React.FC = () => {
     return () => {
       reset();
     };
-  }, [data, addSource, reset]);
+  }, [data, addSource, reset, addExtension]);
 
-  return null;
+  if (isLoading) {
+    return (
+      <BlurBackgroundContainer>
+        <div className="flex h-full items-center justify-center">
+          <span>Loading extensions...</span>
+        </div>
+      </BlurBackgroundContainer>
+    );
+  }
+
+  return children;
 };

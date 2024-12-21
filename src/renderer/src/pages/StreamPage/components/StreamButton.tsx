@@ -24,7 +24,10 @@ export const StreamButton: React.FC<StreamButtonProps> = (props) => {
           <div>
             <span className="text-sm text-gray-400">{data.seeders ?? 0} seeders</span>
           </div>
-          <div>{data.videoResolution && <Badge>{data.videoResolution}</Badge>}</div>
+          <div className="flex gap-4">
+            <div>{data.videoResolution && <Badge>{data.videoResolution}</Badge>}</div>
+            <div>{data.source && <Badge>{data.source}</Badge>}</div>
+          </div>
         </div>
       </div>
     </button>

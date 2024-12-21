@@ -21,3 +21,5 @@ export const calculatePlayerTime = (player: Player) => {
     currentTime: currentTime,
   };
 };
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

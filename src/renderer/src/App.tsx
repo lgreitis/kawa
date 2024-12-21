@@ -7,7 +7,6 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { StreamPage } from "./pages/StreamPage/StreamPage";
 import { InfoPage } from "./pages/InfoPage/InfoPage";
 import { WatchPage } from "./pages/WatchPage/WatchPage";
-import { ExtensionLoader } from "./components/ExtensionLoader/ExtensionLoader";
 import { queryClient } from "./queryClient";
 import { SettingsPage } from "./pages/SettingsPage/SettingsPage";
 import { AnimeListPage } from "./pages/AnimeListPage/AnimeListPage";
@@ -34,7 +33,6 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <MalAuthListener />
-      <ExtensionLoader />
       <RouterProvider router={router} />
       <Toaster
         toastOptions={{
