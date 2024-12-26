@@ -31,7 +31,7 @@ export const EpisodeListSection: React.FC<IEpisodeListSectionProps> = (props) =>
     }
 
     if (Array.isArray(episodes)) {
-      return episodes;
+      return episodes.filter((episode) => episode.epno.type === 1);
     } else {
       return [episodes];
     }
