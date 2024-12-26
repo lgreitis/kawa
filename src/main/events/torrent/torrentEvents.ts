@@ -3,8 +3,9 @@ import WebTorrent from "webtorrent";
 import { registerEvent } from "../registerEvent";
 import { MetadataHelper } from "../../utils/MetadataHelper";
 import { APP_DATA_PATH, TORRENT_CONTENT_LISTEN_PORT } from "../../constants";
-import fs from "fs";
-import { readdir, stat, unlink } from "fs/promises";
+import fs from "fs/promises";
+import { readdir, stat } from "fs/promises";
+import { isNativeError } from "util/types";
 
 const downloadsDir = path.join(APP_DATA_PATH, "downloads");
 const client = new WebTorrent();
@@ -15,9 +16,9 @@ instance.server.listen(TORRENT_CONTENT_LISTEN_PORT);
 
 const addDownloadsDirIfDoesntExist = async () => {
   try {
-    await fs.promises.access(downloadsDir);
+    await fs.access(downloadsDir);
   } catch {
-    await fs.promises.mkdir(downloadsDir, { recursive: true });
+    await fs.mkdir(downloadsDir, { recursive: true });
   }
 };
 
@@ -110,10 +111,11 @@ const getDownloadFolderSize = async () => {
 
 const removeAllDownloads = async () => {
   for (const torrent of client.torrents) {
-    await new Promise<void>((resolve, _reject) => {
+    await new Promise<void>((resolve, reject) => {
       client.remove(torrent, { destroyStore: true }, (err) => {
         if (err) {
-          console.error(err);
+          console.error("Error removing torrent:", err);
+          reject(isNativeError(err) ? err : new Error(err));
           return;
         }
         resolve();
@@ -121,10 +123,21 @@ const removeAllDownloads = async () => {
     });
   }
 
-  const files = await readdir(downloadsDir);
+  try {
+    const files = await fs.readdir(downloadsDir);
 
-  for (const file of files) {
-    await unlink(path.join(downloadsDir, file));
+    for (const file of files) {
+      const filePath = path.join(downloadsDir, file);
+      const stats = await fs.stat(filePath);
+
+      if (stats.isDirectory()) {
+        await fs.rm(filePath, { recursive: true });
+      } else {
+        await fs.unlink(filePath);
+      }
+    }
+  } catch (err) {
+    console.error("Error during downloads cleanup:", err);
   }
 
   return;
