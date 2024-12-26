@@ -6,6 +6,8 @@ import { APP_DATA_PATH, TORRENT_CONTENT_LISTEN_PORT } from "../../constants";
 import fs from "fs/promises";
 import { readdir, stat } from "fs/promises";
 import { isNativeError } from "util/types";
+import { type ITorrentStatus } from "@shared/types/torrent";
+import { sendIpcData } from "../..";
 
 const downloadsDir = path.join(APP_DATA_PATH, "downloads");
 const client = new WebTorrent();
@@ -87,6 +89,16 @@ const handleTorrentAdd = async (
       });
     });
   }
+
+  torrent.on("download", () => {
+    const data: ITorrentStatus = {
+      infoHash: torrent.infoHash,
+      downloadSpeed: torrent.downloadSpeed,
+      uploadSpeed: torrent.uploadSpeed,
+    };
+
+    void sendIpcData("torrent:status", data);
+  });
 
   const videoFile = findVideoFile(torrent);
   const metadataHelper = new MetadataHelper(videoFile);

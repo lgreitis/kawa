@@ -7,9 +7,8 @@ export interface ITrack {
 }
 
 export interface IWatchPageState {
-  state?: {
-    tracks: ITrack[];
-    malId: number;
-    episodeNumber: number;
-  };
+  tracks: ITrack[];
+  malId: number;
+  episodeNumber: number;
+  infoHash: string;
 }

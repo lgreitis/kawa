@@ -12,6 +12,7 @@ import { type TrackHelper } from "@renderer/utils/TrackHelper";
 import { SubtitleSelector } from "./components/SubtitleSelector";
 import { twMerge } from "tailwind-merge";
 import { useMouseMoveTrigger } from "@renderer/hooks/useMouseMoveTrigger";
+import { InformationPopover } from "./components/InformationPopover";
 
 export interface IPlayerState {
   currentTime: number;
@@ -26,10 +27,11 @@ interface IVideoControlBarProps {
   player: Player | null;
   setShowMouse: (show: boolean) => void;
   trackHelperRef: React.MutableRefObject<TrackHelper | null>;
+  infoHash: string;
 }
 
 export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
-  const { player, setShowMouse } = props;
+  const { player, setShowMouse, infoHash } = props;
 
   const { mouseMovementTriggered } = useMouseMoveTrigger(2000);
   const [isDragging, setIsDragging] = useState(false);
@@ -159,6 +161,7 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
             </div>
             <div className="flex-grow"></div>
             <div className="flex items-center gap-2">
+              <InformationPopover infoHash={infoHash} />
               <SubtitleSelector trackHelperRef={props.trackHelperRef} />
               <button onClick={onFullScreenClick}>
                 {playerState.isFullscreen ? (

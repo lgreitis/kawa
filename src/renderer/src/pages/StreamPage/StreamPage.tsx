@@ -9,6 +9,8 @@ import { StreamButton } from "./components/StreamButton";
 import { motion } from "framer-motion";
 import { useIsMounted } from "usehooks-ts";
 import { useMalTitles } from "@renderer/hooks/useMalTitles";
+import { type IWatchPageState } from "@renderer/types/watchPageTypes";
+import { type IEpisodeServiceResult } from "@renderer/services/extensions/extensionsServices";
 
 type TStreamPageParams = {
   malId: string;
@@ -53,6 +55,29 @@ export const StreamPage: React.FC = () => {
 
   const { mutateAsync, isPending } = useSubmitMagnetUriMutation();
 
+  const onStreamClick = async (stream: IEpisodeServiceResult) => {
+    const mutationResult = await mutateAsync({
+      magnetURI: stream.magnet,
+      infoHash: stream.infoHash,
+    });
+
+    const watchPageState: IWatchPageState = {
+      tracks: mutationResult.tracks,
+      malId: malId,
+      episodeNumber: episode,
+      infoHash: stream.infoHash,
+    };
+
+    if (!isMounted()) {
+      return;
+    }
+
+    navigate(`/watch/${btoa(mutationResult.streamUrl)}`, {
+      state: watchPageState,
+      replace: true,
+    });
+  };
+
   const dataExists = data && data.results.length > 0 && data.best;
 
   return (
@@ -74,52 +99,16 @@ export const StreamPage: React.FC = () => {
               <StreamButton
                 disabled={isPending}
                 data={data.best}
-                onClick={async () => {
-                  const mutationResult = await mutateAsync({
-                    magnetURI: data?.best.magnet,
-                    infoHash: data.best.infoHash,
-                  });
-
-                  const watchPageState = {
-                    tracks: mutationResult.tracks,
-                    malId: malId,
-                    episodeNumber: episode,
-                  };
-
-                  if (!isMounted()) {
-                    return;
-                  }
-
-                  navigate(`/watch/${btoa(mutationResult.streamUrl)}`, {
-                    state: watchPageState,
-                    replace: true,
-                  });
-                }}
+                onClick={() => onStreamClick(data.best)}
               />
             )}
             <h1 className="text-2xl font-medium">Other Sources:</h1>
             {data?.results.map((stream) => (
               <StreamButton
-                disabled={isPending}
                 key={stream.title}
+                disabled={isPending}
                 data={stream}
-                onClick={async () => {
-                  const mutationResult = await mutateAsync({
-                    magnetURI: stream.magnet,
-                    infoHash: stream.infoHash,
-                  });
-
-                  const watchPageState = {
-                    tracks: mutationResult.tracks,
-                    malId: malId,
-                    episodeNumber: episode,
-                  };
-
-                  navigate(`/watch/${btoa(mutationResult.streamUrl)}`, {
-                    state: watchPageState,
-                    replace: true,
-                  });
-                }}
+                onClick={() => onStreamClick(stream)}
               />
             ))}
           </div>

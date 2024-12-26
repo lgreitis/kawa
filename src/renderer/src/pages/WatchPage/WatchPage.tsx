@@ -31,7 +31,7 @@ const initialOptions = {
 };
 
 export const WatchPage: React.FC = () => {
-  const { state } = useLocation() as IWatchPageState;
+  const { state } = useLocation() as { state: IWatchPageState };
   const { url } = useParams<{ url: string }>();
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<ReturnType<typeof videojs> | null>(null);
@@ -156,6 +156,7 @@ export const WatchPage: React.FC = () => {
         player={player}
         setShowMouse={setShowMouse}
         trackHelperRef={trackHelperRef}
+        infoHash={state?.infoHash ?? ""}
       />
     </SafeArea>
   );
