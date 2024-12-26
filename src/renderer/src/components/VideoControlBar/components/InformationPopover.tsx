@@ -12,7 +12,9 @@ interface IInformationPopoverProps {
 
 export const InformationPopover: React.FC<IInformationPopoverProps> = (props) => {
   const { infoHash } = props;
-  const [torrentStatus, setTorrentStatus] = useDebounceValue<ITorrentStatus | null>(null, 1000);
+  const [torrentStatus, setTorrentStatus] = useDebounceValue<ITorrentStatus | null>(null, 1000, {
+    maxWait: 2000,
+  });
 
   useEffect(() => {
     const updateData = (_event: IpcRendererEvent, data: ITorrentStatus) => {
