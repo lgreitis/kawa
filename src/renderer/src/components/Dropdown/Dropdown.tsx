@@ -50,26 +50,28 @@ export const Dropdown: React.FC<IDropdownProps> = (props) => {
             origin === "top-left" && "origin-top-left",
           )}
         >
-          {options.map((option, index) => {
-            if (option === null) {
-              return <div key={"divider" + index} className="my-1 h-px bg-white/5" />;
-            }
+          <div className="max-h-96">
+            {options.map((option, index) => {
+              if (option === null) {
+                return <div key={"divider" + index} className="my-1 h-px bg-white/5" />;
+              }
 
-            return (
-              <MenuItem key={option.label}>
-                <button
-                  className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-[focus]:bg-white/10"
-                  onClick={option.onClick}
-                >
-                  {option.icon && <option.icon className="size-4" />}
-                  {option.label}
-                  <kbd className="ml-auto font-sans text-xs text-white/50">
-                    {option.keyboardShortcut}
-                  </kbd>
-                </button>
-              </MenuItem>
-            );
-          })}
+              return (
+                <MenuItem key={option.label}>
+                  <button
+                    className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-[focus]:bg-white/10"
+                    onClick={option.onClick}
+                  >
+                    {option.icon && <option.icon className="size-4" />}
+                    {option.label}
+                    <kbd className="ml-auto font-sans text-xs text-white/50">
+                      {option.keyboardShortcut}
+                    </kbd>
+                  </button>
+                </MenuItem>
+              );
+            })}
+          </div>
         </MenuItems>
       </Menu>
     </div>
