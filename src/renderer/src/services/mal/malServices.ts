@@ -74,7 +74,7 @@ export const getMalRankingAnime = async (data: IMalRankingAnimeRequest) => {
     }
   });
 
-  await Promise.all(promises);
+  await Promise.allSettled(promises);
 
   return {
     ...response.data,
