@@ -2,11 +2,11 @@ import { BlurBackgroundContainer } from "@renderer/components/containers/BlurBac
 import { MalAnimeStatus } from "@renderer/services/mal/malTypes";
 import { useUserMalAnimeList } from "@renderer/services/mal/malQueries";
 import { useState } from "react";
-import { twMerge } from "tailwind-merge";
 import { MAL_STATUS_TO_ENGLISH_TRANSLATION } from "@renderer/constants";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@renderer/components/Loader/Loader";
+import { Tabs } from "@renderer/components/Tabs/Tabs";
 
 export const AnimeListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -33,18 +33,14 @@ export const AnimeListPage: React.FC = () => {
               onChange={(e) => setFilter(e.target.value)}
             />
             <div className="rounded-md bg-zinc-800 p-1">
-              {statuses.map((status) => (
-                <button
-                  key={status}
-                  className={twMerge(
-                    "rounded-sm px-2 py-1",
-                    selectedStatus === status && "bg-zinc-900",
-                  )}
-                  onClick={() => setSelectedStatus(status)}
-                >
-                  {MAL_STATUS_TO_ENGLISH_TRANSLATION[status]}
-                </button>
-              ))}
+              <Tabs
+                tabs={statuses.map((status) => ({
+                  title: MAL_STATUS_TO_ENGLISH_TRANSLATION[status],
+                  value: status,
+                }))}
+                currentValue={selectedStatus}
+                onChange={(tab) => setSelectedStatus(tab.value as MalAnimeStatus)}
+              />
             </div>
           </div>
           {!isLoading ? (
