@@ -155,7 +155,7 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
         </div>
         <div className="flex-grow"></div>
         <div className="flex items-center gap-2">
-          <InformationPopover infoHash={infoHash} />
+          <InformationPopover infoHash={infoHash} player={player} />
           <SubtitleSelector trackHelperRef={props.trackHelperRef} />
           <button onClick={onFullScreenClick}>
             {playerState.isFullscreen ? (

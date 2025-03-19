@@ -95,6 +95,20 @@ const handleTorrentAdd = async (
       infoHash: torrent.infoHash,
       downloadSpeed: torrent.downloadSpeed,
       uploadSpeed: torrent.uploadSpeed,
+      peerCount: torrent.numPeers,
+      progress: videoFile.progress,
+    };
+
+    void sendIpcData("torrent:status", data);
+  });
+
+  torrent.on("upload", () => {
+    const data: ITorrentStatus = {
+      infoHash: torrent.infoHash,
+      downloadSpeed: torrent.downloadSpeed,
+      uploadSpeed: torrent.uploadSpeed,
+      peerCount: torrent.numPeers,
+      progress: videoFile.progress,
     };
 
     void sendIpcData("torrent:status", data);

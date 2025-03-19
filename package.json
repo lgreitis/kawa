@@ -25,6 +25,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "@floating-ui/react": "^0.27.3",
     "@headlessui/react": "^2.1.8",
     "@heroicons/react": "^2.1.5",
     "@lgreitis/kawa-sdk": "^0.0.5",
@@ -71,8 +72,8 @@
     "@types/node": "^20.14.8",
     "@types/pako": "^2.0.3",
     "@types/parse-torrent": "^5.8.7",
-    "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.2",
+  "@types/react": "^19.0.1",
+  "@types/react-dom": "^19.0.2",
     "@types/webtorrent": "^0.110.0",
     "@typescript-eslint/eslint-plugin": "^8.4.0",
     "@typescript-eslint/parser": "^8.4.0",
