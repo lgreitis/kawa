@@ -11,6 +11,8 @@ import { calculatePlayerTime } from "@renderer/utils/utils";
 import { twJoin } from "tailwind-merge";
 import "video.js/dist/video-js.min.css";
 import "videojs-hotkeys";
+import { useMalAnimeDetailsQuery } from "@renderer/services/mal/malQueries";
+import { useAnizipMappingsQuery } from "@renderer/services/anizip/anizipQueries";
 
 const initialOptions = {
   controls: true,
@@ -49,6 +51,20 @@ export const WatchPage: React.FC = () => {
   const { setProgress, getEpisodeData } = useAnimeListStore();
 
   const decodedUrl = encodeURI(atob(url ?? ""));
+
+  const { data: malData } = useMalAnimeDetailsQuery({ animeId: state?.malId });
+  const { data: anizipData } = useAnizipMappingsQuery(state.malId);
+
+  useEffect(() => {
+    if (malData && anizipData) {
+      const anizipEpisode = anizipData?.episodes[state.episodeNumber];
+
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: `${malData.alternative_titles.en ?? malData.title} EP ${state.episodeNumber}`,
+        ...(anizipEpisode.image && { artwork: [{ src: anizipEpisode.image }] }),
+      });
+    }
+  }, [anizipData, malData, state.episodeNumber]);
 
   useEffect(() => {
     if (!playerRef.current) {
