@@ -13,7 +13,7 @@ interface IInformationPopoverProps {
 }
 
 export const InformationPopover: React.FC<IInformationPopoverProps> = (props) => {
-  const { infoHash, player } = props;
+  const { infoHash } = props;
   const [torrentStatus, setTorrentStatus] = useDebounceValue<ITorrentStatus | null>(null, 1000, {
     maxWait: 2000,
   });

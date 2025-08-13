@@ -22,8 +22,8 @@ export const Tabs: React.FC<ITabsProps> = (props) => {
   const moveSelectedTabToTop = (idx: number) => {
     const newTabs = [...propTabs];
     const selectedTab = newTabs.splice(idx, 1);
-    newTabs.unshift(selectedTab[0]!);
-    onChange?.(newTabs[0]!);
+    newTabs.unshift(selectedTab[0]);
+    onChange?.(newTabs[0]);
   };
 
   return (
