@@ -14,6 +14,19 @@ The core functionality of the app is largely complete, though it may lack some f
 
 All you should need is Node.js and yarn. Setup the .env file with .env.example guide and run `yarn install` and `yarn dev` to start the app.
 
+# What needs to be done?
+
+- Auto delete torrents when done seeding/watching.
+- Fix subtitle rendering, auto selection, UI.
+- Create more extensions for different sources.
+- Make builds for MacOS and Linux.
+- Support multi episode torrents.
+- Recognize when video format is not supported on Electron/Chromium. (Add ability to open in VLC)
+- Complete settings page.
+- Add more anime discovery features.
+- Support other anime tracking services (AniList, Kitsu).
+- General extension/renderer/main process system cleanup.
+
 # Acknowledgements
 
 A big thanks to [ThaUnknown](https://github.com/ThaUnknown) for writing and open-sourcing the libraries that made this app possible:
