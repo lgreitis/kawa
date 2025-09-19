@@ -12,6 +12,7 @@ import { SubtitleSelector } from "./components/SubtitleSelector";
 import { twMerge } from "tailwind-merge";
 import { useMouseMoveTrigger } from "@renderer/hooks/useMouseMoveTrigger";
 import { InformationPopover } from "./components/InformationPopover";
+import { useVolumeStore } from "@renderer/store/volumeStore";
 
 export interface IPlayerState {
   currentTime: number;
@@ -32,6 +33,8 @@ interface IVideoControlBarProps {
 export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
   const { player, setShowMouse, infoHash } = props;
 
+  const { setVolume, volume } = useVolumeStore();
+
   const { mouseMovementTriggered } = useMouseMoveTrigger(2000);
   const [isDragging, setIsDragging] = useState(false);
   const [isInsideControlBar, setIsInsideControlBar] = useState(false);
@@ -39,7 +42,7 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
   const [playerState, setPlayerState] = useState<IPlayerState>({
     currentTime: 0,
     timePercentage: 0,
-    volume: 1,
+    volume: volume,
     length: 0,
     isPlaying: false,
     isFullscreen: false,
@@ -52,19 +55,21 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
 
     const { currentTime, timePercentage, duration } = calculatePlayerTime(player);
 
-    setPlayerState({
+    setPlayerState((prev) => ({
+      ...prev,
       currentTime: currentTime,
       timePercentage: timePercentage,
-      volume: player.volume() ?? 1,
       length: duration,
       isPlaying: !player.paused(),
       isFullscreen: player.isFullscreen() ?? false,
-    });
+    }));
 
     const handleVolumeChange = () => {
+      const newVolume = player.volume() ?? 0;
+      setVolume(newVolume);
       setPlayerState((state) => ({
         ...state,
-        volume: player.volume() ?? 1,
+        volume: newVolume,
       }));
     };
 
@@ -90,7 +95,7 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
         player.off("timeupdate", handleTimeUpdate);
       }
     };
-  }, [player]);
+  }, [player, setVolume]);
 
   const onPlayResumeClick = () => {
     if (player) {
