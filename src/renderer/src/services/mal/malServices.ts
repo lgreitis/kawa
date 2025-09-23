@@ -97,7 +97,7 @@ export const getMalAnimeDetails = async (data: IMalAnimeDetailsRequest) => {
 
 export const malAnimeSearch = async (data: IMalAnimeSearchRequest) => {
   const response = await axios.get<IMalAnimeSearchResponse>(
-    `https://api.myanimelist.net/v2/anime?q=${data.q}&limit=${data.limit}&fields=alternative_titles`,
+    `https://api.myanimelist.net/v2/anime?q=${data.q}&limit=${data.limit}&fields=alternative_titles&nsfw=true`,
     {
       headers: {
         "X-MAL-CLIENT-ID": MAL_CLIENT_ID,
@@ -139,7 +139,7 @@ export const refreshMalToken = async (refreshToken: string) => {
 // TODO: load more than 1000
 export const getUserMalAnimeList = async (data: IUserMalAnimeListRequest) => {
   const response = await malAuthenticatedApi.get<IUserMalAnimeListResponse>(
-    "https://api.myanimelist.net/v2/users/@me/animelist?fields=alternative_titles",
+    "https://api.myanimelist.net/v2/users/@me/animelist?fields=alternative_titles&nsfw=true",
     {
       params: {
         limit: 1000,
