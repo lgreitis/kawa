@@ -8,8 +8,9 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest]
+        os: [windows-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -21,9 +22,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: yarn
 
       - name: Install dependencies
-        run: yarn
+        run: yarn --frozen-lockfile
 
       - name: Build Windows
         if: matrix.os == 'windows-latest'
@@ -33,13 +35,29 @@ jobs:
           VITE_MAL_REDIRECT_URI: ${{ vars.VITE_MAL_REDIRECT_URI }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VITE_DEFAULT_EXTENSIONS: ${{ secrets.VITE_DEFAULT_EXTENSIONS }}
+
+      - name: Build macOS
+        if: matrix.os == 'macos-latest'
+        run: yarn build:mac
+        env:
+          VITE_MAL_CLIENT_ID: ${{ vars.VITE_MAL_CLIENT_ID }}
+          VITE_MAL_REDIRECT_URI: ${{ vars.VITE_MAL_REDIRECT_URI }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VITE_DEFAULT_EXTENSIONS: ${{ secrets.VITE_DEFAULT_EXTENSIONS }}
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
       - name: Create artifact
         uses: actions/upload-artifact@v4
         with:
           name: Build-${{ matrix.os }}
+          if-no-files-found: error
           path: |
             dist/win-unpacked/**
             dist/*-portable.exe
+            dist/*.exe
+            dist/mac/**
+            dist/*.dmg
+            dist/*.zip
             dist/*.yml
             dist/*.blockmap
 
@@ -49,6 +67,8 @@ jobs:
           draft: true
           files: |
             dist/*.exe
+            dist/*.dmg
+            dist/*.zip
             dist/*.yml
             dist/*.blockmap
         env:
