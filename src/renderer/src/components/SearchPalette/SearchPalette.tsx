@@ -50,6 +50,7 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
           className="mx-auto max-w-xl transform divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 bg-black/80 backdrop-blur-md transition-all data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
         >
           <Combobox
+            // @ts-expect-error TODO: need to check later
             onChange={(malId: number) => {
               if (malId) {
                 navigate(`/info/${malId}`);

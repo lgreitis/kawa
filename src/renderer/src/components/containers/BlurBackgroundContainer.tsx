@@ -11,7 +11,7 @@ interface IBlurBackgroundContainerProps {
   imdbId?: string;
   isLoading?: boolean;
   darkenLoader?: boolean;
-  ref?: React.RefObject<HTMLDivElement>;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export const BlurBackgroundContainer: React.FC<IBlurBackgroundContainerProps> = (props) => {

@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 interface IScrollAreaProps {
   children: React.ReactNode;
   className?: string;
-  ref?: React.RefObject<HTMLDivElement>;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export const ScrollArea: React.FC<IScrollAreaProps> = (props) => {

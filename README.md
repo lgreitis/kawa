@@ -26,6 +26,8 @@ All you should need is Node.js and yarn. Setup the .env file with .env.example g
 - Add more anime discovery features.
 - Support other anime tracking services (AniList, Kitsu).
 - General extension/renderer/main process system cleanup.
+- Upgrade Tailwind, ESlint, React Router packages
+- Fix up Content-Security-Policy headers.
 
 # Acknowledgements
 

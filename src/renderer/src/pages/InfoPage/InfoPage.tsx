@@ -24,7 +24,6 @@ export const InfoPage: React.FC = () => {
   };
 
   return (
-    // @ts-expect-error - TODO: fix ref problems
     <BlurBackgroundContainer imdbId={imdbId} isLoading={isLoading} ref={refCallback}>
       {!isLoading && (
         <motion.div

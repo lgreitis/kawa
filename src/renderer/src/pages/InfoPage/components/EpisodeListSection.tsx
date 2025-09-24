@@ -15,8 +15,6 @@ interface IEpisodeListSectionProps {
 }
 
 export const EpisodeListSection: React.FC<IEpisodeListSectionProps> = (props) => {
-  // eslint-disable-next-line react-compiler/react-compiler
-  "use no memo";
   const { malId, anidbId, className, parent } = props;
   const { data: anidbData } = useAnidbAnimeInfoQuery(anidbId ?? 0);
   const animeListEntry = useAnimeListEntry(malId);
@@ -42,7 +40,8 @@ export const EpisodeListSection: React.FC<IEpisodeListSectionProps> = (props) =>
     getScrollElement: () => parent,
     estimateSize: () => 112,
     paddingEnd: 16,
-    overscan: 40,
+    // TODO: fix virtualization so that we don't need overcan
+    overscan: 20,
     enabled: !episodesCompressed,
   });
 
