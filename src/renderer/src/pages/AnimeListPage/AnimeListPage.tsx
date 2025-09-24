@@ -59,7 +59,10 @@ export const AnimeListPage: React.FC = () => {
                     src={anime.node.main_picture.large}
                   />
                   <span className="line-clamp-2">
-                    {anime.node.alternative_titles?.en ?? anime.node.title}
+                    {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want this kind of check to check for empty strings */}
+                    {anime.node.alternative_titles?.en
+                      ? anime.node.alternative_titles?.en
+                      : anime.node.title}
                   </span>
                 </motion.div>
               ))}

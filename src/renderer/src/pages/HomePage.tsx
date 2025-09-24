@@ -46,8 +46,10 @@ export const HomePage: React.FC = () => {
           <div className="flex flex-col">
             <span>Top airing anime</span>
             <h1 className="text-4xl font-bold text-white">
-              {data.data[currentSlide].node.alternative_titles?.en ??
-                data.data[currentSlide].node.title}
+              {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want this kind of check to check for empty strings */}
+              {data.data[currentSlide].node.alternative_titles?.en
+                ? data.data[currentSlide].node.alternative_titles?.en
+                : data.data[currentSlide].node.title}
             </h1>
           </div>
           <div className="flex h-[60px] flex-grow items-center justify-end">
