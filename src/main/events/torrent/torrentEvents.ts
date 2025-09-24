@@ -75,9 +75,7 @@ const handleTorrentAdd = async (
     (torrent) => torrent.infoHash === data.infoHash,
   );
 
-  if (!torrent) {
-    torrent = await addTorrent(data.magnetURI);
-  }
+  torrent ??= await addTorrent(data.magnetURI);
 
   pauseOtherTorrents(torrent);
   torrent.resume();
@@ -138,7 +136,7 @@ const getDownloadFolderSize = async () => {
 const removeAllDownloads = async () => {
   for (const torrent of client.torrents) {
     await new Promise<void>((resolve, reject) => {
-      client.remove(torrent, { destroyStore: true }, (err) => {
+      void client.remove(torrent, { destroyStore: true }, (err) => {
         if (err) {
           console.error("Error removing torrent:", err);
           reject(isNativeError(err) ? err : new Error(err));

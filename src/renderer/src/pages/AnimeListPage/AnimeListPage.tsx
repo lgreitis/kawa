@@ -59,9 +59,7 @@ export const AnimeListPage: React.FC = () => {
                     src={anime.node.main_picture.large}
                   />
                   <span className="line-clamp-2">
-                    {anime.node.alternative_titles?.en
-                      ? anime.node.alternative_titles.en
-                      : anime.node.title}
+                    {anime.node.alternative_titles?.en ?? anime.node.title}
                   </span>
                 </motion.div>
               ))}
