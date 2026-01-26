@@ -1,5 +1,5 @@
 import { type ITrack } from "@renderer/types/watchPageTypes";
-import JASSUB from "jassub";
+import JASSUB, { type ASS_Style } from "jassub";
 import type Player from "video.js/dist/types/player";
 
 const defaultHeader = `[Script Info]
@@ -48,6 +48,8 @@ export class TrackHelper {
       wasmUrl: new URL("jassub/dist/jassub-worker.wasm", import.meta.url).toString(),
     });
 
+    this.setActiveTrack(tracks[0]?.number ?? 0);
+
     // Set the active track to English if it exists
     for (const track of this.tracks) {
       const name = track.name ?? track.language ?? "Unknown";
@@ -57,6 +59,37 @@ export class TrackHelper {
         break;
       }
     }
+
+    const overrideStyle: ASS_Style = {
+      Name: "DialogueStyleOverride",
+      FontSize: 72,
+      PrimaryColour: 0xffffff00,
+      SecondaryColour: 0xff000000,
+      OutlineColour: 0,
+      BackColour: 0,
+      Bold: 1,
+      Italic: 0,
+      Underline: 0,
+      StrikeOut: 0,
+      ScaleY: 0.6,
+      ScaleX: 0.6,
+      Angle: 0,
+      BorderStyle: 1,
+      Outline: 4,
+      Shadow: 0,
+      Alignment: 2,
+      MarginL: 135,
+      MarginR: 135,
+      MarginV: 50,
+      Encoding: 1,
+      treat_fontname_as_pattern: 0,
+      Blur: 0,
+      Justify: 0,
+      FontName: "Roboto Medium",
+      Spacing: 0,
+    };
+
+    this.renderer?.styleOverride(overrideStyle);
 
     window.electron.ipcRenderer.on(
       "subtitle",
