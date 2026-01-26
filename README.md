@@ -17,7 +17,7 @@ All you should need is Node.js and yarn. Setup the .env file with .env.example g
 # What needs to be done?
 
 - Auto delete torrents when done seeding/watching.
-- Fix subtitle rendering, auto selection, UI.
+- Fix subtitle rendering, auto selection, UI. Update jassub package to v2.
 - Create more extensions for different sources.
 - Make builds for MacOS and Linux.
 - Support multi episode torrents.
