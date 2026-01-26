@@ -52,14 +52,14 @@ export const getMalRankingAnime = async (data: IMalRankingAnimeRequest) => {
   const kitsuAnimeMapping = await kitsuAnimeMappingQueryFn();
 
   const promises = response.data.data.map(async (anime) => {
-    const { kitsu } = await idMappingsFromMalIdQueryFn(anime.node.id);
+    const { kitsu, imdb } = await idMappingsFromMalIdQueryFn(anime.node.id);
 
     if (!kitsu) {
       return;
     }
 
     const mapInfo = kitsuAnimeMapping[kitsu];
-    const imdbId = mapInfo?.imdb_id;
+    const imdbId = mapInfo?.imdb_id ?? imdb;
 
     if (!imdbId) {
       return;
