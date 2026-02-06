@@ -46,6 +46,7 @@ export class TrackHelper {
       subContent: defaultHeader,
       workerUrl: new URL("jassub/dist/jassub-worker.js", import.meta.url).toString(),
       wasmUrl: new URL("jassub/dist/jassub-worker.wasm", import.meta.url).toString(),
+      availableFonts: { "roboto medium": "kawa://assets/default.woff2" },
     });
 
     this.setActiveTrack(tracks[0]?.number ?? 0);

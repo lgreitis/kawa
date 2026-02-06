@@ -51,3 +51,6 @@ publish:
   repo: kawa
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
+extraResources:
+  - from: resources/renderer-assets
+    to: renderer-assets
