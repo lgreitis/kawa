@@ -44,5 +44,7 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "react-compiler/react-compiler": "error",
+    "react-hooks/set-state-in-effect": "warn",
+    "react-hooks/refs": "warn",
   },
 };
