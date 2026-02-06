@@ -25,6 +25,15 @@ jobs:
           node-version: 20
           cache: yarn
 
+      - name: Ensure tag matches package.json version
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          echo "tag=$TAG pkg=$PKG"
+          test "$TAG" = "$PKG"
+
       - name: Install dependencies
         run: yarn --frozen-lockfile
 
