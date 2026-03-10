@@ -13,6 +13,7 @@ import "video.js/dist/video-js.min.css";
 import "videojs-hotkeys";
 import { useMalAnimeDetailsQuery } from "@renderer/services/mal/malQueries";
 import { useAnizipMappingsQuery } from "@renderer/services/anizip/anizipQueries";
+import { VideoTitleOverlay } from "@renderer/components/VideoTitleOverlay/VideoTitleOverlay";
 
 const initialOptions = {
   controls: true,
@@ -168,6 +169,15 @@ export const WatchPage: React.FC = () => {
         )}
         ref={videoRef}
       ></div>
+      {showMouse && (
+        <VideoTitleOverlay
+          player={player}
+          title={state?.animeTitle}
+          episode={state?.episodeNumber}
+          size={state.size}
+          videoResolution={state.videoResolution}
+        />
+      )}
       <VideoControlBar
         player={player}
         setShowMouse={setShowMouse}

@@ -7,6 +7,9 @@ export interface ITrack {
 }
 
 export interface IWatchPageState {
+  animeTitle: string;
+  size?: number;
+  videoResolution?: string;
   tracks: ITrack[];
   malId: number;
   episodeNumber: number;

@@ -63,6 +63,9 @@ export const StreamPage: React.FC = () => {
 
     const watchPageState: IWatchPageState = {
       tracks: mutationResult.tracks,
+      animeTitle: titles[0] ?? "",
+      size: stream.totalSize,
+      videoResolution: stream.videoResolution,
       malId: malId,
       episodeNumber: episode,
       infoHash: stream.infoHash,
