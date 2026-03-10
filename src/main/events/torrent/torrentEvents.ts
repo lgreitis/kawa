@@ -8,6 +8,7 @@ import { readdir, stat } from "fs/promises";
 import { isNativeError } from "util/types";
 import { type ITorrentStatus } from "@shared/types/torrent";
 import { sendIpcData } from "../..";
+import { app } from "electron";
 
 const downloadsDir = path.join(APP_DATA_PATH, "downloads");
 const client = new WebTorrent();
@@ -15,6 +16,10 @@ const instance = client.createServer();
 // @ts-expect-error - bad types
 // eslint-disable-next-line
 instance.server.listen(TORRENT_CONTENT_LISTEN_PORT);
+
+app.on("before-quit", () => {
+  client.destroy();
+});
 
 const addDownloadsDirIfDoesntExist = async () => {
   try {
