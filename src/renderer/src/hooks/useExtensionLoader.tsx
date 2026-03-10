@@ -1,16 +1,10 @@
 import { useGetExtensionsQuery } from "@renderer/services/electron/electronQueries";
 import { useExtensionStore } from "@renderer/store/extensionStore";
 import { useEffect, useRef, useState } from "react";
-import { BlurBackgroundContainer } from "../containers/BlurBackgroundContainer";
 import { useAddExtensionMutation } from "@renderer/services/electron/electronMutations";
 import { getDefaultExtensions } from "@renderer/services/extensions/extensionsServices";
 
-interface IExtensionProps {
-  children?: React.ReactNode;
-}
-
-export const ExtensionLoader: React.FC<IExtensionProps> = (props) => {
-  const { children } = props;
+export const useExtensionLoader = () => {
   const { data } = useGetExtensionsQuery();
   const { addSource, reset } = useExtensionStore();
   const isAddingRef = useRef(false);
@@ -54,15 +48,5 @@ export const ExtensionLoader: React.FC<IExtensionProps> = (props) => {
     };
   }, [data, addSource, reset, addExtension]);
 
-  if (isLoading) {
-    return (
-      <BlurBackgroundContainer>
-        <div className="flex h-full items-center justify-center">
-          <span>Loading extensions...</span>
-        </div>
-      </BlurBackgroundContainer>
-    );
-  }
-
-  return children;
+  return { isLoading };
 };
