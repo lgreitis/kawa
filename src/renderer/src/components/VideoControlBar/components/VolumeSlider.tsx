@@ -25,10 +25,6 @@ export const VolumeSlider: React.FC<IVolumeSliderProps> = (props) => {
     }
   }, [volume, player]);
 
-  useEffect(() => {
-    setVolume(playerStateVolume);
-  }, [playerStateVolume]);
-
   return (
     <div
       onMouseEnter={() => setShowVolumeSlider(true)}
