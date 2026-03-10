@@ -13,6 +13,8 @@ import { AnimeListPage } from "./pages/AnimeListPage/AnimeListPage";
 import { MalAuthListener } from "./listeners/MalAuthListener";
 import { Toaster } from "sonner";
 import { ErrorBoundary } from "./ErrorBoundary";
+import { IS_DEV } from "./constants";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const router = createHashRouter([
   {
@@ -45,7 +47,7 @@ const App: React.FC = () => {
         theme="dark"
         offset={48}
       />
-      {/* {IS_DEV && <ReactQueryDevtools />} */}
+      {IS_DEV && <ReactQueryDevtools />}
     </QueryClientProvider>
   );
 };
