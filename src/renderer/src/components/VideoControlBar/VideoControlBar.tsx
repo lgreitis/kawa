@@ -26,12 +26,12 @@ export interface IPlayerState {
 interface IVideoControlBarProps {
   player: Player | null;
   setShowMouse: (show: boolean) => void;
-  trackHelperRef: React.MutableRefObject<TrackHelper | null>;
+  trackHelper: TrackHelper | null;
   infoHash: string;
 }
 
 export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
-  const { player, setShowMouse, infoHash } = props;
+  const { player, setShowMouse, infoHash, trackHelper } = props;
 
   const { setVolume, volume } = useVolumeStore();
 
@@ -161,7 +161,7 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
         <div className="flex-grow"></div>
         <div className="flex items-center gap-2">
           <InformationPopover infoHash={infoHash} player={player} />
-          <SubtitleSelector trackHelperRef={props.trackHelperRef} />
+          <SubtitleSelector trackHelper={trackHelper} />
           <button onClick={onFullScreenClick}>
             {playerState.isFullscreen ? (
               <ArrowsPointingInIcon className="size-5" />

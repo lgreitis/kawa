@@ -40,6 +40,7 @@ export const WatchPage: React.FC = () => {
   const playerRef = useRef<ReturnType<typeof videojs> | null>(null);
   const [player, setPlayer] = useState<ReturnType<typeof videojs> | null>(null);
   const trackHelperRef = useRef<TrackHelper | null>(null);
+  const [trackHelper, setTrackHelper] = useState<TrackHelper | null>(null);
 
   useWatchedEpisodeUpdater({
     malId: state?.malId ?? 0,
@@ -101,7 +102,9 @@ export const WatchPage: React.FC = () => {
       setPlayer(player);
 
       if (state?.tracks) {
-        trackHelperRef.current = new TrackHelper(player, state.tracks);
+        const helper = new TrackHelper(player, state.tracks);
+        trackHelperRef.current = helper;
+        setTrackHelper(helper);
       }
 
       player.fill(true);
@@ -135,6 +138,7 @@ export const WatchPage: React.FC = () => {
         trackHelperRef.current?.destroy();
         player.dispose();
         setPlayer(null);
+        setTrackHelper(null);
         trackHelperRef.current = null;
         playerRef.current = null;
       }
@@ -181,7 +185,7 @@ export const WatchPage: React.FC = () => {
       <VideoControlBar
         player={player}
         setShowMouse={setShowMouse}
-        trackHelperRef={trackHelperRef}
+        trackHelper={trackHelper}
         infoHash={state?.infoHash ?? ""}
       />
     </SafeArea>

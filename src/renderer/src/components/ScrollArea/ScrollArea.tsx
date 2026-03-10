@@ -24,7 +24,10 @@ export const ScrollArea: React.FC<IScrollAreaProps> = (props) => {
 
   return (
     <BaseScrollArea.Root className={twMerge("overflow-hidden", className)}>
-      <BaseScrollArea.Viewport className="h-full w-full overscroll-contain" ref={ref}>
+      <BaseScrollArea.Viewport
+        className="h-full max-h-[inherit] w-full overscroll-contain"
+        ref={ref}
+      >
         <BaseScrollArea.Content>{children}</BaseScrollArea.Content>
       </BaseScrollArea.Viewport>
       <BaseScrollArea.Scrollbar

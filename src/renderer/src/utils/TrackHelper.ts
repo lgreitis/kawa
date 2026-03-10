@@ -1,6 +1,10 @@
 import { type ITrack } from "@renderer/types/watchPageTypes";
-import JASSUB, { type ASS_Style } from "jassub";
+import JASSUB from "jassub";
 import type Player from "video.js/dist/types/player";
+import workerUrl from "./jassub-worker.ts?worker&url";
+import wasmUrl from "jassub/dist/wasm/jassub-worker.wasm?url";
+import modernWasmUrl from "jassub/dist/wasm/jassub-worker-modern.wasm?url";
+import { type ASSStyle } from "jassub/dist/worker/util";
 
 const defaultHeader = `[Script Info]
 Title: English (US)
@@ -12,7 +16,7 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default, Roboto Medium},52,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2.6,0,2,20,20,46,1
+Style: Default, Roboto Medium,52,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2.6,0,2,20,20,46,1
 [Events]
 
 `;
@@ -34,34 +38,40 @@ export class TrackHelper {
   tracks: ITrack[];
   player: Player;
   receivedSubtitles = new Map<string, Set<string>>();
-  renderer: JASSUB;
+  instance: JASSUB;
   currentTrack: number | null = null;
+  styles: string[] = [];
 
   constructor(player: Player, tracks: ITrack[]) {
     this.player = player;
     this.tracks = tracks;
 
-    this.renderer = new JASSUB({
+    this.instance = new JASSUB({
       video: player.el().firstElementChild as HTMLVideoElement,
       subContent: defaultHeader,
-      workerUrl: new URL("jassub/dist/jassub-worker.js", import.meta.url).toString(),
-      wasmUrl: new URL("jassub/dist/jassub-worker.wasm", import.meta.url).toString(),
-      availableFonts: { "roboto medium": "kawa://assets/default.woff2" },
+      workerUrl: workerUrl,
+      wasmUrl: wasmUrl,
+      modernWasmUrl: modernWasmUrl,
+      availableFonts: {
+        "Liberation Sans": new URL("../assets/default.woff2", import.meta.url).toString(),
+      },
+      queryFonts: "localandremote",
+      defaultFont: "Liberation Sans",
     });
 
-    this.setActiveTrack(tracks[0]?.number ?? 0);
+    void this.setActiveTrack(tracks[0]?.number ?? 0);
 
     // Set the active track to English if it exists
     for (const track of this.tracks) {
       const name = track.name ?? track.language ?? "Unknown";
 
       if (name.toLowerCase().includes("eng")) {
-        this.setActiveTrack(track.number);
+        void this.setActiveTrack(track.number);
         break;
       }
     }
 
-    const overrideStyle: ASS_Style = {
+    const overrideStyle: ASSStyle = {
       Name: "DialogueStyleOverride",
       FontSize: 72,
       PrimaryColour: 0xffffff00,
@@ -90,7 +100,10 @@ export class TrackHelper {
       Spacing: 0,
     };
 
-    this.renderer?.styleOverride(overrideStyle);
+    void (async (instance) => {
+      await instance.ready;
+      await instance.renderer.styleOverride(overrideStyle);
+    })(this.instance);
 
     window.electron.ipcRenderer.on(
       "subtitle",
@@ -124,28 +137,32 @@ export class TrackHelper {
           return;
         }
 
-        this.renderer.createEvent({
-          Start: subtitle.time,
-          Duration: subtitle.duration,
-          Style: subtitle.style,
-          Name: subtitle.name || "",
-          MarginL: Number(subtitle.marginL) || 0,
-          MarginR: Number(subtitle.marginR) || 0,
-          MarginV: Number(subtitle.marginV) || 0,
-          Effect: subtitle.effect || "",
-          Text: subtitle.text || "",
-          ReadOrder: 1,
-          Layer: Number(subtitle.layer) || 0,
-          _index: trackNumber,
+        void this.instance?.ready.then(() => {
+          void this.instance.renderer.createEvent({
+            Start: subtitle.time,
+            Duration: subtitle.duration,
+            // TODO: need to setup styles
+            Style: 1,
+            // Style: subtitle.style,
+            Name: subtitle.name || "",
+            MarginL: Number(subtitle.marginL) || 0,
+            MarginR: Number(subtitle.marginR) || 0,
+            MarginV: Number(subtitle.marginV) || 0,
+            Effect: subtitle.effect || "",
+            Text: subtitle.text || "",
+            ReadOrder: 1,
+            Layer: Number(subtitle.layer) || 0,
+          });
         });
       },
     );
   }
 
-  setActiveTrack(trackNumber: number) {
+  async setActiveTrack(trackNumber: number) {
     this.currentTrack = Number(trackNumber);
     const textTrack = this.tracks.find((track) => track.number === trackNumber);
-    this.renderer.setTrack(textTrack?.header ?? defaultHeader);
+    await this.instance.ready;
+    await this.instance.renderer.setTrack(textTrack?.header ?? defaultHeader);
     const subtitleSet = this.receivedSubtitles.get(this.currentTrack.toString());
 
     if (!subtitleSet) {
@@ -154,10 +171,12 @@ export class TrackHelper {
 
     subtitleSet.forEach((subtitleString) => {
       const subtitle = JSON.parse(subtitleString) as ISubtitle;
-      this.renderer.createEvent({
+      void this.instance.renderer.createEvent({
         Start: subtitle.time,
         Duration: subtitle.duration,
-        Style: subtitle.style,
+        // TODO: need to setup styles
+        Style: 1,
+        // Style: subtitle.style,
         Name: subtitle.name || "",
         MarginL: Number(subtitle.marginL) || 0,
         MarginR: Number(subtitle.marginR) || 0,
@@ -166,13 +185,12 @@ export class TrackHelper {
         Text: subtitle.text || "",
         ReadOrder: 1,
         Layer: Number(subtitle.layer) || 0,
-        _index: this.currentTrack ?? 0,
       });
     });
   }
 
   destroy() {
     window.electron.ipcRenderer.removeAllListeners("subtitle");
-    this.renderer.destroy();
+    void this.instance.destroy();
   }
 }

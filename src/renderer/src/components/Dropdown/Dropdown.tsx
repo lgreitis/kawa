@@ -1,6 +1,7 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { twJoin } from "tailwind-merge";
+import { ScrollArea } from "../ScrollArea/ScrollArea";
 
 interface IDropdownProps {
   as?: React.ElementType;
@@ -50,7 +51,7 @@ export const Dropdown: React.FC<IDropdownProps> = (props) => {
             origin === "top-left" && "origin-top-left",
           )}
         >
-          <div className="max-h-96">
+          <ScrollArea className="max-h-64" scrollbarClassName="backdrop-blur-none bg-transparent">
             {options.map((option, index) => {
               if (option === null) {
                 return <div key={"divider" + index} className="my-1 h-px bg-white/5" />;
@@ -71,7 +72,7 @@ export const Dropdown: React.FC<IDropdownProps> = (props) => {
                 </MenuItem>
               );
             })}
-          </div>
+          </ScrollArea>
         </MenuItems>
       </Menu>
     </div>

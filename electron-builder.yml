@@ -9,8 +9,6 @@ files:
   - "!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md,postcss.config.cjs,tailwind.config.js}"
   - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
   - "!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}"
-asarUnpack:
-  - resources/**
 win:
   executableName: Kawa
   target:
@@ -51,6 +49,3 @@ publish:
   repo: kawa
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
-extraResources:
-  - from: resources/renderer-assets
-    to: renderer-assets

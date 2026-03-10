@@ -2,23 +2,34 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { Dropdown } from "@renderer/components/Dropdown/Dropdown";
 import { CCIcon } from "@renderer/components/icons/CCIcon";
 import { type TrackHelper } from "@renderer/utils/TrackHelper";
+import { useState } from "react";
 
 interface ISubtitleSelectorProps {
-  trackHelperRef: React.MutableRefObject<TrackHelper | null>;
+  trackHelper: TrackHelper | null;
 }
 
 export const SubtitleSelector: React.FC<ISubtitleSelectorProps> = (props) => {
-  const { trackHelperRef } = props;
+  const { trackHelper } = props;
+  const [activeTrack, setActiveTrack] = useState<number | null>(null);
+  const [prevHelper, setPrevHelper] = useState<TrackHelper | null>(null);
 
-  const options = trackHelperRef.current?.tracks.map((track) => ({
-    label: track.name ?? track.language ?? "Unknown",
-    icon: trackHelperRef.current?.currentTrack === track.number ? CheckCircleIcon : undefined,
+  if (trackHelper !== prevHelper) {
+    setPrevHelper(trackHelper);
+    setActiveTrack(trackHelper?.currentTrack ?? null);
+  }
+
+  const tracks = trackHelper?.tracks ?? [];
+
+  const options = tracks.map((track) => ({
+    label: `${track.name} ${track.language}`,
+    icon: activeTrack === track.number ? CheckCircleIcon : undefined,
     onClick: () => {
-      trackHelperRef.current?.setActiveTrack(track.number);
+      void trackHelper?.setActiveTrack(track.number);
+      setActiveTrack(track.number);
     },
   }));
 
-  return <Dropdown options={options ?? []} as={SubtitleSelectorButton} />;
+  return <Dropdown options={options} as={SubtitleSelectorButton} />;
 };
 
 interface ISubtitleSelectorButtonProps {
