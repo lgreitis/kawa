@@ -8,15 +8,6 @@ import { IS_WINDOWS } from "./constants";
 
 process.env.APP_VERSION = app.getVersion();
 
-const contentTypeFor = (filePath: string): string => {
-  if (filePath.endsWith(".woff2")) return "font/woff2";
-  if (filePath.endsWith(".woff")) return "font/woff";
-  if (filePath.endsWith(".ttf")) return "font/ttf";
-  if (filePath.endsWith(".otf")) return "font/otf";
-  if (filePath.endsWith(".wasm")) return "application/wasm";
-  return "application/octet-stream";
-};
-
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
     app.setAsDefaultProtocolClient("kawa", process.execPath, [path.resolve(process.argv[1])]);

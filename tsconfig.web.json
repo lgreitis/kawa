@@ -8,6 +8,8 @@
     "src/shared/types/*.ts"
   ],
   "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "composite": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
@@ -16,6 +18,6 @@
         "src/renderer/src/*"
       ],
       "@shared/*": ["src/shared/*"]
-    }
+    },
   }
 }
