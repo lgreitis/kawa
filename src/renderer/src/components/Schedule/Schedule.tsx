@@ -1,21 +1,15 @@
 import { useUserAiringScheduleQuery } from "@renderer/services/schedule/scheduleQueries";
-import { endOfWeek, format, fromUnixTime, getUnixTime, startOfWeek } from "date-fns";
+import { format, fromUnixTime } from "date-fns";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "../Skeleton/Skeleton";
 
-export const Schedule: React.FC = () => {
-  const now = new Date();
-  const today = format(now, "yyyy-MM-dd");
-  const weekStart = getUnixTime(startOfWeek(now, { weekStartsOn: 1 }));
-  const weekEnd = getUnixTime(endOfWeek(now, { weekStartsOn: 1 }));
+const formatTitle = (title: string) => title.replace(/【(.*?)】/g, "[$1]");
 
-  const { data: schedules, isLoading } = useUserAiringScheduleQuery({
-    weekStart,
-    weekEnd,
-    page: 1,
-  });
+export const Schedule: React.FC = () => {
+  const today = format(new Date(), "yyyy-MM-dd");
+  const { data: schedules, isLoading } = useUserAiringScheduleQuery();
 
   const scheduleByDay = useMemo(() => {
     if (!schedules) return [];
@@ -87,10 +81,12 @@ export const Schedule: React.FC = () => {
                   <div key={schedule.id} className="flex items-center justify-between text-white">
                     {schedule.malId ? (
                       <Link to={`/info/${schedule.malId}`} className="hover:underline">
-                        {schedule.media.title.english ?? schedule.media.title.romaji}
+                        {formatTitle(schedule.media.title.english ?? schedule.media.title.romaji)}
                       </Link>
                     ) : (
-                      <span>{schedule.media.title.english ?? schedule.media.title.romaji}</span>
+                      <span>
+                        {formatTitle(schedule.media.title.english ?? schedule.media.title.romaji)}
+                      </span>
                     )}
                     <span className={`text-sm ${isToday ? "text-white/70" : "text-white/50"}`}>
                       {format(fromUnixTime(schedule.airingAt), "h:mm a")}
