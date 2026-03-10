@@ -18,7 +18,7 @@ export const Schedule: React.FC = () => {
   });
 
   const scheduleByDay = useMemo(() => {
-    if (!schedules) return null;
+    if (!schedules) return [];
     return schedules
       .slice()
       .sort((a, b) => a.airingAt - b.airingAt)
