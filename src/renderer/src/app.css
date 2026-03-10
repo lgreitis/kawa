@@ -11,3 +11,9 @@ body {
 .vjs-tech:focus {
   outline: none;
 }
+
+.tsqd-open-btn-container {
+  scale: 0.6;
+  top: 40px !important;
+  right: 4px !important;
+}

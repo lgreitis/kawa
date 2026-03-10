@@ -47,7 +47,7 @@ const App: React.FC = () => {
         theme="dark"
         offset={48}
       />
-      {IS_DEV && <ReactQueryDevtools />}
+      {IS_DEV && <ReactQueryDevtools buttonPosition="top-right" />}
     </QueryClientProvider>
   );
 };
