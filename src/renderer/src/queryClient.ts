@@ -12,4 +12,5 @@ const localStoragePersister = createSyncStoragePersister({
 void persistQueryClient({
   queryClient,
   persister: localStoragePersister,
+  buster: `kawa-v${window.version}`,
 });

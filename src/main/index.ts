@@ -7,6 +7,8 @@ import { handleMalAuthCallback } from "./events/mal/malEvents";
 import { IS_WINDOWS } from "./constants";
 import fs from "node:fs";
 
+process.env.APP_VERSION = app.getVersion();
+
 const pickRendererAssetsDir = (): string => {
   const packaged = path.join(process.resourcesPath, "renderer-assets");
   if (app.isPackaged) return packaged;
