@@ -23,3 +23,22 @@ export const calculatePlayerTime = (player: Player) => {
 };
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const gqlFetch = async <TData, TVariables extends object>(
+  url: string,
+  query: string,
+  variables?: TVariables,
+): Promise<TData> => {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, variables }),
+  });
+
+  if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+
+  const json = (await res.json()) as { data?: TData; errors?: { message: string }[] };
+  if (json.errors) throw new Error(json.errors[0].message);
+
+  return json.data as TData;
+};

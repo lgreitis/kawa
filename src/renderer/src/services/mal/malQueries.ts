@@ -15,6 +15,7 @@ import {
 } from "./malTypes";
 import { useUserStore } from "@renderer/store/userStore";
 import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from "@renderer/constants";
+import { queryClient } from "@renderer/queryClient";
 
 export const useMalRankingAnimeQuery = (data: IMalRankingAnimeRequest) =>
   useQuery({
@@ -45,6 +46,20 @@ export const useUserMalAnimeList = (data: IUserMalAnimeListRequest) => {
     queryKey: ["mal", "user", "@me", "animeList", data.status],
     queryFn: () => getUserMalAnimeList(data),
     enabled: !!currentUserId,
+  });
+};
+
+export const userMalAnimeListQueryFn = (data: IUserMalAnimeListRequest) => {
+  const { currentUserId } = useUserStore.getState();
+
+  if (!currentUserId) {
+    return undefined;
+  }
+
+  return queryClient.fetchQuery({
+    queryKey: ["mal", "user", "@me", "animeList", data.status],
+    queryFn: () => getUserMalAnimeList(data),
+    staleTime: ONE_HOUR_IN_MS,
   });
 };
 

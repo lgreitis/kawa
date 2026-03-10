@@ -39,7 +39,7 @@ const App: React.FC = () => {
           style: {
             background: "rgba(0, 0, 0, 0.4)",
           },
-          className: "backdrop-blur-md border-none",
+          className: "backdrop-blur-md !border-none",
         }}
         position="top-right"
         theme="dark"

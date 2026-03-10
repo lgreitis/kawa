@@ -16,5 +16,9 @@ export const useUpdateUserMalAnimeList = () =>
         queryClient.invalidateQueries({ queryKey: ["mal", "user", "@me", "animeList"] }),
         queryClient.invalidateQueries({ queryKey: ["mal", "user", "entry", variables.malId] }),
       ]);
+
+      if (variables.status) {
+        await queryClient.invalidateQueries({ queryKey: ["anilist", "userAiringSchedule"] });
+      }
     },
   });
