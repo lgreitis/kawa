@@ -10,7 +10,6 @@ import {
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { useMalAnimeSearchQuery } from "@renderer/services/mal/malQueries";
 import { useDebounceValue } from "usehooks-ts";
-import { ScrollArea } from "../ScrollArea/ScrollArea";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../Loader/Loader";
 
@@ -74,31 +73,26 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
             </div>
 
             {searchResults && searchResults.data.length > 0 && (
-              <ComboboxOptions static className="scroll-py-2 py-2 text-sm text-white">
-                <ScrollArea className="h-full max-h-72">
-                  {searchResults.data.map((anime) => (
-                    <ComboboxOption
-                      key={anime.node.id}
-                      value={anime.node.id}
-                      className="group flex cursor-default select-none items-center gap-2 px-4 py-2 data-[focus]:bg-white/70 data-[focus]:text-black"
-                    >
-                      {anime.node.main_picture?.medium && (
-                        <img
-                          className="h-10 w-7 object-cover"
-                          src={anime.node.main_picture.medium}
-                        />
+              <ComboboxOptions static className="scroll-py-2 pt-2 text-sm text-white">
+                {searchResults.data.slice(0, 5).map((anime) => (
+                  <ComboboxOption
+                    key={anime.node.id}
+                    value={anime.node.id}
+                    className="group flex cursor-default select-none items-center gap-2 px-4 py-2 data-[focus]:bg-white/70 data-[focus]:text-black"
+                  >
+                    {anime.node.main_picture?.medium && (
+                      <img className="h-10 w-7 object-cover" src={anime.node.main_picture.medium} />
+                    )}
+                    <div className="flex flex-col">
+                      <span>{anime.node.title}</span>
+                      {anime.node.title !== anime.node.alternative_titles.en && (
+                        <span className="text-sm text-neutral-300 group-data-[focus]:text-neutral-800">
+                          {anime.node.alternative_titles.en}
+                        </span>
                       )}
-                      <div className="flex flex-col">
-                        <span>{anime.node.title}</span>
-                        {anime.node.title !== anime.node.alternative_titles.en && (
-                          <span className="text-sm text-neutral-300 group-data-[focus]:text-neutral-800">
-                            {anime.node.alternative_titles.en}
-                          </span>
-                        )}
-                      </div>
-                    </ComboboxOption>
-                  ))}
-                </ScrollArea>
+                    </div>
+                  </ComboboxOption>
+                ))}
               </ComboboxOptions>
             )}
           </Combobox>

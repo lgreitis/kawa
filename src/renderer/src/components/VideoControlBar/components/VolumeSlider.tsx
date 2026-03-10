@@ -1,20 +1,19 @@
 import type Player from "video.js/dist/types/player";
-import { type IPlayerState } from "../VideoControlBar";
 import React, { useEffect, useState } from "react";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
-import * as Slider from "@radix-ui/react-slider";
 import { AnimatePresence, motion } from "framer-motion";
+import { Slider } from "@base-ui/react/slider";
 
 interface IVolumeSliderProps {
   player: Player | null;
-  playerState: IPlayerState;
+  playerStateVolume: number;
 }
 
 export const VolumeSlider: React.FC<IVolumeSliderProps> = (props) => {
-  const { player, playerState } = props;
+  const { player, playerStateVolume } = props;
 
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
-  const [volume, setVolume] = useState(playerState.volume);
+  const [volume, setVolume] = useState(playerStateVolume);
   const [preMuteVolume, setPreMuteVolume] = useState(1);
 
   useEffect(() => {
@@ -27,8 +26,8 @@ export const VolumeSlider: React.FC<IVolumeSliderProps> = (props) => {
   }, [volume, player]);
 
   useEffect(() => {
-    setVolume(playerState.volume);
-  }, [playerState.volume]);
+    setVolume(playerStateVolume);
+  }, [playerStateVolume]);
 
   return (
     <div
@@ -59,24 +58,26 @@ export const VolumeSlider: React.FC<IVolumeSliderProps> = (props) => {
           >
             <Slider.Root
               className="relative flex h-5 w-16 touch-none select-none items-center"
-              value={[volume * 100]}
-              onValueChange={(value) => setVolume(value[0] / 100)}
+              value={volume * 100}
+              onValueChange={(value) => setVolume(value / 100)}
               max={100}
               step={1}
             >
-              <Slider.Track className="relative h-[3px] grow rounded-full bg-white/40">
-                <Slider.Range className="absolute h-full rounded-full bg-white/80" />
-              </Slider.Track>
-              <motion.div
-                key="thumb"
-                className="size-3"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Slider.Thumb className="block size-3 rounded-[10px] bg-white focus:shadow-[0_2px_10px] focus:shadow-white/50 focus:outline-none" />
-              </motion.div>
+              <Slider.Control className="flex w-full items-center py-2">
+                <Slider.Track className="relative h-[3px] grow rounded-full bg-white/40">
+                  <Slider.Indicator className="absolute h-full rounded-full bg-white/80" />
+                  <motion.div
+                    key="thumb"
+                    className="size-3"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Slider.Thumb className="block size-3 rounded-[10px] bg-white focus:shadow-[0_2px_10px] focus:shadow-white/50 focus:outline-none" />
+                  </motion.div>
+                </Slider.Track>
+              </Slider.Control>
             </Slider.Root>
           </motion.div>
         )}

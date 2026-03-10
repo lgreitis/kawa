@@ -152,7 +152,7 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
           )}
         </button>
 
-        <VolumeSlider player={player} playerState={playerState} />
+        <VolumeSlider player={player} playerStateVolume={playerState.volume} />
         <div className="flex items-center gap-1 text-sm">
           <VideoControlBarTime time={playerState.currentTime} />
           <span>/</span>
