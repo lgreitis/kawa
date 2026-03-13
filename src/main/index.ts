@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow } from "electron";
+import { app, shell, BrowserWindow, session } from "electron";
 import path, { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
@@ -37,7 +37,7 @@ function createMainWindow(): BrowserWindow {
     webPreferences: {
       preload: join(__dirname, "../preload/index.mjs"),
       sandbox: false,
-      webSecurity: false,
+      webSecurity: true,
     },
     titleBarStyle: "hidden",
     trafficLightPosition: { x: 10, y: 10 },
@@ -45,6 +45,42 @@ function createMainWindow(): BrowserWindow {
 
   mainWindow.on("ready-to-show", () => {
     mainWindow?.show();
+
+    session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+      callback({ requestHeaders: { ...details.requestHeaders, Origin: "*" } });
+    });
+
+    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+      const headers = { ...details.responseHeaders };
+
+      // Normalize header keys to lowercase for reliable lookup
+      const hasOrigin = Object.keys(headers).some(
+        (key) => key.toLowerCase() === "access-control-allow-origin",
+      );
+
+      if (details.method === "OPTIONS") {
+        if (!hasOrigin) headers["access-control-allow-origin"] = ["*"];
+        if (!Object.keys(headers).some((k) => k.toLowerCase() === "access-control-allow-headers")) {
+          headers["access-control-allow-headers"] = ["*"];
+        }
+        if (!Object.keys(headers).some((k) => k.toLowerCase() === "access-control-allow-methods")) {
+          headers["access-control-allow-methods"] = ["GET, POST, PUT, DELETE, OPTIONS"];
+        }
+        headers["access-control-max-age"] = ["86400"];
+
+        callback({ cancel: false, responseHeaders: headers, statusLine: "HTTP/1.1 200 OK" });
+      } else {
+        if (!hasOrigin) headers["access-control-allow-origin"] = ["*"];
+        if (!Object.keys(headers).some((k) => k.toLowerCase() === "access-control-allow-headers")) {
+          headers["access-control-allow-headers"] = ["*"];
+        }
+        if (!Object.keys(headers).some((k) => k.toLowerCase() === "access-control-allow-methods")) {
+          headers["access-control-allow-methods"] = ["*"];
+        }
+
+        callback({ responseHeaders: headers });
+      }
+    });
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
