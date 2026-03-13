@@ -2,7 +2,6 @@ import { airingScheduleQueryFn } from "../anilist/anilistQueries";
 import { type IAiringScheduleVariables } from "../anilist/anilistTypes";
 import { userMalAnimeListQueryFn } from "../mal/malQueries";
 import { MalAnimeStatus } from "../mal/malTypes";
-import { idMappingsFromMalIdQueryFn } from "../mappings/mappingsQueries";
 import { type ScheduledAnimeWithMalId } from "./scheduleTypes";
 
 export const getUserAiringSchedule = async (
@@ -17,17 +16,9 @@ export const getUserAiringSchedule = async (
     return schedules.map((schedule) => ({ ...schedule, malId: undefined }));
   }
 
-  const results = await Promise.allSettled(
-    animeList.data.map(async (anime) => {
-      const { anilist } = await idMappingsFromMalIdQueryFn(anime.node.id);
-      if (!anilist) return null;
+  const watchingMalIds = new Set(animeList.data.map((anime) => anime.node.id));
 
-      const matchedSchedule = schedules.find((schedule) => schedule.media.id === anilist);
-      return matchedSchedule ? { ...matchedSchedule, malId: anime.node.id } : null;
-    }),
-  );
-
-  return results
-    .filter((r) => r.status === "fulfilled" && r.value !== null)
-    .map((r) => (r as PromiseFulfilledResult<ScheduledAnimeWithMalId>).value);
+  return schedules
+    .filter((schedule) => schedule.media.idMal && watchingMalIds.has(schedule.media.idMal))
+    .map((schedule) => ({ ...schedule, malId: schedule.media.idMal }));
 };

@@ -11,7 +11,14 @@ export interface IAiringScheduleResponse {
       id: number;
       episode: number;
       airingAt: number;
-      media: { id: number; title: { romaji: string; english: string | null } /* etc */ };
+      media: {
+        id: number;
+        idMal: number;
+        title: {
+          romaji: string;
+          english: string | null;
+        };
+      };
     }>;
   };
 }
@@ -26,6 +33,7 @@ export interface IScheduledAnime {
   airingAt: number;
   media: {
     id: number;
+    idMal: number;
     title: {
       romaji: string;
       english: string | null;
