@@ -47,7 +47,7 @@ export const Schedule: React.FC = () => {
           ))}
         </div>
       )}
-      {!isLoading && scheduleByDay?.length === 0 && (
+      {!isLoading && Object.keys(scheduleByDay).length === 0 && (
         <div className="flex min-h-48 flex-col items-center justify-center gap-4 rounded-lg bg-white/10 p-6 text-center">
           <p className="text-sm text-white/70">You have no scheduled anime for this week.</p>
         </div>

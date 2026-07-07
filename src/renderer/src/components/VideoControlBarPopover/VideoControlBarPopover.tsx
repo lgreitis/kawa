@@ -41,8 +41,12 @@ export const VideoControlBarPopover: React.FC<IVideoControlBarPopoverProps> = (p
 
   return (
     <>
-      <button ref={refs.setReference} {...getReferenceProps()}>
-        <Icon className="size-5" />
+      <button
+        ref={refs.setReference}
+        {...getReferenceProps()}
+        className="rounded-md p-1.5 transition-colors hover:bg-white/30 active:bg-white/40"
+      >
+        <Icon className="size-4" />
       </button>
       {isOpen && (
         <FloatingFocusManager context={context} modal={false}>

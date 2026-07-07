@@ -109,11 +109,18 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
 
   const onFullScreenClick = () => {
     if (player) {
-      if (player.isFullscreen()) {
+      const isFullscreen = player.isFullscreen();
+
+      if (isFullscreen) {
         void player.exitFullscreen();
       } else {
         void player.requestFullscreen();
       }
+
+      setPlayerState((state) => ({
+        ...state,
+        isFullscreen: !isFullscreen,
+      }));
     }
   };
 
@@ -128,14 +135,12 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
       onMouseEnter={() => setIsInsideControlBar(true)}
       onMouseLeave={() => setIsInsideControlBar(false)}
       className={twMerge(
-        "absolute flex select-none flex-col border border-white/5 bg-black/40 backdrop-blur-sm",
+        "absolute flex select-none flex-col border-white/5 bg-black/40 backdrop-blur-sm",
         shouldShowControlBar ? "visible" : "invisible",
-        // cant decide between designs
-        // "inset-x-4 bottom-4 rounded-lg px-4 py-2",
         "inset-x-0 bottom-0 px-2 py-1",
       )}
     >
-      <div className="flex items-center pb-3 pt-1">
+      <div className="absolute inset-x-0 top-0 flex items-center">
         <VideoProgressBar
           player={player}
           playerState={playerState}
@@ -143,8 +148,11 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
           onDragEnd={() => setIsDragging(false)}
         />
       </div>
-      <div className="flex items-center gap-2">
-        <button onClick={onPlayResumeClick}>
+      <div className="flex items-center gap-2 pb-1 pt-2">
+        <button
+          onClick={onPlayResumeClick}
+          className="rounded-md p-0.5 transition-colors hover:bg-white/30 active:bg-white/40"
+        >
           {playerState.isPlaying ? (
             <PauseIcon className="size-5" />
           ) : (
@@ -159,19 +167,22 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
           <VideoControlBarTime time={playerState.length} />
         </div>
         <div className="flex-grow"></div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <InformationPopover infoHash={infoHash} player={player} />
           <SubtitleSelector trackHelper={trackHelper} />
-          <button onClick={onFullScreenClick}>
+          <button
+            onClick={onFullScreenClick}
+            className="rounded-md p-1.5 transition-colors hover:bg-white/30 active:bg-white/40"
+          >
             {playerState.isFullscreen ? (
-              <ArrowsPointingInIcon className="size-5" />
+              <ArrowsPointingInIcon className="size-4" />
             ) : (
-              <ArrowsPointingOutIcon className="size-5" />
+              <ArrowsPointingOutIcon className="size-4" />
             )}
           </button>
         </div>
       </div>
     </div>,
-    (player?.playerElIngest_ as HTMLDivElement) ?? document.body,
+    (player?.el() as HTMLDivElement) ?? document.body,
   );
 };

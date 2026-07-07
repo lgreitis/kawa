@@ -12,7 +12,7 @@ export const StreamButton: React.FC<StreamButtonProps> = (props) => {
   return (
     <button
       className={twMerge(
-        "rounded-lg bg-black/60 px-4 py-2 text-left backdrop-blur-md transition-colors hover:bg-black/80 disabled:bg-black",
+        "rounded-lg border border-white/5 bg-black/40 px-4 py-2 text-left backdrop-blur-md transition-colors hover:bg-black/60 disabled:bg-black",
         className,
       )}
       {...rest}

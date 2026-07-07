@@ -4,7 +4,8 @@
 
 html,
 body {
-  @apply bg-zinc-900;
+  /* @apply bg-zinc-900; */
+  background-color: #0a0a0c;
   @apply text-white;
 }
 

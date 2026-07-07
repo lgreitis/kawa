@@ -40,8 +40,12 @@ const SubtitleSelectorButton: React.FC<ISubtitleSelectorButtonProps> = (props) =
   const { ref, ...rest } = props;
 
   return (
-    <button ref={ref} {...rest}>
-      <CCIcon className="size-5 cursor-pointer" />
+    <button
+      ref={ref}
+      {...rest}
+      className="rounded-md p-1.5 transition-colors hover:bg-white/30 active:bg-white/40"
+    >
+      <CCIcon className="size-4 cursor-pointer" />
     </button>
   );
 };

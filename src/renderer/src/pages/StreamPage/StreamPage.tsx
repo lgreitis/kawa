@@ -89,14 +89,14 @@ export const StreamPage: React.FC = () => {
       isLoading={isAnidbDataLoading || isLoading || isPending}
       darkenLoader={isPending}
     >
-      <motion.div
-        className="flex h-full items-center justify-center"
-        initial={{ opacity: 0, y: -24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        {dataExists ? (
-          <div className="flex w-full max-w-4xl flex-col gap-4 p-4">
+      {dataExists ? (
+        <motion.div
+          className="flex justify-center"
+          initial={{ opacity: 0, y: -24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="flex h-full max-w-4xl flex-col gap-4 p-4">
             <h1 className="text-2xl font-medium">Best Source:</h1>
             {data?.best && (
               <StreamButton
@@ -115,12 +115,12 @@ export const StreamPage: React.FC = () => {
               />
             ))}
           </div>
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <h1 className="text-2xl font-medium">Failed to find any sources for this episode.</h1>
-          </div>
-        )}
-      </motion.div>
+        </motion.div>
+      ) : (
+        <div className="flex h-full grow items-center justify-center">
+          <h1 className="text-2xl font-medium">Failed to find any sources for this episode.</h1>
+        </div>
+      )}
     </BlurBackgroundContainer>
   );
 };

@@ -15,9 +15,14 @@ export const AnimeListPage: React.FC = () => {
   const { data: malList, isLoading } = useUserMalAnimeList({ status: selectedStatus });
   const [filter, setFilter] = useState("");
 
-  const filteredList = malList?.data.filter((anime) =>
-    anime.node.title.toLowerCase().includes(filter.toLowerCase()),
-  );
+  const filteredList = malList?.data.filter(({ node }) => {
+    const searchValue = filter.toLowerCase();
+    const title = node.title.toLowerCase();
+
+    const englishTitle = node.alternative_titles?.en?.toLowerCase() ?? "";
+
+    return title.includes(searchValue) || englishTitle.includes(searchValue);
+  });
 
   const statuses = Object.values(MalAnimeStatus);
 
@@ -25,14 +30,14 @@ export const AnimeListPage: React.FC = () => {
     <BlurBackgroundContainer>
       <div className="flex flex-col items-center">
         <div className="flex w-full max-w-5xl flex-col gap-2 px-4 pb-4">
-          <div className="sticky top-0 flex flex-col items-center gap-4 bg-zinc-900 py-4 md:flex-row">
+          <div className="sticky top-0 flex flex-col items-center gap-4 bg-[#0a0a0c] py-4 md:flex-row">
             <input
-              className="h-10 flex-grow rounded-md border border-zinc-600 bg-transparent px-2 py-1 focus:outline-zinc-400"
+              className="h-10 flex-grow rounded-full border border-zinc-600 bg-transparent px-3 py-1 text-sm focus:outline-zinc-400"
               placeholder="Search anime..."
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             />
-            <div className="rounded-md bg-zinc-800 p-1">
+            <div className="rounded-full bg-[#18181D] p-1">
               <Tabs
                 tabs={statuses.map((status) => ({
                   title: MAL_STATUS_TO_ENGLISH_TRANSLATION[status],

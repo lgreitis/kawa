@@ -1,4 +1,4 @@
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { ActivityIcon } from "@renderer/components/icons/ActivityIcon";
 import { VideoControlBarPopover } from "@renderer/components/VideoControlBarPopover/VideoControlBarPopover";
 import { type ITorrentStatus } from "@shared/types/torrent";
 import { type IpcRendererEvent } from "electron";
@@ -33,7 +33,7 @@ export const InformationPopover: React.FC<IInformationPopoverProps> = (props) =>
   }, [infoHash, setTorrentStatus]);
 
   return (
-    <VideoControlBarPopover icon={InformationCircleIcon}>
+    <VideoControlBarPopover icon={ActivityIcon}>
       <div className="rounded-xl border border-white/10 bg-black/50 backdrop-blur-lg transition duration-200 ease-in-out data-[closed]:-translate-y-1 data-[closed]:opacity-0">
         <div className="flex min-w-48 flex-col px-2 py-1">
           <span>Information:</span>

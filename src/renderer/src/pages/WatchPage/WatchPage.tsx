@@ -9,7 +9,7 @@ import videojs from "video.js";
 import { VideoControlBar } from "@renderer/components/VideoControlBar/VideoControlBar";
 import { calculatePlayerTime } from "@renderer/utils/utils";
 import { twJoin } from "tailwind-merge";
-import "video.js/dist/video-js.min.css";
+import "@renderer/video-js.css";
 import "videojs-hotkeys";
 import { useMalAnimeDetailsQuery } from "@renderer/services/mal/malQueries";
 import { useAnizipMappingsQuery } from "@renderer/services/anizip/anizipQueries";

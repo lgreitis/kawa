@@ -2,24 +2,35 @@ import axios from "axios";
 import { anizipMappingsQueryFn } from "../anizip/anizipQueries";
 import { type IAniZipResponse } from "../anizip/anizipTypes";
 
-export const getIdMappingsFromMalId = async (malId: number) => {
-  const firstResponseData = (
-    await axios.get<{
-      kitsu?: number;
-      imdb?: string;
-      anidb?: number | null;
-      anilist?: number;
-    } | null>(`https://arm.haglund.dev/api/v2/ids?source=myanimelist&id=${malId}`)
-  ).data;
+type ArmResponse = {
+  kitsu?: number;
+  imdb?: string;
+  anidb?: number | null;
+  anilist?: number;
+} | null;
 
-  const secondResponse = await anizipMappingsQueryFn(malId).catch(
-    (): IAniZipResponse => ({ mappings: {}, episodes: {} }),
-  );
+const emptyAniZipResponse: IAniZipResponse = {
+  mappings: {},
+  episodes: {},
+};
+
+export const getIdMappingsFromMalId = async (malId: number) => {
+  const [armResult, anizipResult] = await Promise.allSettled([
+    axios
+      .get<ArmResponse>(`https://arm.haglund.dev/api/v2/ids?source=myanimelist&id=${malId}`)
+      .then((response) => response.data),
+
+    anizipMappingsQueryFn(malId),
+  ]);
+
+  const armData = armResult.status === "fulfilled" ? armResult.value : null;
+
+  const anizipData = anizipResult.status === "fulfilled" ? anizipResult.value : emptyAniZipResponse;
 
   return {
-    kitsu: firstResponseData?.kitsu ?? secondResponse.mappings?.kitsu_id,
-    imdb: firstResponseData?.imdb ?? secondResponse.mappings?.imdb_id,
-    anidb: firstResponseData?.anidb ?? secondResponse.mappings?.anidb_id,
-    anilist: firstResponseData?.anilist ?? secondResponse.mappings?.anilist_id,
+    kitsu: armData?.kitsu ?? anizipData.mappings?.kitsu_id,
+    imdb: armData?.imdb ?? anizipData.mappings?.imdb_id,
+    anidb: armData?.anidb ?? anizipData.mappings?.anidb_id,
+    anilist: armData?.anilist ?? anizipData.mappings?.anilist_id,
   };
 };

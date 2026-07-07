@@ -69,7 +69,7 @@ export const VideoProgressBar: React.FC<IVideoProgressBarProps> = (props) => {
   return (
     <div
       ref={progressBarRef}
-      className="flex h-1.5 w-full cursor-pointer overflow-hidden rounded-full bg-white/20"
+      className="flex h-1.5 w-full cursor-pointer overflow-hidden bg-white/20"
       onMouseDown={handleMouseDown}
       onClick={(e) => updateProgress(e.nativeEvent)}
     >

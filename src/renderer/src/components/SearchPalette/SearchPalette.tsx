@@ -40,13 +40,13 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
     >
       <DialogBackdrop
         transition
-        className="fixed inset-0 bg-black bg-opacity-25 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+        className="fixed inset-0 bg-[#0A0A0C] bg-opacity-25 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
       />
 
       <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 sm:p-6 md:p-20">
         <DialogPanel
           transition
-          className="mx-auto max-w-xl transform divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 bg-black/80 backdrop-blur-md transition-all data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+          className="mx-auto max-w-xl transform divide-y divide-white/10 overflow-hidden rounded-xl border border-white/10 bg-[#0A0A0C] bg-opacity-80 backdrop-blur-md transition-all data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
         >
           <Combobox
             // @ts-expect-error TODO: need to check later
@@ -78,7 +78,7 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
                   <ComboboxOption
                     key={anime.node.id}
                     value={anime.node.id}
-                    className="group flex cursor-default select-none items-center gap-2 px-4 py-2 data-[focus]:bg-white/70 data-[focus]:text-black"
+                    className="group flex cursor-default select-none items-center gap-2 px-4 py-2 data-[focus]:bg-[#F0F0F5] data-[focus]:text-black"
                   >
                     {anime.node.main_picture?.medium && (
                       <img className="h-10 w-7 object-cover" src={anime.node.main_picture.medium} />

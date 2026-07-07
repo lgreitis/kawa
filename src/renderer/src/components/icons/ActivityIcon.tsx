@@ -1,7 +1,7 @@
 // icon:badge-cc | Bootstrap https://icons.getbootstrap.com/ | Bootstrap
 import * as React from "react";
 
-export const CCIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
+export const ActivityIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,8 +15,7 @@ export const CCIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
       strokeLinejoin="round"
       {...props}
     >
-      <rect width="18" height="14" x="3" y="5" rx="2" ry="2" />
-      <path d="M7 15h4M15 15h2M7 11h2M13 11h4" />
+      <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
     </svg>
   );
 };

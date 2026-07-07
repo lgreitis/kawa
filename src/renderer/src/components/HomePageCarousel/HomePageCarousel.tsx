@@ -27,7 +27,7 @@ export const HomePageCarousel: React.FC = () => {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="absolute h-full w-full select-none bg-gradient-to-t from-zinc-900 from-15% to-60% will-change-auto"
+        className="absolute h-full w-full select-none bg-gradient-to-t from-[#0a0a0c] from-15% to-60% will-change-auto"
       ></motion.div>
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -45,7 +45,7 @@ export const HomePageCarousel: React.FC = () => {
                 : data.data[currentSlide].node.title}
             </h1>
           </div>
-          <div className="flex h-[60px] flex-grow items-center justify-end">
+          <div className="flex h-[60px] flex-grow items-end justify-end">
             {imdbId && (
               <button
                 className="flex items-center gap-1 rounded-full border border-white/10 bg-black/30 px-4 py-2 font-medium text-white backdrop-blur-md transition-colors active:bg-black/50"

@@ -40,7 +40,7 @@ function createMainWindow(): BrowserWindow {
       webSecurity: true,
     },
     titleBarStyle: "hidden",
-    trafficLightPosition: { x: 10, y: 10 },
+    trafficLightPosition: { x: 10, y: 11 },
   });
 
   mainWindow.on("ready-to-show", () => {

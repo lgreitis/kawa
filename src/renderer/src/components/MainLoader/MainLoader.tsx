@@ -24,7 +24,7 @@ const P3 =
   "M96.384 0.768013H49.152V133.632C49.152 154.624 48.128 175.744 46.08 196.992C44.032 217.984 39.552 238.336 32.64 258.048C25.728 277.504 14.848 295.552 0 312.192C3.84 314.496 8.32 317.568 13.44 321.408C18.56 325.504 23.424 329.6 28.032 333.696C32.896 338.048 36.736 342.016 39.552 345.6C52.352 331.008 62.464 315.264 69.888 298.368C77.568 281.472 83.328 263.936 87.168 245.76C91.008 227.584 93.44 209.152 94.464 190.464C95.744 171.52 96.384 152.576 96.384 133.632V0.768013Z";
 
 export const MainLoader: React.FC<IMainLoaderProps> = ({ children, isLoading, progress }) => {
-  const [phase, setPhase] = useState<"drawing" | "filling" | "done">(IS_DEV ? "done" : "drawing");
+  const [phase, setPhase] = useState<"drawing" | "filling" | "done">("drawing");
   const isFilled = phase === "filling" || phase === "done";
 
   const [showLoader, setShowLoader] = useState(true);
@@ -47,7 +47,7 @@ export const MainLoader: React.FC<IMainLoaderProps> = ({ children, isLoading, pr
       <AnimatePresence>
         {showLoader && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-black"
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[#0a0a0c]"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.45, ease: "easeInOut" }}
@@ -74,7 +74,7 @@ export const MainLoader: React.FC<IMainLoaderProps> = ({ children, isLoading, pr
                   <g
                     fill="none"
                     stroke="oklch(0.95 0 0)"
-                    strokeWidth="1.5"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >

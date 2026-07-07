@@ -43,13 +43,13 @@ export const Tabs: React.FC<ITabsProps> = (props) => {
             <motion.div
               layoutId={`clickedbutton_${id}`}
               transition={{ type: "spring", bounce: 0.3, duration: 0.6 }}
-              className="absolute inset-0 rounded-sm bg-gray-200"
+              className="absolute inset-0 rounded-full bg-[#E8C97E]"
             />
           )}
 
           <span
             className={twMerge(
-              "duration-600 group relative block text-white transition-colors",
+              "duration-600 group relative block text-[#F0F0F5] transition-colors",
               active?.value === tab.value && "text-black",
             )}
           >

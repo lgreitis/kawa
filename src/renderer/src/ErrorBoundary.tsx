@@ -3,9 +3,11 @@ import { BlurBackgroundContainer } from "./components/containers/BlurBackgroundC
 import { TitleBar } from "./components/TitleBar/TitleBar";
 import { ScrollArea } from "./components/ScrollArea/ScrollArea";
 import React from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const ErrorBoundary: React.FC = () => {
   const error = useRouteError();
+  const queryClient = useQueryClient();
 
   return (
     <div className="relative">
@@ -25,6 +27,15 @@ export const ErrorBoundary: React.FC = () => {
                   </ScrollArea>
                 </React.Fragment>
               )}
+              <button
+                className="inline-flex gap-2 rounded-md bg-white px-3 py-2 text-black"
+                onClick={() => {
+                  void queryClient.clear();
+                  window.location.reload();
+                }}
+              >
+                <span>Try again</span>
+              </button>
             </div>
           </div>
         </BlurBackgroundContainer>
