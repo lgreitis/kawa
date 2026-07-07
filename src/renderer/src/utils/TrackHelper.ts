@@ -73,7 +73,7 @@ interface ITrackState {
 
 const normalizeHeader = (track: ITrack) => {
   if (track.header?.startsWith("[Script Info]")) {
-    return track.header;
+    return convertAssEventHtmlTags(track.header);
   }
 
   return defaultHeader;
@@ -140,6 +140,10 @@ const decodeHtmlEntity = (entity: string) => {
   return `&${entity};`;
 };
 
+const decodeHtmlEntities = (text: string) => {
+  return text.replace(/&([a-z\d#]+);/gi, (_, entity: string) => decodeHtmlEntity(entity));
+};
+
 const convertHtmlTagsToAss = (text: string) => {
   return text.replace(/<\/?([a-z][\w:-]*)(?:\s+[^>]*)?>/gi, (tag, rawName: string) => {
     const name = rawName.toLowerCase();
@@ -155,10 +159,21 @@ const convertHtmlTagsToAss = (text: string) => {
   });
 };
 
+const convertHtmlTextToAss = (text: string) => {
+  return convertHtmlTagsToAss(decodeHtmlEntities(text));
+};
+
 const convertNonAssText = (text: string) => {
-  return convertHtmlTagsToAss(text)
-    .replace(/&([a-z\d#]+);/gi, (_, entity: string) => decodeHtmlEntity(entity))
-    .replace(/\r?\n/g, "\\N");
+  return convertHtmlTextToAss(text).replace(/\r?\n/g, "\\N");
+};
+
+function convertAssEventHtmlTags(text: string) {
+  return text.replace(
+    /^(Dialogue|Comment):((?:[^,\r\n]*,){9})(.*)$/gim,
+    (_match, kind: string, fields: string, dialogueText: string) => {
+      return `${kind}:${fields}${convertHtmlTextToAss(dialogueText)}`;
+    },
+  );
 };
 
 const normalizeFontData = (data: ISubtitleAttachment["data"] | unknown) => {
@@ -302,7 +317,9 @@ export class TrackHelper {
       MarginR: Number(subtitle.marginR) || 0,
       MarginV: Number(subtitle.marginV) || 0,
       Effect: subtitle.effect || "",
-      Text: isAssTrack(track.meta) ? text.replace(/\r?\n/g, "") : convertNonAssText(text),
+      Text: isAssTrack(track.meta)
+        ? convertHtmlTextToAss(text).replace(/\r?\n/g, "\\N")
+        : convertNonAssText(text),
       ReadOrder: subtitle.readOrder ?? subtitleIndex,
       Layer: Number(subtitle.layer) || 0,
     };
