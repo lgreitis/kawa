@@ -59,11 +59,11 @@ export const WatchPage: React.FC = () => {
 
   useEffect(() => {
     if (malData && anizipData) {
-      const anizipEpisode = anizipData?.episodes[state.episodeNumber];
+      const image = anizipData?.episodes[state.episodeNumber]?.image;
 
       navigator.mediaSession.metadata = new MediaMetadata({
         title: `${malData.alternative_titles.en ?? malData.title} EP ${state.episodeNumber}`,
-        ...(anizipEpisode.image && { artwork: [{ src: anizipEpisode.image }] }),
+        ...(image && { artwork: [{ src: image }] }),
       });
     }
   }, [anizipData, malData, state.episodeNumber]);
