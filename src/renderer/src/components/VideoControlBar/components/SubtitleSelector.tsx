@@ -20,14 +20,25 @@ export const SubtitleSelector: React.FC<ISubtitleSelectorProps> = (props) => {
 
   const tracks = trackHelper?.tracks ?? [];
 
-  const options = tracks.map((track) => ({
-    label: `${track.name} ${track.language}`,
-    icon: activeTrack === track.number ? CheckCircleIcon : undefined,
-    onClick: () => {
-      void trackHelper?.setActiveTrack(track.number);
-      setActiveTrack(track.number);
+  const options = [
+    {
+      label: "Disable subtitles",
+      icon: activeTrack === -1 || activeTrack === null ? CheckCircleIcon : undefined,
+      onClick: () => {
+        void trackHelper?.setActiveTrack(-1);
+        setActiveTrack(-1);
+      },
     },
-  }));
+    null,
+    ...tracks.map((track) => ({
+      label: `${track.name} ${track.language}`,
+      icon: activeTrack === track.number ? CheckCircleIcon : undefined,
+      onClick: () => {
+        void trackHelper?.setActiveTrack(track.number);
+        setActiveTrack(track.number);
+      },
+    })),
+  ];
 
   return <Dropdown options={options} as={SubtitleSelectorButton} />;
 };

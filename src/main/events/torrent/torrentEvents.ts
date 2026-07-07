@@ -120,11 +120,13 @@ const handleTorrentAdd = async (
   const videoFile = findVideoFile(torrent);
   const metadataHelper = new MetadataHelper(videoFile);
   const tracks = await metadataHelper.getTracks();
+  const attachments = await metadataHelper.getAttachments();
   videoFile.select();
 
   return {
     streamUrl: `http://localhost:${TORRENT_CONTENT_LISTEN_PORT}${videoFile.streamURL}`,
     tracks,
+    attachments,
   };
 };
 

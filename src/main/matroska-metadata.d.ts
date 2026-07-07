@@ -5,6 +5,7 @@ declare module "matroska-metadata" {
     text: string;
     time: number;
     duration: number;
+    readOrder?: number;
     layer: string;
     style: string;
     name: string;
@@ -20,7 +21,7 @@ declare module "matroska-metadata" {
     getTracks(): Promise<
       { number: number; language?: string; type: string; name: string; header: string }[]
     >;
-    getAttachments(): Promise<unknown>;
+    getAttachments(): Promise<{ filename: string; mimetype: string; data: Uint8Array }[]>;
     *parseStream(stream: AsyncIterable<Uint8Array>, stable: boolean = false): Promise<unknown>;
   }
 }

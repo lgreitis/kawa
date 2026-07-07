@@ -102,7 +102,7 @@ export const WatchPage: React.FC = () => {
       setPlayer(player);
 
       if (state?.tracks) {
-        const helper = new TrackHelper(player, state.tracks);
+        const helper = new TrackHelper(player, state.tracks, state.attachments);
         trackHelperRef.current = helper;
         setTrackHelper(helper);
       }

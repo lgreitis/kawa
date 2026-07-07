@@ -1,4 +1,5 @@
 import {
+  type IStreamResponse,
   type IAddExtensionsRequest,
   type IRemoveExtensionsRequest,
   type ISubmitMagnetUriRequest,
@@ -8,10 +9,7 @@ export const submitMagnetUri = async (data: ISubmitMagnetUriRequest) => {
   const path = (await window.electron.ipcRenderer.invoke("torrent:sendMagnetURI", {
     infoHash: data.infoHash,
     magnetURI: data.magnetURI,
-  })) as {
-    streamUrl: string;
-    tracks: { number: number; language?: string; type: string; name: string; header: string }[];
-  };
+  })) as IStreamResponse;
 
   return path;
 };

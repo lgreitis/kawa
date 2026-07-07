@@ -1,7 +1,6 @@
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { useState } from "react";
 import { useSmoothProgress } from "@renderer/hooks/useSmoothProgress";
-import { IS_DEV } from "@renderer/constants";
 
 interface IMainLoaderProps {
   children?: React.ReactNode;
@@ -98,7 +97,7 @@ export const MainLoader: React.FC<IMainLoaderProps> = ({ children, isLoading, pr
                       initial="hidden"
                       animate="show"
                       custom={0}
-                      onAnimationComplete={() => !IS_DEV && setPhase("filling")} // fires after the last one finishes
+                      onAnimationComplete={() => setPhase("filling")} // fires after the last one finishes
                     />
                   </g>
 
