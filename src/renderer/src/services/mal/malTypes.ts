@@ -90,6 +90,9 @@ export interface IMalAnimeDetailsResponse {
     node: {
       id: number;
       title: string;
+      alternative_titles?: {
+        en?: string;
+      };
       main_picture: {
         medium: string;
         large: string;

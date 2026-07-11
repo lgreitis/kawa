@@ -14,6 +14,8 @@ import "videojs-hotkeys";
 import { useMalAnimeDetailsQuery } from "@renderer/services/mal/malQueries";
 import { useAnizipMappingsQuery } from "@renderer/services/anizip/anizipQueries";
 import { VideoTitleOverlay } from "@renderer/components/VideoTitleOverlay/VideoTitleOverlay";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
+import { getPreferredAnimeTitle } from "@renderer/utils/animeTitle";
 
 const initialOptions = {
   controls: true,
@@ -56,17 +58,24 @@ export const WatchPage: React.FC = () => {
 
   const { data: malData } = useMalAnimeDetailsQuery({ animeId: state?.malId });
   const { data: anizipData } = useAnizipMappingsQuery(state.malId);
+  const animeTitleLanguage = usePreferencesStore((store) => store.animeTitleLanguage);
+  const animeTitle = malData
+    ? getPreferredAnimeTitle(
+        { romaji: malData.title, english: malData.alternative_titles.en },
+        animeTitleLanguage,
+      )
+    : state?.animeTitle;
 
   useEffect(() => {
     if (malData && anizipData) {
       const image = anizipData?.episodes[state.episodeNumber]?.image;
 
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: `${malData.alternative_titles.en ?? malData.title} EP ${state.episodeNumber}`,
+        title: `${animeTitle} EP ${state.episodeNumber}`,
         ...(image && { artwork: [{ src: image }] }),
       });
     }
-  }, [anizipData, malData, state.episodeNumber]);
+  }, [animeTitle, anizipData, malData, state.episodeNumber]);
 
   useEffect(() => {
     if (!playerRef.current) {
@@ -176,7 +185,7 @@ export const WatchPage: React.FC = () => {
       {showMouse && (
         <VideoTitleOverlay
           player={player}
-          title={state?.animeTitle}
+          title={animeTitle}
           episode={state?.episodeNumber}
           size={state.size}
           videoResolution={state.videoResolution}

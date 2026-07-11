@@ -7,6 +7,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "@renderer/components/Loader/Loader";
 import { Tabs } from "@renderer/components/Tabs/Tabs";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
+import { getPreferredAnimeTitle } from "@renderer/utils/animeTitle";
 
 export const AnimeListPage: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ export const AnimeListPage: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState(MalAnimeStatus.Watching);
   const { data: malList, isLoading } = useUserMalAnimeList({ status: selectedStatus });
   const [filter, setFilter] = useState("");
+  const animeTitleLanguage = usePreferencesStore((state) => state.animeTitleLanguage);
 
   const filteredList = malList?.data.filter(({ node }) => {
     const searchValue = filter.toLowerCase();
@@ -64,10 +67,13 @@ export const AnimeListPage: React.FC = () => {
                     src={anime.node.main_picture.large}
                   />
                   <span className="line-clamp-2">
-                    {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want this kind of check to check for empty strings */}
-                    {anime.node.alternative_titles?.en
-                      ? anime.node.alternative_titles?.en
-                      : anime.node.title}
+                    {getPreferredAnimeTitle(
+                      {
+                        romaji: anime.node.title,
+                        english: anime.node.alternative_titles?.en,
+                      },
+                      animeTitleLanguage,
+                    )}
                   </span>
                 </motion.div>
               ))}

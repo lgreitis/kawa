@@ -2,6 +2,8 @@ import { type IMalAnimeDetailsResponse } from "@renderer/services/mal/malTypes";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
+import { getPreferredAnimeTitle } from "@renderer/utils/animeTitle";
 
 interface IRelatedAnimeSectionProps {
   malData: IMalAnimeDetailsResponse;
@@ -10,6 +12,7 @@ interface IRelatedAnimeSectionProps {
 export const RelatedAnimeSection: React.FC<IRelatedAnimeSectionProps> = (props) => {
   const { malData } = props;
   const navigate = useNavigate();
+  const animeTitleLanguage = usePreferencesStore((state) => state.animeTitleLanguage);
 
   if (!malData.related_anime.length) {
     return;
@@ -29,7 +32,15 @@ export const RelatedAnimeSection: React.FC<IRelatedAnimeSectionProps> = (props) 
               className="aspect-[2/3] w-full rounded-2xl object-cover"
               src={related.node.main_picture.large ?? related.node.main_picture.medium}
             />
-            <span className="line-clamp-2">{related.node.title}</span>
+            <span className="line-clamp-2">
+              {getPreferredAnimeTitle(
+                {
+                  romaji: related.node.title,
+                  english: related.node.alternative_titles?.en,
+                },
+                animeTitleLanguage,
+              )}
+            </span>
             <span className="text-sm text-zinc-300">{related.relation_type_formatted}</span>
           </button>
         ))}

@@ -12,6 +12,8 @@ import { useMalAnimeSearchQuery } from "@renderer/services/mal/malQueries";
 import { useDebounceValue } from "usehooks-ts";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../Loader/Loader";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
+import { getAlternativeAnimeTitle, getPreferredAnimeTitle } from "@renderer/utils/animeTitle";
 
 interface ISearchPaletteProps {
   open: boolean;
@@ -21,6 +23,7 @@ interface ISearchPaletteProps {
 export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
   const { open, setOpen } = props;
   const navigate = useNavigate();
+  const animeTitleLanguage = usePreferencesStore((state) => state.animeTitleLanguage);
 
   const [debouncedQuery, setQuery] = useDebounceValue("", 300);
 
@@ -74,25 +77,36 @@ export const SearchPalette: React.FC<ISearchPaletteProps> = (props) => {
 
             {searchResults && searchResults.data.length > 0 && (
               <ComboboxOptions static className="scroll-py-2 pt-2 text-sm text-white">
-                {searchResults.data.slice(0, 5).map((anime) => (
-                  <ComboboxOption
-                    key={anime.node.id}
-                    value={anime.node.id}
-                    className="group flex cursor-default select-none items-center gap-2 px-4 py-2 data-[focus]:bg-[#F0F0F5] data-[focus]:text-black"
-                  >
-                    {anime.node.main_picture?.medium && (
-                      <img className="h-10 w-7 object-cover" src={anime.node.main_picture.medium} />
-                    )}
-                    <div className="flex flex-col">
-                      <span>{anime.node.title}</span>
-                      {anime.node.title !== anime.node.alternative_titles.en && (
-                        <span className="text-sm text-neutral-300 group-data-[focus]:text-neutral-800">
-                          {anime.node.alternative_titles.en}
-                        </span>
+                {searchResults.data.slice(0, 5).map((anime) => {
+                  const titles = {
+                    romaji: anime.node.title,
+                    english: anime.node.alternative_titles?.en,
+                  };
+                  const alternativeTitle = getAlternativeAnimeTitle(titles, animeTitleLanguage);
+
+                  return (
+                    <ComboboxOption
+                      key={anime.node.id}
+                      value={anime.node.id}
+                      className="group flex cursor-default select-none items-center gap-2 px-4 py-2 data-[focus]:bg-[#F0F0F5] data-[focus]:text-black"
+                    >
+                      {anime.node.main_picture?.medium && (
+                        <img
+                          className="h-10 w-7 object-cover"
+                          src={anime.node.main_picture.medium}
+                        />
                       )}
-                    </div>
-                  </ComboboxOption>
-                ))}
+                      <div className="flex flex-col">
+                        <span>{getPreferredAnimeTitle(titles, animeTitleLanguage)}</span>
+                        {alternativeTitle && (
+                          <span className="text-sm text-neutral-300 group-data-[focus]:text-neutral-800">
+                            {alternativeTitle}
+                          </span>
+                        )}
+                      </div>
+                    </ComboboxOption>
+                  );
+                })}
               </ComboboxOptions>
             )}
           </Combobox>

@@ -6,11 +6,14 @@ import { useMalRankingAnimeQuery } from "@renderer/services/mal/malQueries";
 import { motion } from "framer-motion";
 import { useHomePageStore } from "@renderer/store/homePageStore";
 import { BackgroundImage } from "@renderer/components/BackgroundImage/BackgroundImage";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
+import { getPreferredAnimeTitle } from "@renderer/utils/animeTitle";
 
 export const HomePageCarousel: React.FC = () => {
   const navigate = useNavigate();
   const { data } = useMalRankingAnimeQuery({ rankingType: "airing" });
   const { currentSlide, setSlide } = useHomePageStore();
+  const animeTitleLanguage = usePreferencesStore((state) => state.animeTitleLanguage);
   const { imdbId } = useIdFromMal(data?.data[currentSlide].node.id ?? 0);
 
   if (!data) {
@@ -39,10 +42,13 @@ export const HomePageCarousel: React.FC = () => {
           <div className="flex flex-col">
             <span>Top airing anime</span>
             <h1 className="text-4xl font-bold text-white">
-              {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want this kind of check to check for empty strings */}
-              {data.data[currentSlide].node.alternative_titles?.en
-                ? data.data[currentSlide].node.alternative_titles?.en
-                : data.data[currentSlide].node.title}
+              {getPreferredAnimeTitle(
+                {
+                  romaji: data.data[currentSlide].node.title,
+                  english: data.data[currentSlide].node.alternative_titles?.en,
+                },
+                animeTitleLanguage,
+              )}
             </h1>
           </div>
           <div className="flex h-[60px] flex-grow items-end justify-end">
@@ -62,7 +68,13 @@ export const HomePageCarousel: React.FC = () => {
             containerClassName="pb-2 pl-4"
             slides={data.data.map((anime) => ({
               src: anime.node.main_picture.medium,
-              alt: anime.node.title,
+              alt: getPreferredAnimeTitle(
+                {
+                  romaji: anime.node.title,
+                  english: anime.node.alternative_titles?.en,
+                },
+                animeTitleLanguage,
+              ),
             }))}
             options={{ skipSnaps: true }}
             onSlideChange={(index) => {

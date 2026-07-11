@@ -11,6 +11,9 @@ import { useIsMounted } from "usehooks-ts";
 import { useMalTitles } from "@renderer/hooks/useMalTitles";
 import { type IWatchPageState } from "@renderer/types/watchPageTypes";
 import { type IEpisodeServiceResult } from "@renderer/services/extensions/extensionsServices";
+import { useMalAnimeDetailsQuery } from "@renderer/services/mal/malQueries";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
+import { getPreferredAnimeTitle } from "@renderer/utils/animeTitle";
 
 type TStreamPageParams = {
   malId: string;
@@ -28,7 +31,16 @@ export const StreamPage: React.FC = () => {
   const { anidbId, imdbId, anilistId } = useIdFromMal(malId);
 
   const titles = useMalTitles(malId);
+  const { data: malData } = useMalAnimeDetailsQuery({ animeId: malId });
+  const animeTitleLanguage = usePreferencesStore((state) => state.animeTitleLanguage);
   const { data: anidbData, isLoading: isAnidbDataLoading } = useAnidbAnimeInfoQuery(anidbId ?? 0);
+
+  const animeTitle = malData
+    ? getPreferredAnimeTitle(
+        { romaji: malData.title, english: malData.alternative_titles.en },
+        animeTitleLanguage,
+      )
+    : "";
 
   const anidbEid = useMemo(() => {
     const episodes = anidbData?.anime.episodes?.episode;
@@ -64,7 +76,7 @@ export const StreamPage: React.FC = () => {
     const watchPageState: IWatchPageState = {
       tracks: mutationResult.tracks,
       attachments: mutationResult.attachments,
-      animeTitle: titles[0] ?? "",
+      animeTitle,
       size: stream.totalSize,
       videoResolution: stream.videoResolution,
       malId: malId,

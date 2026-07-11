@@ -8,9 +8,21 @@ import { useRemoveAllDownloadsMutation } from "@renderer/services/electron/elect
 import { Loader } from "@renderer/components/Loader/Loader";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { FolderIcon, PuzzlePieceIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  FolderIcon,
+  LanguageIcon,
+  PuzzlePieceIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
 
 const settingCategories = [
+  {
+    title: "Appearance",
+    value: "appearance",
+    description: "Customize how anime titles are displayed throughout the app.",
+    icon: LanguageIcon,
+  },
   {
     title: "Extensions",
     value: "extensions",
@@ -41,6 +53,7 @@ export const SettingsPage: React.FC = () => {
   const { mutateAsync: deleteDownloads, isPending: isRemovingDownloads } =
     useRemoveAllDownloadsMutation();
   const [selectedCategory, setSelectedCategory] = useState<SettingsCategory["value"]>("extensions");
+  const { animeTitleLanguage, setAnimeTitleLanguage } = usePreferencesStore();
 
   const size = typeof data === "number" ? prettyBytes(data) : undefined;
   const selectedCategoryIndex = Math.max(
@@ -118,6 +131,43 @@ export const SettingsPage: React.FC = () => {
               >
                 {selectedCategory === "extensions" && <ExtensionManager />}
                 {selectedCategory === "accounts" && <UserManager />}
+                {selectedCategory === "appearance" && (
+                  <section className="rounded-lg border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/20">
+                    <div className="flex flex-col gap-1">
+                      <h2 className="text-lg font-semibold text-white">Anime title language</h2>
+                      <p className="text-sm leading-6 text-white/55">
+                        Show English titles or romanized Japanese titles. English falls back to the
+                        romanized title when no translation is available.
+                      </p>
+                    </div>
+
+                    <div className="mt-5 flex gap-2" role="group" aria-label="Anime title language">
+                      {[
+                        { value: "english", label: "English" },
+                        { value: "romaji", label: "Romanized Japanese" },
+                      ].map((option) => {
+                        const isSelected = animeTitleLanguage === option.value;
+
+                        return (
+                          <button
+                            key={option.value}
+                            className={
+                              isSelected
+                                ? "rounded-md bg-[#E8C97E] px-3 py-2 text-sm font-semibold text-black"
+                                : "rounded-md border border-white/10 bg-black/20 px-3 py-2 text-sm font-semibold text-white/70 transition-colors hover:bg-white/10"
+                            }
+                            onClick={() =>
+                              setAnimeTitleLanguage(option.value as typeof animeTitleLanguage)
+                            }
+                            aria-pressed={isSelected}
+                          >
+                            {option.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                )}
                 {selectedCategory === "storage" && (
                   <section className="rounded-lg border border-white/10 bg-white/[0.04] p-5 shadow-2xl shadow-black/20">
                     <div className="flex flex-col gap-1">

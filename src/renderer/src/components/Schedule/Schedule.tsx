@@ -4,12 +4,15 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import { Skeleton } from "../Skeleton/Skeleton";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
+import { getPreferredAnimeTitle } from "@renderer/utils/animeTitle";
 
 const formatTitle = (title: string) => title.replace(/【(.*?)】/g, "[$1]");
 
 export const Schedule: React.FC = () => {
   const today = format(new Date(), "yyyy-MM-dd");
   const { data: schedules, isLoading } = useUserAiringScheduleQuery();
+  const animeTitleLanguage = usePreferencesStore((state) => state.animeTitleLanguage);
 
   const scheduleByDay = useMemo(() => {
     if (!schedules) return [];
@@ -81,11 +84,15 @@ export const Schedule: React.FC = () => {
                   <div key={schedule.id} className="flex items-center justify-between text-white">
                     {schedule.malId ? (
                       <Link to={`/info/${schedule.malId}`} className="hover:underline">
-                        {formatTitle(schedule.media.title.english ?? schedule.media.title.romaji)}
+                        {formatTitle(
+                          getPreferredAnimeTitle(schedule.media.title, animeTitleLanguage),
+                        )}
                       </Link>
                     ) : (
                       <span>
-                        {formatTitle(schedule.media.title.english ?? schedule.media.title.romaji)}
+                        {formatTitle(
+                          getPreferredAnimeTitle(schedule.media.title, animeTitleLanguage),
+                        )}
                       </span>
                     )}
                     <span className={`text-sm ${isToday ? "text-white/70" : "text-white/50"}`}>

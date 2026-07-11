@@ -12,6 +12,8 @@ import { type IMalAnimeDetailsResponse } from "@renderer/services/mal/malTypes";
 import { twMerge } from "tailwind-merge";
 import { AnimeListStatusSelector } from "./AnimeListStatusSelector";
 import { RelatedAnimeSection } from "./RelatedAnimeSection";
+import { usePreferencesStore } from "@renderer/store/preferencesStore";
+import { getAlternativeAnimeTitle, getPreferredAnimeTitle } from "@renderer/utils/animeTitle";
 
 interface IInfoPageMainSectionProps {
   malData: IMalAnimeDetailsResponse;
@@ -22,6 +24,9 @@ interface IInfoPageMainSectionProps {
 
 export const InfoPageMainSection: React.FC<IInfoPageMainSectionProps> = (props) => {
   const { malData, malId, imdbId, className } = props;
+  const animeTitleLanguage = usePreferencesStore((state) => state.animeTitleLanguage);
+  const titles = { romaji: malData.title, english: malData.alternative_titles.en };
+  const alternativeTitle = getAlternativeAnimeTitle(titles, animeTitleLanguage);
 
   const onPictureButtonClick = () => {
     if (imdbId) {
@@ -32,11 +37,9 @@ export const InfoPageMainSection: React.FC<IInfoPageMainSectionProps> = (props) 
   return (
     <div className={twMerge(className)}>
       <div className="mb-2">
-        <h1 className="text-4xl font-bold">{malData.title}</h1>
-        {malData.title !== malData.alternative_titles.en && (
-          <h2 className="mb-2 text-lg font-semibold text-neutral-200">
-            {malData.alternative_titles.en}
-          </h2>
+        <h1 className="text-4xl font-bold">{getPreferredAnimeTitle(titles, animeTitleLanguage)}</h1>
+        {alternativeTitle && (
+          <h2 className="mb-2 text-lg font-semibold text-neutral-200">{alternativeTitle}</h2>
         )}
       </div>
       <div className="mb-4 flex flex-wrap gap-x-4 gap-y-2">
