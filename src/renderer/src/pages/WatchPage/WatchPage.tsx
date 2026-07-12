@@ -54,7 +54,7 @@ export const WatchPage: React.FC = () => {
 
   const { setProgress, getEpisodeData } = useAnimeListStore();
 
-  const decodedUrl = encodeURI(atob(url ?? ""));
+  const decodedUrl = atob(url ?? "");
 
   const { data: malData } = useMalAnimeDetailsQuery({ animeId: state?.malId });
   const { data: anizipData } = useAnizipMappingsQuery(state.malId);
