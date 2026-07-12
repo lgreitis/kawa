@@ -1,7 +1,4 @@
-import {
-  type ISubtitleAttachment,
-  type ITrack,
-} from "@renderer/types/watchPageTypes";
+import { type ISubtitleAttachment, type ITrack } from "@renderer/types/watchPageTypes";
 import JASSUB from "jassub";
 import type Player from "video.js/dist/types/player";
 import workerUrl from "./jassub-worker.ts?worker&url";
@@ -174,8 +171,9 @@ function convertAssEventHtmlTags(text: string) {
       return `${kind}:${fields}${convertHtmlTextToAss(dialogueText)}`;
     },
   );
-};
+}
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 const normalizeFontData = (data: ISubtitleAttachment["data"] | unknown) => {
   if (data instanceof Uint8Array) {
     return data;
@@ -304,6 +302,7 @@ export class TrackHelper {
   }
 
   private constructSub(subtitle: ISubtitle, track: ITrackState, subtitleIndex: number): ASSEvent {
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const styleName = subtitle.style?.trim() || "Default";
     const style = track.styles[styleName] ?? track.styles.Default ?? 0;
     const text = subtitle.text ?? "";

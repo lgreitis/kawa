@@ -1787,10 +1787,10 @@ abort-controller@^3.0.0:
   dependencies:
     event-target-shim "^5.0.0"
 
-abslink@^1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/abslink/-/abslink-1.1.6.tgz#ff8019d2fa275c2fda8f1f594bd41e98ca2687e9"
-  integrity sha512-8fQgnUoVSgc1IhOrYzdDY+wTDPktbuYjds2LKf9kWYWKwDnHgXU168gdV3sPei7vevFf5m2fPZ6IQSKZkSjHVg==
+abslink@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/abslink/-/abslink-1.2.2.tgz#c4af9cc65d7ebb1db45069429daf53f1015bb01c"
+  integrity sha512-HCOItvzORPjMzddCmEpbH8+W1VM3yjH+CR7DLtxlxFKX/jz5twJbm7KLfblO7eKLnXINLah8Hk2ZAJqxXeSkOg==
 
 acorn-jsx@^5.3.2:
   version "5.3.2"
@@ -4596,12 +4596,12 @@ jake@^10.8.5:
     filelist "^1.0.4"
     picocolors "^1.1.1"
 
-jassub@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/jassub/-/jassub-2.4.1.tgz#00f8f1f2ad9c98961abe01ad829aa606cbe5b4ad"
-  integrity sha512-gwCy1hkDvgrPSIQpdBa8/LZe6Pp5/Jq508ZX4KK+ABnWAe31yD6LGBNJCDTyIaXwtxahDFkbZUin6pwvx1wtVA==
+jassub@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/jassub/-/jassub-2.5.6.tgz#a5caf67c0a30386f646dba3ab4b8762aaa7a8dbe"
+  integrity sha512-jsbEPVR+JvcOcGa8PbyVvHmFol+rQtAfty7JDp1WWrS3GEfThitjI5sXT0VLfG6/BLuyIuv1+2qykWdWyLkpQw==
   dependencies:
-    abslink "^1.1.6"
+    abslink "^1.2.2"
     lfa-ponyfill "^1.1.0"
     rvfc-polyfill "^1.0.8"
     throughput "^1.0.2"
