@@ -53,7 +53,11 @@ const createAuthenticatedMalAxiosInstance = () => {
           return instance(originalRequest);
         } catch (refreshError) {
           console.error("Token refresh failed:", refreshError);
-          return Promise.reject(refreshError as Error);
+          return Promise.reject(
+            refreshError instanceof Error
+              ? refreshError
+              : new Error("Token refresh failed", { cause: refreshError }),
+          );
         }
       }
       return Promise.reject(error);

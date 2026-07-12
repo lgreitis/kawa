@@ -17,6 +17,7 @@ export const MacTitleBarButtons: React.FC = () => {
 
   useEffect(() => {
     if (keyPress) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- useKeyPress is an external subscription.
       setSearchOpen(true);
     }
   }, [keyPress]);

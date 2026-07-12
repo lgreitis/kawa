@@ -8,7 +8,7 @@ interface IAnimeTitles {
 export const getPreferredAnimeTitle = (
   titles: IAnimeTitles,
   titleLanguage: AnimeTitleLanguage,
-): string => (titleLanguage === "english" ? titles.english || titles.romaji : titles.romaji);
+): string => (titleLanguage === "english" && titles.english ? titles.english : titles.romaji);
 
 export const getAlternativeAnimeTitle = (
   titles: IAnimeTitles,

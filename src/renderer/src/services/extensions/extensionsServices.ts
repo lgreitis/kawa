@@ -14,7 +14,6 @@ export interface IEpisodeServiceResult extends IEpisodeResult {
 
 export const getEpisodeFromExtensions = async (data: IEpisodeParams) => {
   // TODO: actually implement best algo
-  let best: IEpisodeServiceResult | undefined = undefined;
   const results: IEpisodeServiceResult[] = [];
   const sources = useExtensionStore.getState().sources;
 
@@ -47,7 +46,7 @@ export const getEpisodeFromExtensions = async (data: IEpisodeParams) => {
   }
 
   results.sort((a, b) => b.seeders - a.seeders);
-  best = results[0];
+  const best = results[0];
   results.shift();
 
   return { results, best };

@@ -173,8 +173,7 @@ function convertAssEventHtmlTags(text: string) {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-const normalizeFontData = (data: ISubtitleAttachment["data"] | unknown) => {
+const normalizeFontData = (data: unknown) => {
   if (data instanceof Uint8Array) {
     return data;
   }
@@ -302,7 +301,7 @@ export class TrackHelper {
   }
 
   private constructSub(subtitle: ISubtitle, track: ITrackState, subtitleIndex: number): ASSEvent {
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Empty styles must fall back to Default.
     const styleName = subtitle.style?.trim() || "Default";
     const style = track.styles[styleName] ?? track.styles.Default ?? 0;
     const text = subtitle.text ?? "";

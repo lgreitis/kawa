@@ -35,6 +35,7 @@ export const EpisodeListSection: React.FC<IEpisodeListSectionProps> = (props) =>
     }
   }, [anidbData]);
 
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Virtual intentionally opts this component out of compiler memoization.
   const rowVirtualizer = useVirtualizer({
     count: episodes.length,
     getScrollElement: () => parent,

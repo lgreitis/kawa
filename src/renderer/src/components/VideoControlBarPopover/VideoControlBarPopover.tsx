@@ -13,6 +13,8 @@ import {
 import React, { type ComponentType, type ElementType, useState } from "react";
 import { twJoin } from "tailwind-merge";
 
+/* eslint-disable react-hooks/refs -- @floating-ui/react requires its callback refs to be passed during render. */
+
 interface IVideoControlBarPopoverProps {
   icon: ComponentType | ElementType;
   children?: React.ReactNode;

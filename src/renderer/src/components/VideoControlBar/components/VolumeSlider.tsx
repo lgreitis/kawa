@@ -1,5 +1,5 @@
 import type Player from "video.js/dist/types/player";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
 import { AnimatePresence, motion } from "framer-motion";
 import { Slider } from "@base-ui/react/slider";
@@ -14,12 +14,12 @@ export const VolumeSlider: React.FC<IVolumeSliderProps> = (props) => {
 
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [volume, setVolume] = useState(playerStateVolume);
-  const [preMuteVolume, setPreMuteVolume] = useState(1);
+  const preMuteVolume = useRef(1);
 
   useEffect(() => {
     if (player) {
       if (volume !== 0) {
-        setPreMuteVolume(volume);
+        preMuteVolume.current = volume;
       }
       player.volume(volume);
     }
@@ -33,12 +33,12 @@ export const VolumeSlider: React.FC<IVolumeSliderProps> = (props) => {
     >
       <AnimatePresence>
         {volume === 0 ? (
-          <SpeakerXMarkIcon className="size-5" onClick={() => setVolume(preMuteVolume)} />
+          <SpeakerXMarkIcon className="size-5" onClick={() => setVolume(preMuteVolume.current)} />
         ) : (
           <SpeakerWaveIcon
             className="size-5"
             onClick={() => {
-              setPreMuteVolume(volume);
+              preMuteVolume.current = volume;
               setVolume(0);
             }}
           />

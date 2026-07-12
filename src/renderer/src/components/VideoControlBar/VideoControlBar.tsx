@@ -55,6 +55,7 @@ export const VideoControlBar: React.FC<IVideoControlBarProps> = (props) => {
 
     const { currentTime, timePercentage, duration } = calculatePlayerTime(player);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronizes the initial state from the imperative video.js player.
     setPlayerState((prev) => ({
       ...prev,
       currentTime: currentTime,

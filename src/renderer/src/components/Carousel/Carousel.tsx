@@ -1,7 +1,7 @@
 import { type EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { twMerge } from "tailwind-merge";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 import { useHomePageStore } from "@renderer/store/homePageStore";
 
@@ -23,7 +23,7 @@ export const Carousel: React.FC<ICarouselProps> = (props) => {
 
   const { currentSlide, setSlide } = useHomePageStore();
   const [userTouched, setUserTouched] = useState(false);
-  const [firstRenderJump, setFirstRenderJump] = useState(true);
+  const firstRenderJump = useRef(true);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -43,13 +43,13 @@ export const Carousel: React.FC<ICarouselProps> = (props) => {
     const scrollSnapList = emblaApi.scrollSnapList();
 
     if (currentSlide > scrollSnapList.length - 1) {
-      emblaApi.scrollTo(scrollSnapList.length - 1, firstRenderJump);
+      emblaApi.scrollTo(scrollSnapList.length - 1, firstRenderJump.current);
     } else {
-      emblaApi.scrollTo(currentSlide, firstRenderJump);
+      emblaApi.scrollTo(currentSlide, firstRenderJump.current);
     }
 
-    setFirstRenderJump(false);
-  }, [emblaApi, currentSlide, firstRenderJump]);
+    firstRenderJump.current = false;
+  }, [emblaApi, currentSlide]);
 
   useEffect(() => {
     const timer = setInterval(() => {
