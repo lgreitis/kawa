@@ -1500,11 +1500,6 @@
   dependencies:
     undici-types "~7.18.0"
 
-"@types/pako@^2.0.3":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@types/pako/-/pako-2.0.4.tgz#c3575ef8125e176c345fa0e7b301c1db41170c15"
-  integrity sha512-VWDCbrLeVXJM9fihYodcLiIv0ku+AlOa/TQ1SvYOaBuyrSKgEcro95LJyIsJ4vSo6BXIxOKxiJAat04CmST9Fw==
-
 "@types/parse-torrent-file@*":
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/@types/parse-torrent-file/-/parse-torrent-file-4.0.6.tgz#11801dfd5b0a017302a164b72c8869f2bcba15b1"
