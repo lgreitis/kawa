@@ -59,7 +59,7 @@
     "usehooks-ts": "^3.1.0",
     "video.js": "^8.17.3",
     "videojs-hotkeys": "^0.2.30",
-    "webtorrent": "^2.5.10",
+    "webtorrent": "^3.0.16",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
