@@ -14,11 +14,17 @@ export class MetadataHelper {
       BrowserWindow.getAllWindows()[0].webContents.send("subtitle", { subtitle, trackNumber });
     });
 
+    // The library starts this parse eagerly. Observe a failure here so a malformed
+    // Matroska index cannot become an unhandled rejection.
+    void this.metadata.getDuration().catch(() => undefined);
+  }
+
+  startSubtitleParsing = () => {
     this.videoFile.on("iterator", ({ iterator }, cb) => {
       // eslint-disable-next-line
       cb(this.metadata.parseStream(iterator));
     });
-  }
+  };
 
   getTracks = async () => {
     return this.metadata.getTracks();

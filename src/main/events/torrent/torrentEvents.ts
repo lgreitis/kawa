@@ -119,8 +119,23 @@ const handleTorrentAdd = async (
 
   const videoFile = findVideoFile(torrent);
   const metadataHelper = new MetadataHelper(videoFile);
-  const tracks = await metadataHelper.getTracks();
-  const attachments = await metadataHelper.getAttachments();
+  let tracks: Awaited<ReturnType<MetadataHelper["getTracks"]>> = [];
+  let attachments: Awaited<ReturnType<MetadataHelper["getAttachments"]>> = [];
+
+  try {
+    [tracks, attachments] = await Promise.all([
+      metadataHelper.getTracks(),
+      metadataHelper.getAttachments(),
+    ]);
+    metadataHelper.startSubtitleParsing();
+  } catch (error) {
+    console.warn("Could not read Matroska metadata; continuing without embedded subtitles.", {
+      infoHash: torrent.infoHash,
+      fileName: videoFile.name,
+      error,
+    });
+  }
+
   videoFile.select();
 
   return {

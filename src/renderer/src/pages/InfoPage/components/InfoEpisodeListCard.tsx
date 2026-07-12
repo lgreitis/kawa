@@ -42,7 +42,7 @@ export const InfoEpisodeListCard: React.FC<IInfoEpisodeListCardProps> = (props) 
         ) : (
           <div className="aspect-video h-24 rounded-lg bg-black/40"></div>
         )}
-        {progress && (
+        {!!progress && (
           <div className="absolute bottom-2 z-40 w-full px-4">
             <Progress percent={progress} />
           </div>

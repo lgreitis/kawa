@@ -22,6 +22,7 @@ declare module "matroska-metadata" {
       { number: number; language?: string; type: string; name: string; header: string }[]
     >;
     getAttachments(): Promise<{ filename: string; mimetype: string; data: Uint8Array }[]>;
+    getDuration(): Promise<number | undefined>;
     *parseStream(stream: AsyncIterable<Uint8Array>, stable: boolean = false): Promise<unknown>;
   }
 }
