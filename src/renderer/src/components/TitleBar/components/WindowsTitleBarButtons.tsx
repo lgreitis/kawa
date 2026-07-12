@@ -7,10 +7,10 @@ import {
   StopIcon,
 } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useKeyPress } from "@xyflow/react";
+import { useState } from "react";
 import { isMac } from "@renderer/utils/osUtils";
 import { twMerge } from "tailwind-merge";
+import { useKeyboardShortcut } from "@renderer/hooks/useKeyboardShortcut";
 
 import React from "react";
 import { SearchPalette } from "@renderer/components/SearchPalette/SearchPalette";
@@ -20,14 +20,7 @@ export const WindowsTitleBarButtons: React.FC = () => {
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const keyPress = useKeyPress(["Meta+k", "Control+k"]);
-
-  useEffect(() => {
-    if (keyPress) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- useKeyPress is an external subscription.
-      setSearchOpen(true);
-    }
-  }, [keyPress]);
+  useKeyboardShortcut({ key: "k", onTrigger: () => setSearchOpen(true) });
 
   return (
     <React.Fragment>
